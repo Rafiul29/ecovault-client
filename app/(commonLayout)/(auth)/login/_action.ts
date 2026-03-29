@@ -1,6 +1,6 @@
 "use server";
 
-import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/authUtils";
+// import { getDefaultDashboardRoute, isValidRedirectForRole, UserRole } from "@/lib/authUtils";
 import { httpClient } from "@/lib/axios/httpClient";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { ApiErrorResponse } from "@/types/api.types";
@@ -34,8 +34,8 @@ export const loginAction = async (payload: ILoginPayload, redirectPath?: string)
             //TODO : refactoring
             redirect(`/reset-password?email=${email}`);
         } else {
-            const targetPath = redirectPath && isValidRedirectForRole(redirectPath, role as UserRole) ? redirectPath : getDefaultDashboardRoute(role as UserRole);
-            redirect(targetPath);
+            // const targetPath = redirectPath && isValidRedirectForRole(redirectPath, role as UserRole) ? redirectPath : getDefaultDashboardRoute(role as UserRole);
+            redirect(redirectPath || "/dashboard");
         }
 
     } catch (error: any) {
