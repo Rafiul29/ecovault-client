@@ -99,9 +99,6 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                             />
                         )}
                     </form.Field>
-                    <div className="flex items-center justify-end">
-                        <Link href="/forgot-password" disable-nav-link-transition={true} className="text-xs font-semibold text-emerald-600 hover:text-emerald-500 hover:underline hover:underline-offset-4 transition-all duration-200">Forgot Password?</Link>
-                    </div>
 
                     {serverError && (
                         <Alert variant="destructive" className="bg-destructive/10 border-destructive/20 text-destructive">

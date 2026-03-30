@@ -1,0 +1,51 @@
+export enum Role {
+  MEMBER = "MEMBER",
+  MODERATOR = "MODERATOR",
+  ADMIN = "ADMIN",
+  SUPER_ADMIN = "SUPER_ADMIN",
+}
+
+export enum UserStatus {
+  ACTIVE = "ACTIVE",
+  BLOCKED = "BLOCKED",
+  DELETED = "DELETED",
+}
+
+export enum IdeaStatus {
+  DRAFT = "DRAFT",
+  UNDER_REVIEW = "UNDER_REVIEW",
+  APPROVED = "APPROVED",
+  REJECTED = "REJECTED",
+}
+
+export enum PaymentStatus {
+  PENDING = "PENDING",
+  COMPLETED = "COMPLETED",
+  FAILED = "FAILED",
+  REFUNDED = "REFUNDED",
+}
+
+export enum NotificationType {
+  IDEA_APPROVED = "IDEA_APPROVED",
+  IDEA_REJECTED = "IDEA_REJECTED",
+  NEW_COMMENT = "NEW_COMMENT",
+  COMMENT_REPLY = "COMMENT_REPLY",
+  VOTE_MILESTONE = "VOTE_MILESTONE",
+  PAYMENT_RECEIVED = "PAYMENT_RECEIVED",
+  SYSTEM_ANNOUNCEMENT = "SYSTEM_ANNOUNCEMENT",
+}
+
+export enum SubscriptionTier {
+  FREE = "FREE",
+  BASIC = "BASIC",
+  PRO = "PRO",
+  ENTERPRISE = "ENTERPRISE",
+}
+
+export enum ReactionType {
+  LIKE = "LIKE",
+  LOVE = "LOVE",
+  INSIGHTFUL = "INSIGHTFUL",
+  INSPIRING = "INSPIRING",
+  CONCERNED = "CONCERNED",
+}

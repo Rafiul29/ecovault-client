@@ -3,12 +3,11 @@ import { cn } from '@/lib/utils';
 import { Loader2 } from 'lucide-react';
 import React from 'react';
 
-type AppSubmitButtonProps = {
+interface AppSubmitButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     isPending: boolean;
     children: React.ReactNode;
     pendingLabel?: string;
     className?: string;
-    disabled?: boolean;
 }
 
 
@@ -18,6 +17,7 @@ const AppSubmitButton = ({
     pendingLabel = "Submitting...",
     className,
     disabled = false,
+    ...props
 }: AppSubmitButtonProps
 ) => {
 

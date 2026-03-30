@@ -49,7 +49,7 @@ export const registerAction = async (payload: IRegisterPayload, redirectPath?: s
         }
         return {
             success: false,
-            message: `Register failed: ${error.message}`,
+            message: `Register failed: ${error.response.data.message}`,
         }
 
     }

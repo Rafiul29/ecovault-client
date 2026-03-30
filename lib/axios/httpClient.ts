@@ -86,9 +86,18 @@ const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions): Pr
 const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
     try {
         const instance = await axiosInstance();
+        
+        const headers = options?.headers || {};
+        if (data instanceof FormData) {
+            delete (instance.defaults.headers as any).common['Content-Type'];
+            delete (instance.defaults.headers as any).post['Content-Type'];
+            delete (instance.defaults.headers as any).put['Content-Type'];
+            delete (instance.defaults.headers as any).patch['Content-Type'];
+        }
+
         const response = await instance.post<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
-            headers: options?.headers,
+            headers: headers,
         });
         return response.data;
     } catch (error: any) {
@@ -114,9 +123,18 @@ const httpPut = async <TData>(endpoint: string, data: unknown, options?: ApiRequ
 const httpPatch = async <TData>(endpoint: string, data: unknown, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
     try {
         const instance = await axiosInstance();
+
+        const headers = options?.headers || {};
+        if (data instanceof FormData) {
+            delete (instance.defaults.headers as any).common['Content-Type'];
+            delete (instance.defaults.headers as any).post['Content-Type'];
+            delete (instance.defaults.headers as any).put['Content-Type'];
+            delete (instance.defaults.headers as any).patch['Content-Type'];
+        }
+
         const response = await instance.patch<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
-            headers: options?.headers,
+            headers: headers,
         });
         return response.data;
     }
