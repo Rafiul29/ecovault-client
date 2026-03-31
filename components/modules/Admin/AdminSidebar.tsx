@@ -12,7 +12,8 @@ import {
     LogOut,
     ShieldCheck,
     CreditCard,
-    MessageSquare
+    MessageSquare,
+    ShoppingBag
 } from "lucide-react"
 
 const sidebarLinks = [
@@ -65,6 +66,11 @@ const sidebarLinks = [
         title: "Subscription Registry",
         href: "/admin/dashboard/subscription-management",
         icon: ShieldCheck
+    },
+    {
+        title: "Idea Purchases",
+        href: "/admin/dashboard/Ideapurchase-management",
+        icon: ShoppingBag
     },
 ]
 
