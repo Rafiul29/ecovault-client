@@ -1,8 +1,8 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { getIdeas } from "@/services/idea.service";
-import IdeasTable from "@/components/modules/Admin/IdeaManagement/IdeasTable";
+import { getCategories } from "@/services/category.service";
+import CategoryTable from "@/components/modules/Admin/CategoryManagement/CategoryTable";
 
-const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
+const CategoryManagementPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
 
     const queryParamsObjects = await searchParams;
 
@@ -29,8 +29,8 @@ const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: stri
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery({
-        queryKey: ["ideas", queryString],
-        queryFn: () => getIdeas(queryString),
+        queryKey: ["categories", queryString],
+        queryFn: () => getCategories(queryString),
         staleTime: 1000 * 60,
     });
 
@@ -39,16 +39,16 @@ const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: stri
             <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Idea Management</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">Category Management</h1>
                         <p className="text-muted-foreground">
-                            Manage your ecosystem's ideas, review submissions, and feature innovative solutions.
+                            Organize ideas by defining categories that help users discover relevant content.
                         </p>
                     </div>
                 </div>
-                <IdeasTable initialQueryString={queryString} />
+                <CategoryTable initialQueryString={queryString} />
             </div>
         </HydrationBoundary>
     );
 }
 
-export default IdeaManagementPage
+export default CategoryManagementPage

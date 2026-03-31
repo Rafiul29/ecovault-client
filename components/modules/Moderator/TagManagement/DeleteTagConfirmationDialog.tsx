@@ -1,6 +1,6 @@
 "use client"
 
-import { deleteIdeaAction } from "@/app/(dashboardLayout)/admin/dashboard/idea-management/_action"
+import { deleteTagAction } from "@/app/(dashboardLayout)/admin/dashboard/tag-management/_action"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -10,85 +10,82 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog"
-import { IIdea } from "@/types/idea.types"
+import { ITag } from "@/types/tag.types"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { AlertCircle, Trash2 } from "lucide-react"
+import { AlertTriangle, Trash2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { toast } from "sonner"
 
-interface DeleteIdeaConfirmationDialogProps {
+interface DeleteTagConfirmationDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
-    idea: IIdea | null
-    mode?: "all" | "my-ideas"
+    tag: ITag | null
 }
 
-const DeleteIdeaConfirmationDialog = ({
+const DeleteTagConfirmationDialog = ({
     open,
     onOpenChange,
-    idea,
-    mode = "all",
-}: DeleteIdeaConfirmationDialogProps) => {
+    tag,
+}: DeleteTagConfirmationDialogProps) => {
     const [permanent, setPermanent] = useState(false)
     const queryClient = useQueryClient()
     const router = useRouter()
 
     const { mutateAsync, isPending } = useMutation({
-        mutationFn: (id: string) => deleteIdeaAction(id, permanent),
+        mutationFn: (id: string) => deleteTagAction(id, permanent),
     })
 
     const handleDelete = async () => {
-        if (!idea) return
+        if (!tag) return
 
-        const result = await mutateAsync(idea.id)
+        const result = await mutateAsync(tag.id)
 
         if (!result.success) {
-            toast.error(result.message || "Failed to delete idea")
+            toast.error(result.message || "Failed to delete tag")
             return
         }
 
-        toast.success(result.message || "Idea deleted successfully")
+        toast.success(result.message || "Tag deleted successfully")
         onOpenChange(false)
-        void queryClient.invalidateQueries({ queryKey: [mode === "my-ideas" ? "my-ideas" : "ideas"] })
+        void queryClient.invalidateQueries({ queryKey: ["tags"] })
         router.refresh()
     }
 
-    if (!idea) return null
+    if (!tag) return null
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-[400px]">
                 <DialogHeader className="flex flex-col items-center gap-2 pt-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
-                        <AlertCircle className="h-6 w-6" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-destructive/10">
+                        <AlertTriangle className="h-6 w-6 text-destructive" />
                     </div>
-                    <DialogTitle className="text-xl">Delete Idea</DialogTitle>
+                    <DialogTitle className="text-xl">Delete Tag</DialogTitle>
                     <DialogDescription className="text-center">
-                        This will delete <span className="font-semibold text-foreground">"{idea.title}"</span>.
-                        Are you sure?
+                        Are you sure you want to delete <span className="font-semibold text-foreground">"#{tag.name}"</span>?
                     </DialogDescription>
                 </DialogHeader>
 
                 <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3 my-2">
                     <input
                         type="checkbox"
-                        id="idea-permanent"
+                        id="tag-permanent"
                         checked={permanent}
                         onChange={(e) => setPermanent(e.target.checked)}
                         className="h-4 w-4 rounded border-gray-300 text-destructive focus:ring-destructive"
                     />
-                    <label htmlFor="idea-permanent" className="text-sm font-medium leading-none cursor-pointer">
+                    <label htmlFor="tag-permanent" className="text-sm font-medium leading-none cursor-pointer">
                         Permanent Delete (Admin only)
                     </label>
                 </div>
 
-                <DialogFooter className="gap-2 sm:gap-0 mt-4">
+                <DialogFooter className="gap-2 sm:gap-0">
                     <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isPending}>
                         Cancel
                     </Button>
                     <Button variant="destructive" onClick={handleDelete} disabled={isPending} className="gap-2">
-                        {isPending ? "Deleting..." : "Delete Idea"}
+                        {isPending ? "Deleting..." : "Delete Tag"}
                         {!isPending && <Trash2 className="h-4 w-4" />}
                     </Button>
                 </DialogFooter>
@@ -97,4 +94,4 @@ const DeleteIdeaConfirmationDialog = ({
     )
 }
 
-export default DeleteIdeaConfirmationDialog
+export default DeleteTagConfirmationDialog

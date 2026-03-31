@@ -2,7 +2,7 @@ import { ApiResponse } from '@/types/api.types';
 import axios from 'axios';
 import { isTokenExpiringSoon } from '../tokenUtils';
 import { cookies, headers } from 'next/headers';
-import { getNewTokensWithRefreshToken } from '@/services/auth.services';
+import { getNewTokensWithRefreshToken } from '@/services/auth.service';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -86,7 +86,7 @@ const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions): Pr
 const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
     try {
         const instance = await axiosInstance();
-        
+
         const headers = options?.headers || {};
         if (data instanceof FormData) {
             delete (instance.defaults.headers as any).common['Content-Type'];

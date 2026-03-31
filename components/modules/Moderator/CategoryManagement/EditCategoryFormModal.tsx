@@ -1,0 +1,282 @@
+"use client"
+
+import { updateCategoryAction } from "@/app/(dashboardLayout)/admin/dashboard/category-management/_action"
+import AppField from "@/components/shared/form/AppField"
+import AppSubmitButton from "@/components/shared/form/AppSubmitButton"
+import { Button } from "@/components/ui/button"
+import {
+    Dialog,
+    DialogClose,
+    DialogContent,
+    DialogDescription,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Input } from "@/components/ui/input"
+import { updateCategoryZodSchema } from "@/zod/category.validation"
+import { ICategory } from "@/types/category"
+import { useForm } from "@tanstack/react-form"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { Upload } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { toast } from "sonner"
+import Image from "next/image"
+
+interface EditCategoryFormModalProps {
+    open: boolean
+    onOpenChange: (open: boolean) => void
+    category: ICategory | null
+}
+
+const EditCategoryFormModal = ({ open, onOpenChange, category }: EditCategoryFormModalProps) => {
+    const [iconPreview, setIconPreview] = useState<string | null>(null)
+    const queryClient = useQueryClient()
+    const router = useRouter()
+
+    useEffect(() => {
+        if (category?.icon) {
+            setIconPreview(category.icon)
+        } else {
+            setIconPreview(null)
+        }
+
+        // Reset form when category changes
+        if (category) {
+            form.reset({
+                name: category.name,
+                description: category.description || "",
+                color: category.color || "#10b981",
+                icon: null,
+                isActive: category.isActive ?? true,
+            })
+        }
+    }, [category])
+
+    const { mutateAsync, isPending } = useMutation({
+        mutationFn: ({ id, payload }: { id: string; payload: FormData | any }) => updateCategoryAction(id, payload),
+    })
+
+    const form = useForm({
+        defaultValues: {
+            name: category?.name || "",
+            description: category?.description || "",
+            color: category?.color || "#10b981",
+            icon: null as File | null,
+            isActive: category?.isActive ?? true,
+        },
+        onSubmit: async ({ value }) => {
+            if (!category) return
+
+            const formData = new FormData()
+
+            const data = {
+                name: value.name,
+                description: value.description,
+                color: value.color,
+                isActive: value.isActive
+            }
+
+            formData.append("data", JSON.stringify(data))
+
+            if (value.icon) {
+                formData.append("file", value.icon)
+            }
+
+            const result = await mutateAsync({ id: category.id, payload: formData })
+
+            if (!result.success) {
+                toast.error(result.message || "Failed to update category")
+                return
+            }
+
+            toast.success(result.message || "Category updated successfully")
+            onOpenChange(false)
+            void queryClient.invalidateQueries({ queryKey: ["categories"] })
+            router.refresh()
+        },
+    })
+
+    const handleIconChange = (e: React.ChangeEvent<HTMLInputElement>, field: any) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            field.handleChange(file)
+            const reader = new FileReader()
+            reader.onloadend = () => {
+                setIconPreview(reader.result as string)
+            }
+            reader.readAsDataURL(file)
+        }
+    }
+
+    if (!category) return null
+
+    return (
+        <Dialog open={open} onOpenChange={onOpenChange}>
+            <DialogContent className="sm:max-w-[500px]">
+                <DialogHeader className="pb-2">
+                    <DialogTitle className="text-3xl font-black text-neutral-950 tracking-tight font-heading">Edit Category</DialogTitle>
+                    <DialogDescription className="text-neutral-500 font-medium">
+                        Update the category details and brand theme.
+                    </DialogDescription>
+                </DialogHeader>
+                <form
+                    onSubmit={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        form.handleSubmit()
+                    }}
+                    className="space-y-4 pt-4"
+                >
+                    <form.Field
+                        name="name"
+                        validators={{
+                            onChange: ({ value }) => {
+                                const res = updateCategoryZodSchema.shape.name.safeParse(value)
+                                return res.success ? undefined : res.error.issues[0]?.message
+                            }
+                        }}
+                    >
+                        {(field) => (
+                            <AppField
+                                field={field}
+                                label="Category Name"
+                                placeholder="e.g. Renewable Energy"
+                            />
+                        )}
+                    </form.Field>
+
+                    <form.Field
+                        name="description"
+                        validators={{
+                            onChange: ({ value }) => {
+                                const res = updateCategoryZodSchema.shape.description.safeParse(value)
+                                return res.success ? undefined : res.error.issues[0]?.message
+                            }
+                        }}
+                    >
+                        {(field) => (
+                            <div className="space-y-2">
+                                <Label htmlFor="edit-description">Description</Label>
+                                <Textarea
+                                    id="edit-description"
+                                    placeholder="Briefly describe what this category covers..."
+                                    value={field.state.value}
+                                    onBlur={field.handleBlur}
+                                    onChange={(e) => field.handleChange(e.target.value)}
+                                />
+                                {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                                    <p className="text-[12px] font-medium text-destructive mt-0.5">
+                                        {String(field.state.meta.errors[0])}
+                                    </p>
+                                )}
+                            </div>
+                        )}
+                    </form.Field>
+
+                    <div className="grid grid-cols-2 gap-4">
+                        <form.Field
+                            name="color"
+                            validators={{
+                                onChange: ({ value }) => {
+                                    const res = updateCategoryZodSchema.shape.color.safeParse(value)
+                                    return res.success ? undefined : res.error.issues[0]?.message
+                                }
+                            }}
+                        >
+                            {(field) => (
+                                <div className="space-y-2">
+                                    <Label htmlFor="edit-color">Theme Color</Label>
+                                    <div className="flex gap-2">
+                                        <Input
+                                            id="edit-color"
+                                            type="color"
+                                            className="h-10 w-10 p-1 cursor-pointer"
+                                            value={field.state.value}
+                                            onChange={(e) => field.handleChange(e.target.value)}
+                                        />
+                                        <Input
+                                            type="text"
+                                            value={field.state.value}
+                                            onBlur={field.handleBlur}
+                                            onChange={(e) => field.handleChange(e.target.value)}
+                                            placeholder="#000000"
+                                        />
+                                    </div>
+                                    {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                                        <p className="text-[12px] font-medium text-destructive mt-0.5">
+                                            {String(field.state.meta.errors[0])}
+                                        </p>
+                                    )}
+                                </div>
+                            )}
+                        </form.Field>
+
+                        <form.Field name="icon">
+                            {(field) => (
+                                <div className="space-y-2">
+                                    <Label>Category Icon</Label>
+                                    <div className="flex items-center gap-3">
+                                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md border bg-muted">
+                                            {iconPreview ? (
+                                                <Image
+                                                    src={iconPreview}
+                                                    alt="Preview"
+                                                    fill
+                                                    className="object-cover"
+                                                />
+                                            ) : (
+                                                <div className="flex h-full w-full items-center justify-center">
+                                                    <Upload className="h-4 w-4 text-muted-foreground" />
+                                                </div>
+                                            )}
+                                        </div>
+                                        <div className="relative flex-1">
+                                            <Input
+                                                type="file"
+                                                accept="image/*"
+                                                className="absolute inset-0 opacity-0 cursor-pointer"
+                                                onChange={(e) => handleIconChange(e, field)}
+                                            />
+                                            <Button type="button" variant="outline" className="w-full text-xs">
+                                                Change Icon
+                                            </Button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+                        </form.Field>
+                    </div>
+
+                    <form.Field name="isActive">
+                        {(field) => (
+                            <div className="flex items-center gap-2">
+                                <input
+                                    type="checkbox"
+                                    id="isActive"
+                                    checked={field.state.value}
+                                    onChange={(e) => field.handleChange(e.target.checked)}
+                                    className="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
+                                />
+                                <Label htmlFor="isActive">Active Status</Label>
+                            </div>
+                        )}
+                    </form.Field>
+
+                    <div className="flex items-center justify-end gap-3 pt-6 mt-4 border-t border-neutral-100">
+                        <Button type="button" variant="ghost" className="h-11 px-6 rounded-xl font-bold text-neutral-500 hover:text-neutral-900 transition-all font-sans" onClick={() => onOpenChange(false)} disabled={isPending}>
+                            Cancel
+                        </Button>
+                        <AppSubmitButton isPending={isPending} className="w-auto h-11 px-8 rounded-xl font-black shadow-xl shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700 font-sans">
+                            Save Changes
+                        </AppSubmitButton>
+                    </div>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
+}
+
+export default EditCategoryFormModal

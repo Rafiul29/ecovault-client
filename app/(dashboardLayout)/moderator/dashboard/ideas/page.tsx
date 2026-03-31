@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { getIdeas } from "@/services/idea.service";
+import { getMyIdeas } from "@/services/idea.service";
 import IdeasTable from "@/components/modules/Admin/IdeaManagement/IdeasTable";
 
 const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
@@ -29,8 +29,8 @@ const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: stri
     const queryClient = new QueryClient();
 
     await queryClient.prefetchQuery({
-        queryKey: ["ideas", queryString],
-        queryFn: () => getIdeas(queryString),
+        queryKey: ["my-ideas", queryString],
+        queryFn: () => getMyIdeas(queryString),
         staleTime: 1000 * 60,
     });
 
@@ -39,13 +39,13 @@ const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: stri
             <div className="flex flex-col gap-4">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h1 className="text-2xl font-bold tracking-tight">Idea Management</h1>
+                        <h1 className="text-2xl font-bold tracking-tight">My Ideas</h1>
                         <p className="text-muted-foreground">
                             Manage your ecosystem's ideas, review submissions, and feature innovative solutions.
                         </p>
                     </div>
                 </div>
-                <IdeasTable initialQueryString={queryString} />
+                <IdeasTable initialQueryString={queryString} mode="my-ideas" />
             </div>
         </HydrationBoundary>
     );

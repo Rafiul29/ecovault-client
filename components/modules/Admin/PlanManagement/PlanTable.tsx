@@ -1,12 +1,9 @@
 "use client";
 
 import DataTable from "@/components/shared/table/DataTable";
-import { getComments } from "@/services/comment.service";
-import { PaginationMeta } from "@/types/api.types";
 import { ISubscriptionPlan } from "@/types/subscription";
 import { getAllSubscriptionPlans } from "@/services/subscription.service";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
 import { planColumns } from "./planColumns";
 import CreatePlanFormModal from "./CreatePlanFormModal";
 import EditPlanFormModal from "./EditPlanFormModal";

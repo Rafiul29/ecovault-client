@@ -21,14 +21,12 @@ interface DeleteIdeaConfirmationDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
     idea: IIdea | null
-    mode?: "all" | "my-ideas"
 }
 
 const DeleteIdeaConfirmationDialog = ({
     open,
     onOpenChange,
     idea,
-    mode = "all",
 }: DeleteIdeaConfirmationDialogProps) => {
     const [permanent, setPermanent] = useState(false)
     const queryClient = useQueryClient()
@@ -50,7 +48,7 @@ const DeleteIdeaConfirmationDialog = ({
 
         toast.success(result.message || "Idea deleted successfully")
         onOpenChange(false)
-        void queryClient.invalidateQueries({ queryKey: [mode === "my-ideas" ? "my-ideas" : "ideas"] })
+        void queryClient.invalidateQueries({ queryKey: ["ideas"] })
         router.refresh()
     }
 

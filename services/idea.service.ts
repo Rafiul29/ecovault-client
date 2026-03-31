@@ -2,6 +2,7 @@
 
 import { httpClient } from "@/lib/axios/httpClient";
 import { IIdea, ICreateIdeaPayload, IUpdateIdeaPayload } from "@/types/idea.types";
+import { revalidateTag, revalidatePath } from "next/cache";
 
 export const getIdeas = async (queryString?: string) => {
     try {
@@ -40,6 +41,10 @@ export const createIdea = async (payload: FormData) => {
                 "Content-Type": "multipart/form-data",
             },
         });
+        revalidateTag("ideas", "page");
+        revalidateTag("my-ideas", "page");
+        revalidatePath("/admin/dashboard/idea-management", "page");
+        revalidatePath("/moderator/dashboard/ideas", "page");
         return response;
     } catch (error) {
         console.error("Error creating idea:", error);
@@ -54,6 +59,10 @@ export const updateIdea = async (id: string, payload: FormData) => {
                 "Content-Type": "multipart/form-data",
             },
         });
+        revalidateTag("ideas", "page");
+        revalidateTag("my-ideas", "page");
+        revalidatePath("/admin/dashboard/idea-management", "page");
+        revalidatePath("/moderator/dashboard/ideas", "page");
         return response;
     } catch (error) {
         console.error("Error updating idea:", error);
@@ -65,6 +74,10 @@ export const deleteIdea = async (id: string, permanent: boolean = false) => {
     try {
         const url = permanent ? `/ideas/${id}?permanent=true` : `/ideas/${id}`;
         const response = await httpClient.delete<{ message: string }>(url);
+        revalidateTag("ideas", "page");
+        revalidateTag("my-ideas", "page");
+        revalidatePath("/admin/dashboard/idea-management", "page");
+        revalidatePath("/moderator/dashboard/ideas", "page");
         return response;
     } catch (error) {
         console.error("Error deleting idea:", error);

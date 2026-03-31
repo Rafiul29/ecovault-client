@@ -21,7 +21,7 @@ const EditIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
     const categories = categoriesResponse?.data || [];
 
     await queryClient.prefetchQuery({
-        queryKey: ["idea", id],
+        queryKey: ["my-ideas", id],
         queryFn: () => getIdeaById(id),
     });
 
@@ -33,7 +33,7 @@ const EditIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <div className="max-w-[1600px] mx-auto py-10 px-4 h-full">
-                <EditIdeaForm idea={idea} categories={categories} />
+                <EditIdeaForm idea={idea} categories={categories} mode="my-ideas" />
             </div>
         </HydrationBoundary>
     );

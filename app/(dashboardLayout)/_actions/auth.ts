@@ -1,6 +1,6 @@
 "use server";
 
-import { changePassword } from "@/services/auth.services";
+import { changePassword } from "@/services/auth.service";
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { cookies } from "next/headers";
 import { IChangePasswordPayload, changePasswordZodSchema } from "@/zod/auth.validation";

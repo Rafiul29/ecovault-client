@@ -11,7 +11,7 @@ import {
 } from "@/hooks/useServerManagedDataTableFilters";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
 import { useRowActionModalState } from "@/hooks/useRowActionModalState";
-import { getIdeas, getMyIdeas } from "@/services/idea.service";
+import { getIdeas } from "@/services/idea.service";
 import { getCategories } from "@/services/category.service";
 import { PaginationMeta } from "@/types/api.types";
 import { IIdea } from "@/types/idea.types";
@@ -39,12 +39,7 @@ const IDEA_FILTER_DEFINITIONS = [
 ];
 
 
-interface IdeasTableProps {
-    initialQueryString: string;
-    mode?: "all" | "my-ideas";
-}
-
-const IdeasTable = ({ initialQueryString, mode = "all" }: IdeasTableProps) => {
+const IdeasTable = ({ initialQueryString }: { initialQueryString: string }) => {
     const searchParams = useSearchParams();
     const {
         viewingItem,
@@ -93,12 +88,9 @@ const IdeasTable = ({ initialQueryString, mode = "all" }: IdeasTableProps) => {
         updateParams,
     });
 
-    const queryKey = mode === "my-ideas" ? ["my-ideas", queryString] : ["ideas", queryString];
-    const fetchFn = mode === "my-ideas" ? getMyIdeas : getIdeas;
-
     const { data: ideaDataResponse, isLoading, isFetching } = useQuery({
-        queryKey,
-        queryFn: () => fetchFn(queryString)
+        queryKey: ["ideas", queryString],
+        queryFn: () => getIdeas(queryString)
     });
 
     const router = useRouter();
@@ -196,7 +188,7 @@ const IdeasTable = ({ initialQueryString, mode = "all" }: IdeasTableProps) => {
                     onClearAll: clearAllFilters,
                 }}
                 toolbarAction={
-                    <Link href={mode === "my-ideas" ? "/moderator/dashboard/ideas/create" : "/admin/dashboard/idea-management/create"}>
+                    <Link href="/admin/dashboard/idea-management/create">
                         <Button className="h-11 rounded-xl px-6 font-bold shadow-xl shadow-emerald-500/20 bg-emerald-600 hover:bg-emerald-700">
                             <Plus className="mr-2 h-4 w-4" />
                             Submit Idea
@@ -206,8 +198,8 @@ const IdeasTable = ({ initialQueryString, mode = "all" }: IdeasTableProps) => {
                 meta={meta}
                 actions={{
                     ...tableActions,
-                    onEdit: (idea) => router.push(`${mode === "my-ideas" ? "/moderator/dashboard/ideas" : "/admin/dashboard/idea-management"}/edit/${idea.id}`),
-                    onView: (idea) => router.push(`${mode === "my-ideas" ? "/moderator/dashboard/ideas" : "/admin/dashboard/idea-management"}/view/${idea.id}`),
+                    onEdit: (idea) => router.push(`/admin/dashboard/idea-management/edit/${idea.id}`),
+                    onView: (idea) => router.push(`/admin/dashboard/idea-management/view/${idea.id}`),
                 }}
             />
 
@@ -215,7 +207,6 @@ const IdeasTable = ({ initialQueryString, mode = "all" }: IdeasTableProps) => {
                 open={isDeleteDialogOpen}
                 onOpenChange={onDeleteOpenChange}
                 idea={deletingItem}
-                mode={mode}
             />
 
             {/* <ViewIdeaDialog

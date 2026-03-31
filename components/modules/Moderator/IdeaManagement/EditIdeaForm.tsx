@@ -35,7 +35,6 @@ interface EditIdeaFormProps {
     idea: IIdea
     categories: ICategory[]
     isLoadingCategories?: boolean
-    mode?: "all" | "my-ideas"
 }
 
 const getErrorMessage = (error: unknown): string => {
@@ -44,7 +43,7 @@ const getErrorMessage = (error: unknown): string => {
     return "Invalid input"
 }
 
-const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: EditIdeaFormProps) => {
+const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormProps) => {
     const [imagePreviews, setImagePreviews] = useState<string[]>([])
     const queryClient = useQueryClient()
     const router = useRouter()
@@ -112,8 +111,8 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
             }
 
             toast.success(result.message || "Idea updated successfully")
-            void queryClient.invalidateQueries({ queryKey: [mode === "my-ideas" ? "my-ideas" : "ideas"] })
-            router.push(mode === "my-ideas" ? "/moderator/dashboard/ideas" : "/admin/dashboard/idea-management")
+            void queryClient.invalidateQueries({ queryKey: ["ideas"] })
+            router.push("/admin/dashboard/idea-management")
         },
     })
 
@@ -153,7 +152,7 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
         <div className="flex flex-col gap-6">
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-2">
                 <div className="flex items-center gap-4">
-                    <Link href={mode === "my-ideas" ? "/moderator/dashboard/ideas" : "/admin/dashboard/idea-management"}>
+                    <Link href="/admin/dashboard/idea-management">
                         <Button variant="outline" size="icon" className="rounded-full h-10 w-10">
                             <ChevronLeft className="h-5 w-5" />
                         </Button>
@@ -524,7 +523,7 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
                 </div>
 
                 <div className="flex flex-col-reverse sm:flex-row justify-end gap-4 pt-4">
-                    <Link href={mode === "my-ideas" ? "/moderator/dashboard/ideas" : "/admin/dashboard/idea-management"} className="w-full sm:w-auto">
+                    <Link href="/admin/dashboard/idea-management" className="w-full sm:w-auto">
                         <Button type="button" variant="outline" className="h-14 w-full sm:px-10 rounded-2xl font-bold text-neutral-500 hover:text-neutral-900 transition-all border-neutral-200" disabled={isPending}>
                             Discard
                         </Button>
