@@ -85,11 +85,6 @@ const EditCategoryFormModal = ({ open, onOpenChange, category }: EditCategoryFor
                 formData.append("file", value.icon)
             }
 
-            console.log("FormData Contents:")
-            for (let [key, val] of (formData as any).entries()) {
-                console.log(key, val)
-            }
-
             const result = await mutateAsync({ id: category.id, payload: formData })
 
             if (!result.success) {

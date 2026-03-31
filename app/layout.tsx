@@ -1,6 +1,9 @@
 import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import QueryProviders from "@/providers/QueryProvider";
+import type { Metadata } from "next";
+import { Toaster } from "sonner";
+
 
 const inter = Inter({
   variable: "--font-inter",
@@ -12,7 +15,7 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-import type { Metadata } from "next";
+
 
 export const metadata: Metadata = {
   title: "EcoVault",
@@ -30,7 +33,7 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} antialiased`}
       >
         <QueryProviders>{children}</QueryProviders>
-
+        <Toaster richColors />
       </body>
     </html>
   );

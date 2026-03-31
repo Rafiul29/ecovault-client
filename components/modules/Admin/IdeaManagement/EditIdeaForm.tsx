@@ -29,6 +29,7 @@ import { getTags } from "@/services/tag.service"
 import CategoryMultiSelect from "./CategoryMultiSelect"
 import TagMultiSelect from "./TagMultiSelect"
 import Link from "next/link"
+import IdeaAttachments from "./IdeaAttachments"
 
 interface EditIdeaFormProps {
     idea: IIdea
@@ -182,13 +183,13 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                 className="space-y-8 pb-20"
             >
                 {/* SECTION: GENERAL INFORMATION */}
-                <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-sm border border-neutral-100">
-                    <div className="mb-8 border-b border-neutral-100 pb-6">
-                        <h2 className="text-2xl font-black text-neutral-900 tracking-tight">General Information</h2>
-                        <p className="text-neutral-500 font-medium mt-1">Provide the foundational details for your new idea.</p>
+                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
+                        <h2 className="text-lg font-bold text-neutral-900">Basic Information</h2>
+                        <p className="text-sm text-neutral-500 font-medium mt-1">Title, description, and overview of your idea</p>
                     </div>
 
-                    <div className="space-y-8">
+                    <div className="p-6 md:p-8 space-y-8 bg-white">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                             <form.Field
                                 name="title"
@@ -202,8 +203,8 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                                 {(field) => (
                                     <AppField
                                         field={field}
-                                        label={<span>Idea Title <span className="text-rose-500">*</span></span> as any}
-                                        placeholder="Enter a catchy title"
+                                        label={<span>Title <span className="text-rose-500">*</span></span> as any}
+                                        placeholder="e.g., Solar-Powered Water Purification System"
                                     />
                                 )}
                             </form.Field>
@@ -211,7 +212,7 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                             <form.Field name="status">
                                 {(field) => (
                                     <div className="space-y-2">
-                                        <Label className="font-bold text-neutral-700">Idea Status</Label>
+                                        <Label className="text-sm font-medium text-neutral-800">Idea Status</Label>
                                         <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
                                             <SelectTrigger className="h-12 rounded-xl transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200">
                                                 <SelectValue placeholder="Select status" />
@@ -242,9 +243,9 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                         >
                             {(field) => (
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-neutral-700">Description <span className="text-rose-500">*</span></Label>
+                                    <Label className="text-sm font-medium text-neutral-800">Short Description <span className="text-rose-500">*</span></Label>
                                     <Textarea
-                                        placeholder="Describe your idea in detail..."
+                                        placeholder="A concise overview of your idea (2–3 sentences)"
                                         className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
@@ -259,13 +260,13 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                 </div>
 
                 {/* SECTION: PROBLEM & SOLUTION */}
-                <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-sm border border-neutral-100">
-                    <div className="mb-8 border-b border-neutral-100 pb-6">
-                        <h2 className="text-2xl font-black text-neutral-900 tracking-tight">Problem & Solution</h2>
-                        <p className="text-neutral-500 font-medium mt-1">Elaborate on the issue and your approach.</p>
+                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
+                        <h2 className="text-lg font-bold text-neutral-900">Problem & Solution</h2>
+                        <p className="text-sm text-neutral-500 font-medium mt-1">Clearly define the problem you're solving</p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                    <div className="p-6 md:p-8 flex flex-col gap-6 sm:gap-8 bg-white">
                         <form.Field
                             name="problemStatement"
                             validators={{
@@ -277,9 +278,9 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                         >
                             {(field) => (
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-neutral-700">Problem Statement <span className="text-rose-500">*</span></Label>
+                                    <Label className="text-sm font-medium text-neutral-800">Problem Statement <span className="text-rose-500">*</span></Label>
                                     <Textarea
-                                        placeholder="What problem does this solve?"
+                                        placeholder="What specific problem does your idea address? Include data or evidence if possible."
                                         className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
@@ -302,9 +303,9 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                         >
                             {(field) => (
                                 <div className="space-y-2">
-                                    <Label className="font-bold text-neutral-700">Proposed Solution <span className="text-rose-500">*</span></Label>
+                                    <Label className="text-sm font-medium text-neutral-800">Proposed Solution <span className="text-rose-500">*</span></Label>
                                     <Textarea
-                                        placeholder="How do you plan to solve it?"
+                                        placeholder="How does your idea solve the problem? Be specific about the approach, technology, or method."
                                         className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
@@ -319,13 +320,13 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                 </div>
 
                 {/* SECTION: CATEGORIZATION */}
-                <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-sm border border-neutral-100">
-                    <div className="mb-8 border-b border-neutral-100 pb-6">
-                        <h2 className="text-2xl font-black text-neutral-900 tracking-tight">Categorization</h2>
-                        <p className="text-neutral-500 font-medium mt-1">Help users find your idea by adding relevant tags and categories.</p>
+                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
+                        <h2 className="text-lg font-bold text-neutral-900">Categorization</h2>
+                        <p className="text-sm text-neutral-500 font-medium mt-1">Help users discover your idea</p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                    <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 bg-white">
                         <form.Field name="categories">
                             {(field) => (
                                 <CategoryMultiSelect
@@ -357,13 +358,13 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                 </div>
 
                 {/* SECTION: PRICING & VISIBILITY */}
-                <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-sm border border-neutral-100 bg-linear-to-br from-white to-neutral-50/50">
-                    <div className="mb-8 border-b border-neutral-100 pb-6">
-                        <h2 className="text-2xl font-black text-neutral-900 tracking-tight">Pricing & Visibility</h2>
-                        <p className="text-neutral-500 font-medium mt-1">Configure monetization and promotion settings.</p>
+                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
+                        <h2 className="text-lg font-bold text-neutral-900">Pricing & Visibility</h2>
+                        <p className="text-sm text-neutral-500 font-medium mt-1">Configure monetization and promotion settings.</p>
                     </div>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-6 items-start">
+                    <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-6 items-start bg-white">
                         <div className="flex flex-col gap-4">
                             <form.Field name="isPaid">
                                 {(field) => (
@@ -424,7 +425,7 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                         <div className="flex flex-col h-full justify-start">
                             <form.Subscribe selector={(state) => state.values.isPaid}>
                                 {(isPaid) => isPaid && (
-                                    <form.Field 
+                                    <form.Field
                                         name="price"
                                         validators={{
                                             onChange: ({ value }) => {
@@ -466,13 +467,14 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                 </div>
 
                 {/* SECTION: MEDIA SHOWCASE */}
-                <div className="bg-white rounded-[2rem] sm:rounded-[2.5rem] p-6 sm:p-10 shadow-sm border border-neutral-100">
-                    <div className="mb-8 border-b border-neutral-100 pb-6">
-                        <h2 className="text-2xl font-black text-neutral-900 tracking-tight">Media Showcase</h2>
-                        <p className="text-neutral-500 font-medium mt-1">Manage high-quality images to represent your idea visually.</p>
+                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
+                        <h2 className="text-lg font-bold text-neutral-900">Media Showcase</h2>
+                        <p className="text-sm text-neutral-500 font-medium mt-1">Manage high-quality images to represent your idea visually.</p>
                     </div>
 
-                    <form.Field name="newImages">
+                    <div className="p-6 md:p-8 bg-white">
+                        <form.Field name="newImages">
                         {(field) => (
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
@@ -506,6 +508,18 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                             </div>
                         )}
                     </form.Field>
+                    </div>
+                </div>
+
+                {/* SECTION: RESOURCES & ATTACHMENTS */}
+                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
+                        <h2 className="text-xl font-bold text-neutral-900">Resources & Attachments</h2>
+                        <p className="text-sm text-neutral-500 font-medium mt-1">Resource files, presentations, and videos</p>
+                    </div>
+                    <div className="p-6 md:p-8 bg-white">
+                        <IdeaAttachments ideaId={idea.id} authorId={idea.authorId} currentUserId={idea.authorId} currentUserRole="ADMIN" />
+                    </div>
                 </div>
 
                 <div className="flex flex-col-reverse sm:flex-row justify-end gap-4 pt-4">

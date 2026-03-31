@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { IIdea } from "@/types/idea.types"
+import IdeaAttachments from "@/components/modules/Admin/IdeaManagement/IdeaAttachments"
 
 // This page renders a premium view of a single Idea entity
 const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -81,10 +82,10 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-8 items-start">
-                
+
                 {/* Main Content Column */}
                 <div className="xl:col-span-2 space-y-8">
-                    
+
                     {/* Hero Images Gallery */}
                     {idea.images && idea.images.length > 0 && (
                         <div className="bg-white rounded-[2.5rem] p-4 sm:p-6 shadow-sm border border-neutral-100">
@@ -92,10 +93,10 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                 {idea.images.map((img, idx) => (
                                     <div key={idx} className={`relative rounded-3xl overflow-hidden bg-neutral-100 border border-neutral-100 ${idx === 0 && idea.images.length % 2 !== 0 ? 'sm:col-span-2 aspect-video' : 'aspect-square sm:aspect-4/3'}`}>
-                                        <Image 
-                                            src={img} 
-                                            alt={`${idea.title} - Image ${idx + 1}`} 
-                                            fill 
+                                        <Image
+                                            src={img}
+                                            alt={`${idea.title} - Image ${idx + 1}`}
+                                            fill
                                             className="object-cover hover:scale-105 transition-transform duration-700"
                                             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                                         />
@@ -107,7 +108,7 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
 
                     {/* Detailed Content */}
                     <div className="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-sm border border-neutral-100 space-y-12">
-                        
+
                         {/* Description */}
                         <div>
                             <h2 className="flex items-center gap-3 text-lg font-black text-neutral-900 tracking-tight mb-4">
@@ -134,7 +135,7 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                                     </p>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-4">
                                 <h3 className="text-sm font-black uppercase tracking-widest text-emerald-500 flex items-center gap-2">
                                     <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
@@ -147,16 +148,20 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                                 </div>
                             </div>
                         </div>
+                    </div>
 
+                    {/* Resources & Attachments */}
+                    <div className="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-sm border border-neutral-100 mt-8">
+                        <IdeaAttachments ideaId={idea.id} authorId={idea.authorId} currentUserId={idea.authorId} currentUserRole="ADMIN" />
                     </div>
                 </div>
 
                 {/* Sidebar Column */}
                 <div className="xl:col-span-1 space-y-8">
-                    
+
                     {/* Author & Stats Card */}
                     <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-neutral-100 bg-linear-to-br from-white to-neutral-50/50 relative overflow-hidden">
-                        
+
                         <div className="absolute top-0 right-0 p-8 opacity-5 pointer-events-none">
                             <TrendingUp className="h-32 w-32" />
                         </div>
@@ -166,7 +171,7 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                         </h3>
 
                         <div className="space-y-8">
-                            
+
                             <div className="flex items-center gap-4">
                                 <div className="h-14 w-14 rounded-full bg-emerald-100 flex items-center justify-center border-2 border-emerald-200">
                                     <User className="h-6 w-6 text-emerald-600" />

@@ -14,7 +14,7 @@ export default function DashboardLoading() {
         >
           <Leaf className="h-8 w-8 text-white" />
         </motion.div>
-        
+
         {/* Pulsing rings */}
         <div className="absolute inset-0 animate-ping rounded-3xl bg-emerald-500/20 scale-125 pointer-events-none" />
         <div className="absolute inset-0 animate-pulse rounded-3xl bg-emerald-500/10 scale-150 pointer-events-none" />
@@ -22,17 +22,17 @@ export default function DashboardLoading() {
 
       <div className="space-y-2 text-center">
         <h2 className="text-xl font-black text-neutral-900 uppercase tracking-widest">
-           Syncing Vault
+          Syncing Vault
         </h2>
         <div className="flex items-center gap-1 justify-center px-4">
-           {[...Array(3)].map((_, i) => (
-              <motion.div
-                 key={i}
-                 animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
-                 transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
-                 className="h-1.5 w-1.5 rounded-full bg-emerald-600"
-              />
-           ))}
+          {[...Array(3)].map((_, i) => (
+            <motion.div
+              key={i}
+              animate={{ scale: [1, 1.5, 1], opacity: [0.3, 1, 0.3] }}
+              transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
+              className="h-1.5 w-1.5 rounded-full bg-emerald-600"
+            />
+          ))}
         </div>
       </div>
     </div>

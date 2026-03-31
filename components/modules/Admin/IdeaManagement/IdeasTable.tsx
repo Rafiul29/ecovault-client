@@ -93,8 +93,6 @@ const IdeasTable = ({ initialQueryString }: { initialQueryString: string }) => {
         queryFn: () => getIdeas(queryString)
     });
 
-    console.log("ideaDataResponse", ideaDataResponse)
-
     const router = useRouter();
 
     const { data: categoriesResponse, isLoading: isLoadingCategories } = useQuery({
