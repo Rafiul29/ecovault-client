@@ -1,6 +1,6 @@
 "use server"
 
-import { createCategory, deleteCategory, getCategoryById, updateCategory } from "@/services/category.service."
+import { createCategory, deleteCategory, getCategoryById, updateCategory } from "@/services/category.service"
 import { type ApiErrorResponse, type ApiResponse } from "@/types/api.types"
 import { type ICategory } from "@/types/category"
 

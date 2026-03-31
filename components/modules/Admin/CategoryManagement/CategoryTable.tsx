@@ -11,7 +11,7 @@ import {
 } from "@/hooks/useServerManagedDataTableFilters";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
 import { useRowActionModalState } from "@/hooks/useRowActionModalState";
-import { getCategories } from "@/services/category.service.";
+import { getCategories } from "@/services/category.service";
 import { PaginationMeta } from "@/types/api.types";
 import { ICategory } from "@/types/category";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";

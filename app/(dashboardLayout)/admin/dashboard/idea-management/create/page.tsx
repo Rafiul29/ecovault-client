@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { getCategories } from "@/services/category.service.";
+import { getCategories } from "@/services/category.service";
 import CreateIdeaForm from "@/components/modules/Admin/IdeaManagement/CreateIdeaForm";
 
 const CreateIdeaPage = async () => {

@@ -1,5 +1,5 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
-import { getCategories } from "@/services/category.service.";
+import { getCategories } from "@/services/category.service";
 import CategoryTable from "@/components/modules/Admin/CategoryManagement/CategoryTable";
 
 const CategoryManagementPage = async ({ searchParams }: { searchParams: { [key: string]: string | string[] | undefined } }) => {
