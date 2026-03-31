@@ -207,10 +207,7 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                                     <SelectValue placeholder="Select type" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="DOCUMENT">Document (PPT, DOCX, XLSX)</SelectItem>
-                                    <SelectItem value="PDF">PDF File</SelectItem>
-                                    <SelectItem value="VIDEO">Video Production (MP4, MOV)</SelectItem>
-
+                                    <SelectItem value="PDF"> PDF File</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

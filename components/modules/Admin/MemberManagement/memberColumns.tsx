@@ -25,7 +25,7 @@ export const memberColumns: ColumnDef<any>[] = [
                     </div>
                     <div className="flex flex-col min-w-0">
                         <span className="font-black text-neutral-900 text-[14px] leading-tight truncate">{member.name || "Anonymous Member"}</span>
-                        <div className="flex items-center gap-1.5 text-[10px] text-neutral-400 font-black uppercase tracking-widest mt-1">
+                        <div className="flex items-center gap-1.5 text-[10px] text-neutral-400 font-black tracking-widest mt-1">
                             <Mail className="h-2.5 w-2.5 text-blue-500" />
                             {member.email}
                         </div>

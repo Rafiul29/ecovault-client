@@ -176,7 +176,7 @@ const ModeratorTable = ({ initialQueryString }: { initialQueryString: string }) 
                                             </DropdownMenuItem>
                                             
                                             <DropdownMenuSeparator className="bg-neutral-50 my-1" />
-                                            <DropdownMenuItem className="p-3 rounded-xl focus:bg-rose-50 focus:text-rose-700 cursor-pointer text-sm text-rose-600" onClick={() => tableActions.onDelete(moderator)}>
+                                            <DropdownMenuItem className="p-3 rounded-xl focus:bg-rose-50 focus:text-rose-700 cursor-pointer text-sm text-rose-600" onClick={() => tableActions.onDelete?.(moderator)}>
                                                 <Trash2 className="h-4 w-4 mr-3" /> Terminate Account
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>

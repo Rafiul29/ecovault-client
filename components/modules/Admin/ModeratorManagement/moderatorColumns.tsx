@@ -25,7 +25,7 @@ export const moderatorColumns: ColumnDef<any>[] = [
                     </div>
                     <div className="flex flex-col min-w-0">
                         <span className="font-black text-neutral-900 text-[15px] leading-tight truncate tracking-tight">{moderator.name}</span>
-                        <div className="flex items-center gap-1.5 text-[10px] text-neutral-400 font-bold uppercase tracking-widest mt-1">
+                        <div className="flex items-center gap-1.5 text-[10px] text-neutral-400 font-bold  tracking-widest mt-1">
                             <Mail className="h-2.5 w-2.5 text-indigo-500" />
                             <span className="truncate">{moderator.email || moderator.user?.email || "N/A"}</span>
                         </div>
@@ -82,9 +82,9 @@ export const moderatorColumns: ColumnDef<any>[] = [
                         <span className="text-[9px] font-black text-indigo-600 uppercase tracking-wider">{row.original.activityScore || 0}%</span>
                     </div>
                     <div className="h-1.5 bg-neutral-100 rounded-full overflow-hidden border border-neutral-50 shadow-inner">
-                        <div 
-                            className="h-full bg-gradient-to-r from-indigo-400 to-indigo-600 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.4)] transition-all duration-700" 
-                            style={{ width: `${Math.min(row.original.activityScore || 0, 100)}%` }} 
+                        <div
+                            className="h-full bg-linear-to-r from-indigo-400 to-indigo-600 rounded-full shadow-[0_0_8px_rgba(99,102,241,0.4)] transition-all duration-700"
+                            style={{ width: `${Math.min(row.original.activityScore || 0, 100)}%` }}
                         />
                     </div>
                 </div>

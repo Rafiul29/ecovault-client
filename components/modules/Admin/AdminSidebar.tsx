@@ -48,7 +48,7 @@ const sidebarLinks = [
     },
     {
         title: "Payment Management",
-        href: "/admin/dashboard/payament-management",
+        href: "/admin/dashboard/payment-management",
         icon: CreditCard
     },
     {
