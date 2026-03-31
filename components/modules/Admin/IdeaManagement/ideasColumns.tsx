@@ -3,7 +3,8 @@ import StatusBadgeCell from "@/components/shared/cell/StatusBadgeCell";
 import { Badge } from "@/components/ui/badge";
 import { IIdea } from "@/types/idea.types";
 import { ColumnDef } from "@tanstack/react-table";
-import { Eye, TrendingUp } from "lucide-react";
+import { Eye, TrendingUp, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 export const ideaColumns: ColumnDef<IIdea>[] = [
     {
@@ -99,6 +100,14 @@ export const ideaColumns: ColumnDef<IIdea>[] = [
                         <TrendingUp className="h-3 w-3" />
                         {row.original._count?.votes || 0}
                     </div>
+                    <Link
+                        href={`/admin/dashboard/comment-management?ideaId=${row.original.id}`}
+                        className="flex items-center gap-1 hover:text-primary transition-colors"
+                        title="View Comments"
+                    >
+                        <MessageSquare className="h-3 w-3" />
+                        {row.original._count?.comments || 0}
+                    </Link>
                 </div>
             );
         },

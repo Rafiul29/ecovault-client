@@ -2,13 +2,13 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { 
-    LayoutDashboard, 
-    Lightbulb, 
-    Tags, 
-    Layers, 
-    Users, 
-    Settings, 
+import {
+    LayoutDashboard,
+    Lightbulb,
+    Tags,
+    Layers,
+    Users,
+    Settings,
     LogOut,
     ShieldCheck,
     CreditCard,
@@ -56,6 +56,16 @@ const sidebarLinks = [
         href: "/admin/dashboard/comment-management",
         icon: MessageSquare
     },
+    {
+        title: "Plan Management",
+        href: "/admin/dashboard/plan-management",
+        icon: Layers
+    },
+    {
+        title: "Subscription Registry",
+        href: "/admin/dashboard/subscription-management",
+        icon: ShieldCheck
+    },
 ]
 
 const AdminSidebar = () => {
@@ -80,11 +90,10 @@ const AdminSidebar = () => {
                         <Link
                             key={link.href}
                             href={link.href}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${
-                                isActive 
-                                ? "bg-emerald-50 text-emerald-700 shadow-sm shadow-emerald-100/50" 
+                            className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold transition-all ${isActive
+                                ? "bg-emerald-50 text-emerald-700 shadow-sm shadow-emerald-100/50"
                                 : "text-neutral-500 hover:bg-neutral-50 hover:text-neutral-900"
-                            }`}
+                                }`}
                         >
                             <link.icon className={`h-5 w-5 ${isActive ? "text-emerald-600" : "text-neutral-400"}`} />
                             {link.title}
