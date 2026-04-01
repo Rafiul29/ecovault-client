@@ -84,11 +84,11 @@ const DashboardNavbarContent = ({ dashboardHome, navItems, userInfo }: Dashboard
                     {/* User Dropdown */}
                     <div className="flex items-center">
                         <UserDropdown user={userInfo} />
-                        <span className="hidden lg:flex lg:items-center ml-3">
+                        {/* <span className="hidden lg:flex lg:items-center ml-3">
                             <span className="text-sm font-semibold leading-6 text-gray-900" aria-hidden="true">
                                 {userInfo.name}
                             </span>
-                        </span>
+                        </span> */}
                     </div>
                 </div>
             </div>

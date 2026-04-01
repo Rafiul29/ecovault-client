@@ -1,7 +1,7 @@
 "use client"
 
 import StatsCard from "@/components/shared/StatsCard"
-import { getDashboardData } from "@/services/dashboard.service"
+import { getAdminDashboardData } from "@/services/dashboard.service"
 import { ApiResponse } from "@/types/api.types"
 import { IAdminDashboardData } from "@/types/dashboard.types"
 import { useQuery } from "@tanstack/react-query"
@@ -12,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 const AdminDashboardContent = () => {
     const { data: adminDashboardData, isLoading } = useQuery({
         queryKey: ["admin-dashboard-data"],
-        queryFn: getDashboardData as any,
+        queryFn: getAdminDashboardData as any,
         refetchOnWindowFocus: "always"
     })
 

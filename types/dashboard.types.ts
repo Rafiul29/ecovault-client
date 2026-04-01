@@ -30,3 +30,23 @@ export interface IAdminDashboardData {
     barChartData: BarChartData[];
     pieChartData: PieChartData[];
 }
+
+export interface IModeratorDashboardData {
+    totalReviewsHandled: number;
+    pendingReviews: number;
+    totalSoldIdeas: number;
+    totalSoldPrices: number;
+    ideaStatusDistribution: {
+        status: string;
+        count: number;
+    }[];
+}
+
+export interface IMemberDashboardData {
+    totalMyIdeas: number;
+    totalPurchasedIdeas: number;
+    totalSpent: number;
+    totalFollowers: number;
+    totalFollowing: number;
+    watchlistCount: number;
+}

@@ -96,7 +96,7 @@ export function UserDropdown({ user }: UserNavProps) {
                     onClick={handleLogout}
                 >
                     <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
+                    <span className="text-black">Log out</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
