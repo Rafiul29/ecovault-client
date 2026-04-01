@@ -26,16 +26,18 @@ const IdeaPurchaseManagementPage = async (props: {
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex flex-col gap-6">
-                <div>
-                    <h1 className="text-3xl font-black text-neutral-900 tracking-tight font-heading leading-none">
-                        Idea Purchases
-                    </h1>
-                    <p className="text-neutral-500 font-medium mt-2 italic px-1">
-                        Track every marketplace transaction — who bought what and when.
-                    </p>
+            <div className="space-y-12">
+                <div className="flex flex-col justify-between gap-6 border-b pb-8 md:flex-row md:items-center">
+                    <div>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 font-sans">Idea Purchases</h1>
+                        <p className="mt-2 text-lg text-neutral-500 font-medium tracking-tight">
+                            Track every marketplace transaction — who bought what and when.
+                        </p>
+                    </div>
                 </div>
-                <SoldIdeasTable initialQueryString={queryString} />
+                <div className="overflow-hidden rounded-[2.5rem] bg-white p-6 shadow-sm border border-neutral-100/60 relative">
+                    <SoldIdeasTable initialQueryString={queryString} />
+                </div>
             </div>
         </HydrationBoundary>
     );

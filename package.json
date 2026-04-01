@@ -15,6 +15,7 @@
     "@tanstack/react-table": "^8.21.3",
     "@types/jsonwebtoken": "^9.0.10",
     "axios": "^1.14.0",
+    "button": "link:@base-ui/react/button",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",

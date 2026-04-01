@@ -15,14 +15,18 @@ const SubscriptionManagementPage = async (props: { searchParams: Promise<any> })
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex flex-col gap-4">
-                <div>
-                    <h1 className="text-3xl font-black text-neutral-900 tracking-tight font-heading leading-none">Access Ledger</h1>
-                    <p className="text-neutral-500 font-medium mt-2 italic px-1">
-                        Monitor active memberships and revenue streams for the platform.
-                    </p>
+            <div className="space-y-12">
+                <div className="flex flex-col justify-between gap-6 border-b pb-8 md:flex-row md:items-center">
+                    <div>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 font-sans">Access Ledger</h1>
+                        <p className="mt-2 text-lg text-neutral-500 font-medium tracking-tight">
+                            Monitor active memberships and revenue streams for the platform.
+                        </p>
+                    </div>
                 </div>
-                <SubscriptionTable initialQueryString={queryString} />
+                <div className="overflow-hidden rounded-[2.5rem] bg-white p-6 shadow-sm border border-neutral-100/60 relative">
+                    <SubscriptionTable initialQueryString={queryString} />
+                </div>
             </div>
         </HydrationBoundary>
     );

@@ -19,19 +19,18 @@ const PaymentManagementPage = async ({ searchParams }: { searchParams: { [key: s
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex flex-col gap-6">
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                    <div className="flex-1">
-                        <div className="flex items-center gap-2.5 mb-1.5">
-                            <div className="h-2 w-10 bg-emerald-500 rounded-full" />
-                            <h1 className="text-2xl md:text-3xl font-black text-neutral-900 tracking-tight">Revenue Operations</h1>
-                        </div>
-                        <p className="text-sm font-medium text-neutral-500 max-w-2xl">
+            <div className="space-y-12">
+                <div className="flex flex-col justify-between gap-6 border-b pb-8 md:flex-row md:items-center">
+                    <div>
+                        <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 font-sans">Revenue Operations</h1>
+                        <p className="mt-2 text-lg text-neutral-500 font-medium tracking-tight">
                             Monitor global transactions, audit payment gateway performance, and manage marketplace settlement statuses for the EcoVault ecosystem.
                         </p>
                     </div>
                 </div>
-                <PaymentTable initialQueryString={queryString} />
+                <div className="overflow-hidden rounded-[2.5rem] bg-white p-6 shadow-sm border border-neutral-100/60 relative">
+                    <PaymentTable initialQueryString={queryString} />
+                </div>
             </div>
         </HydrationBoundary>
     );

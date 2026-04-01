@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import AdminSidebar from "@/components/modules/Admin/AdminSidebar";
 
 export default function AdminDashboardLayout({

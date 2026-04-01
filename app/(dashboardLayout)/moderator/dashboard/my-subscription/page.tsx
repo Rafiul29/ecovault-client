@@ -21,6 +21,22 @@ const ModeratorMySubscriptionPage = async () => {
     // Helper for tier-based colors
     const getTierConfig = (tier: string) => {
         switch (tier?.toUpperCase()) {
+            case "FREE":
+                return {
+                    wrapperClass: "border-neutral-200 ring-4 ring-neutral-50 shadow-neutral-200/50",
+                    bgClass: "bg-linear-to-bl from-neutral-50 to-white",
+                    iconGradient: "bg-linear-to-br from-neutral-400 to-neutral-600 shadow-neutral-500/30",
+                    badgeClass: "bg-neutral-100 text-neutral-700 border-neutral-200",
+                    accentText: "text-neutral-600"
+                };
+            case "BASIC":
+                return {
+                    wrapperClass: "border-blue-200 ring-4 ring-blue-50 shadow-blue-200/50",
+                    bgClass: "bg-linear-to-bl from-blue-50 to-white",
+                    iconGradient: "bg-linear-to-br from-blue-400 to-blue-600 shadow-blue-500/30",
+                    badgeClass: "bg-blue-100 text-blue-700 border-blue-200",
+                    accentText: "text-blue-600"
+                };
             case "PRO":
                 return {
                     wrapperClass: "border-amber-200 ring-4 ring-amber-50 shadow-amber-200/50",
@@ -29,7 +45,7 @@ const ModeratorMySubscriptionPage = async () => {
                     badgeClass: "bg-amber-100 text-amber-700 border-amber-200",
                     accentText: "text-amber-600"
                 };
-            case "PREMIUM":
+            case "ENTERPRISE":
                 return {
                     wrapperClass: "border-purple-200 ring-4 ring-purple-50 shadow-purple-200/50",
                     bgClass: "bg-linear-to-bl from-purple-50 to-white",
@@ -37,7 +53,7 @@ const ModeratorMySubscriptionPage = async () => {
                     badgeClass: "bg-purple-100 text-purple-700 border-purple-200",
                     accentText: "text-purple-600"
                 };
-            default: // BASIC or others
+            default:
                 return {
                     wrapperClass: "border-emerald-200 ring-4 ring-emerald-50 shadow-emerald-200/50",
                     bgClass: "bg-linear-to-bl from-emerald-50 to-white",

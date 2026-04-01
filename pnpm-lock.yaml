@@ -26,6 +26,9 @@ importers:
       axios:
         specifier: ^1.14.0
         version: 1.14.0
+      button:
+        specifier: link:@base-ui/react/button
+        version: link:@base-ui/react/button
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1

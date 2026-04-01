@@ -19,16 +19,18 @@ const MemberManagementPage = async ({ searchParams }: { searchParams: { [key: st
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
+            <div className="space-y-12">
+                <div className="flex flex-col justify-between gap-6 border-b pb-8 md:flex-row md:items-center">
                     <div>
-                        <h1 className="text-2xl font-black text-neutral-900 tracking-tight">Ecosystem Members</h1>
-                        <p className="text-sm font-medium text-neutral-500">
-                             Manage user accounts, monitor engagement, and maintain community standards across the platform.
+                        <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 font-sans">Ecosystem Members</h1>
+                        <p className="mt-2 text-lg text-neutral-500 font-medium tracking-tight">
+                            Manage user accounts, monitor engagement, and maintain community standards across the platform.
                         </p>
                     </div>
                 </div>
-                <MemberTable initialQueryString={queryString} />
+                <div className="overflow-hidden rounded-[2.5rem] bg-white p-6 shadow-sm border border-neutral-100/60 relative">
+                    <MemberTable initialQueryString={queryString} />
+                </div>
             </div>
         </HydrationBoundary>
     );

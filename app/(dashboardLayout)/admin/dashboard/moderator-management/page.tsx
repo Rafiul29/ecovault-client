@@ -19,18 +19,18 @@ const ModeratorManagementPage = async ({ searchParams }: { searchParams: { [key:
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="flex flex-col gap-4">
-                <div className="flex items-center justify-between">
+            <div className="space-y-12">
+                <div className="flex flex-col justify-between gap-6 border-b pb-8 md:flex-row md:items-center">
                     <div>
-                        <h1 className="text-2xl font-black text-neutral-900 tracking-tight flex items-center gap-2">
-                             System Moderators
-                        </h1>
-                        <p className="text-sm font-medium text-neutral-500">
+                        <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 font-sans">System Moderators</h1>
+                        <p className="mt-2 text-lg text-neutral-500 font-medium tracking-tight">
                             Monitor moderator performance, toggle account statuses, and oversee platform verification processes.
                         </p>
                     </div>
                 </div>
-                <ModeratorTable initialQueryString={queryString} />
+                <div className="overflow-hidden rounded-[2.5rem] bg-white p-6 shadow-sm border border-neutral-100/60 relative">
+                    <ModeratorTable initialQueryString={queryString} />
+                </div>
             </div>
         </HydrationBoundary>
     );
