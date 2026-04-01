@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { ArrowRight, Search } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
@@ -114,11 +112,11 @@ export function Hero({ featuredIdeas }: HeroProps) {
               <div className="mb-2 flex flex-wrap gap-1">
                 {idea.categories.slice(0, 1).map((cat) => (
                   <Badge
-                    key={cat.id}
+                    key={cat?.category?.id}
                     variant="secondary"
                     className="text-[10px] px-1.5 py-0 bg-primary/5 text-primary"
                   >
-                    {cat.name}
+                    {cat?.category?.name}
                   </Badge>
                 ))}
               </div>

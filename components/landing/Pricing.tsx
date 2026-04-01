@@ -6,29 +6,28 @@ import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import type { SubscriptionPlan } from "@/lib/types";
+import type { ISubscriptionPlan } from "@/types/subscription";
 
 interface PricingProps {
-  plans: SubscriptionPlan[];
+  plans: ISubscriptionPlan[];
 }
 
 export function Pricing({ plans }: PricingProps) {
   return (
-    <section className="py-32 px-6">
+    <section id="pricing" className="py-32 px-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-20 text-center">
           <Badge
             variant="outline"
-            className="mb-4 bg-primary/5 uppercase tracking-widest text-[10px]"
+            className="mb-4 bg-emerald-500/5 text-emerald-600 border-emerald-500/20 uppercase tracking-widest text-[10px] px-4"
           >
-            Pricing
+            Pricing Architecture
           </Badge>
-          <h2 className="section-heading text-4xl sm:text-5xl lg:text-6xl tracking-tight">
-            Simple, Transparent Plans <br className="hidden sm:block" /> for
-            Every Stage
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl tracking-tight font-black text-neutral-900 font-heading">
+            Simple, Transparent Plans <br className="hidden sm:block" /> for Every Stage
           </h2>
-          <p className="mx-auto mt-6 max-w-lg text-base text-muted-foreground leading-relaxed">
-            Start free, scale when your ideas gain traction. No hidden fees.
+          <p className="mx-auto mt-6 max-w-lg text-base text-neutral-500 font-medium leading-relaxed">
+            Start for free, scale when your ideas gain traction. No hidden fees.
           </p>
         </div>
 
@@ -37,54 +36,48 @@ export function Pricing({ plans }: PricingProps) {
             <div
               key={plan.id}
               className={cn(
-                "group relative flex flex-col rounded-3xl border p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/40 hover:-translate-y-1.5",
+                "group relative flex flex-col rounded-[2rem] border p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/5 hover:-translate-y-2",
                 plan.isPopular
-                  ? "border-primary bg-primary/5 shadow-lg shadow-primary/10"
-                  : "bg-card",
+                  ? "border-emerald-500/30 bg-emerald-500/[0.02] shadow-xl shadow-emerald-500/5 ring-1 ring-emerald-500/20"
+                  : "bg-white border-neutral-100",
               )}
             >
               {plan.isPopular && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <Badge className="px-5 py-1 text-[10px] font-bold uppercase tracking-widest border-2 border-background shadow-lg">
+                  <Badge className="px-5 py-1 text-[10px] font-black uppercase tracking-widest bg-emerald-600 text-white border-none shadow-lg">
                     Most Popular
                   </Badge>
                 </div>
               )}
 
               <div className="mb-8">
-                <p className="font-display text-[11px] font-bold uppercase tracking-[0.2em] text-muted-foreground/80 group-hover:text-primary transition-colors">
-                  {plan.name}
+                <p className="font-display text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 group-hover:text-emerald-600 transition-colors">
+                  {plan.name} {plan.isActive ? "" : "(Inactive)"}
                 </p>
                 <div className="mt-4 flex items-baseline gap-1.5">
-                  {plan.price === 0 ? (
-                    <span className="font-display text-5xl font-bold tracking-tighter">
-                      Free
-                    </span>
-                  ) : (
-                    <>
-                      <span className="font-display text-5xl font-bold tracking-tighter">
-                        ${plan.price}
-                      </span>
-                      <span className="text-sm font-semibold text-muted-foreground">
-                        /mo
-                      </span>
-                    </>
-                  )}
+                  <span className="font-display text-5xl font-black tracking-tighter text-neutral-900">
+                    ${plan.price}
+                  </span>
+                  <span className="text-sm font-bold text-neutral-400">
+                    /{plan.durationDays}d
+                  </span>
                 </div>
                 {plan.description && (
-                  <p className="mt-4 text-sm text-muted-foreground leading-relaxed">
+                  <p className="mt-4 text-sm text-neutral-500 font-medium leading-relaxed">
                     {plan.description}
                   </p>
                 )}
               </div>
 
-              <Separator className="mb-8 border-border/60" />
+              <Separator className="mb-8 bg-neutral-100" />
 
               <ul className="mb-10 flex-1 space-y-4">
-                {plan.features.map((feat) => (
-                  <li key={feat} className="flex items-start gap-3.5 text-sm">
-                    <CheckCircle className="mt-0.5 size-4.5 shrink-0 text-primary transition-transform group-hover:scale-110" />
-                    <span className="text-muted-foreground leading-snug">
+                {plan.features.map((feat, idx) => (
+                  <li key={idx} className="flex items-start gap-3.5 text-sm">
+                    <div className="mt-0.5 h-5 w-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <CheckCircle className="size-3 text-emerald-600" strokeWidth={3} />
+                    </div>
+                    <span className="text-neutral-600 font-medium leading-snug">
                       {feat}
                     </span>
                   </li>
@@ -98,12 +91,13 @@ export function Pricing({ plans }: PricingProps) {
                     variant: plan.isPopular ? "default" : "outline",
                     size: "lg",
                   }),
-                  "w-full justify-center rounded-2xl py-6 font-bold shadow-md shadow-primary/5 hover:shadow-lg hover:shadow-primary/10 transition-all hover:scale-[1.02] active:scale-[0.98]",
+                  "w-full justify-center rounded-xl py-6 font-black shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]",
+                  plan.isPopular
+                    ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20"
+                    : "border-neutral-200 text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300"
                 )}
               >
-                {plan.price === 0
-                  ? "Get Started for Free"
-                  : `Subscribe to ${plan.name}`}
+                {plan.buttonText || (plan.price === 0 ? "Get Started for Free" : `Join ${plan.name}`)}
               </Link>
             </div>
           ))}

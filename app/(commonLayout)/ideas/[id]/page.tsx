@@ -1,16 +1,6 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import {
-    ThumbsUp,
-    ThumbsDown,
     Eye,
-    Bookmark,
-    BookmarkCheck,
-    Share2,
-    Edit,
-    MessageSquare,
     ArrowLeft,
     BadgeDollarSign,
     CheckCircle,
@@ -20,64 +10,39 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
-import { mockIdeas, mockCurrentUser } from "@/lib/mock-data";
+import { getIdeaById, getIdeas } from "@/services/idea.service";
+import { getUserInfo } from "@/services/auth.service";
 import {
     formatDate,
     formatNumber,
-    formatRelativeTime,
     ideaStatusLabel,
     ideaStatusVariant,
 } from "@/lib/utils";
+import IdeaInteraction from "@/components/modules/IdeaDetail/IdeaInteraction";
+import IdeaComments from "@/components/modules/IdeaDetail/IdeaComments";
+import IdeaAttachments from "@/components/modules/IdeaDetail/IdeaAttachments";
+import { notFound } from "next/navigation";
+import { IdeaStatus } from "@/types/types";
 
-const idea = mockIdeas[0];
-const relatedIdeas = mockIdeas.slice(1, 4);
+export default async function IdeaDetailPage({ params }: { params: { id: string } }) {
+    const { id } = await params;
+    const ideaResponse = await getIdeaById(id);
+    const currentUser = await getUserInfo();
 
-const mockComments = [
-    {
-        id: "c1",
-        content:
-            "This is exactly the kind of innovation we need! The modular approach makes it very scalable.",
-        author: {
-            id: "user_2",
-            name: "Priya Nair",
-            image: "https://i.pravatar.cc/80?u=priya-nair",
-        },
-        createdAt: "2026-03-28T10:00:00Z",
-    },
-    {
-        id: "c2",
-        content:
-            "Have you considered the battery storage costs? That might be a challenge for low-income communities.",
-        author: {
-            id: "user_3",
-            name: "Marco Chen",
-            image: "https://i.pravatar.cc/80?u=marco-chen",
-        },
-        createdAt: "2026-03-27T14:30:00Z",
-    },
-];
+    if (!ideaResponse.success || !ideaResponse.data) {
+        return notFound();
+    }
 
-export default function IdeaDetailPage() {
-    const [upvoted, setUpvoted] = useState(false);
-    const [downvoted, setDownvoted] = useState(false);
-    const [watchlisted, setWatchlisted] = useState(false);
-    const [upvoteCount, setUpvoteCount] = useState(idea.upvoteCount);
-    const [comment, setComment] = useState("");
+    const idea = ideaResponse.data;
+    const isOwner = currentUser?.id === idea.authorId;
 
-    const handleUpvote = () => {
-        if (upvoted) {
-            setUpvoted(false);
-            setUpvoteCount((c) => c - 1);
-        } else {
-            setUpvoted(true);
-            if (downvoted) setDownvoted(false);
-            setUpvoteCount((c) => c + 1);
-        }
-    };
+    // Fetch related ideas
+    const relatedIdeasResponse = await getIdeas(`limit=3&exclude=${idea.id}&status=APPROVED`);
+    const relatedIdeas = relatedIdeasResponse.data || [];
 
-    const isOwner = idea.author.id === mockCurrentUser.id;
+    // Determine current user's vote
+    const userVoteObj = idea.votes?.find(v => v.userId === currentUser?.id);
+    const initialUserVote = userVoteObj ? userVoteObj.value : 0;
 
     return (
         <div className="flex flex-1 flex-col">
@@ -88,6 +53,7 @@ export default function IdeaDetailPage() {
                         variant="ghost"
                         size="sm"
                         className="mb-5 -ml-2 gap-1.5 text-muted-foreground"
+                        asChild
                     >
                         <Link href="/ideas">
                             <ArrowLeft className="size-4" /> Back to Ideas
@@ -108,16 +74,16 @@ export default function IdeaDetailPage() {
 
                             <div className="rounded-xl border border-border bg-card p-5">
                                 <div className="mb-3 flex flex-wrap items-center gap-2">
-                                    {idea.categories.map((cat) => (
-                                        <Badge key={cat.id} variant="secondary" className="text-xs">
-                                            {cat.name}
+                                    {idea.categories?.map((cat) => (
+                                        <Badge key={cat.categoryId} variant="secondary" className="text-xs">
+                                            {cat.category?.name || "Category"}
                                         </Badge>
                                     ))}
                                     <Badge
-                                        variant={ideaStatusVariant(idea.status)}
+                                        variant={ideaStatusVariant(idea.status as IdeaStatus)}
                                         className="text-xs"
                                     >
-                                        {ideaStatusLabel(idea.status)}
+                                        {ideaStatusLabel(idea.status as IdeaStatus)}
                                     </Badge>
                                     {idea.isFeatured && (
                                         <div className="flex items-center gap-1 rounded-full bg-accent/10 px-2 py-0.5 text-[11px] font-semibold text-accent border border-accent/20">
@@ -136,73 +102,19 @@ export default function IdeaDetailPage() {
                                         views
                                     </span>
                                     <span>{formatDate(idea.createdAt)}</span>
-                                    {idea.publishedAt && (
-                                        <span>
-                                            Published {formatRelativeTime(idea.publishedAt)}
-                                        </span>
-                                    )}
                                 </div>
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-3">
-                                <button
-                                    onClick={handleUpvote}
-                                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium border ${upvoted
-                                        ? "bg-primary text-primary-foreground border-primary"
-                                        : "border-border text-foreground hover:bg-muted"
-                                        }`}
-                                >
-                                    <ThumbsUp className="size-4" />
-                                    {formatNumber(upvoteCount)} Upvotes
-                                </button>
-
-                                <button
-                                    onClick={() => {
-                                        if (downvoted) setDownvoted(false);
-                                        else {
-                                            setDownvoted(true);
-                                            if (upvoted) {
-                                                setUpvoted(false);
-                                                setUpvoteCount((c) => c - 1);
-                                            }
-                                        }
-                                    }}
-                                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium border ${downvoted
-                                        ? "bg-destructive text-destructive-foreground border-destructive"
-                                        : "border-border text-foreground hover:bg-muted"
-                                        }`}
-                                >
-                                    <ThumbsDown className="size-4" />
-                                    {formatNumber(idea.downvoteCount)}
-                                </button>
-
-                                <button
-                                    onClick={() => setWatchlisted((w) => !w)}
-                                    className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-sm font-medium border ${watchlisted
-                                        ? "bg-primary/10 text-primary border-primary/30"
-                                        : "border-border text-foreground hover:bg-muted"
-                                        }`}
-                                >
-                                    {watchlisted ? (
-                                        <BookmarkCheck className="size-4" />
-                                    ) : (
-                                        <Bookmark className="size-4" />
-                                    )}
-                                    {watchlisted ? "Saved" : "Save"}
-                                </button>
-
-                                <button className="flex size-8 items-center justify-center rounded-lg border border-border text-muted-foreground hover:bg-muted ml-auto">
-                                    <Share2 className="size-4" />
-                                </button>
-
-                                {isOwner && (
-                                    <Button variant="outline" size="sm">
-                                        <Link href={`/ideas/${idea.slug}/edit`}>
-                                            <Edit className="size-4" /> Edit
-                                        </Link>
-                                    </Button>
-                                )}
-                            </div>
+                            {/* Use split interaction component */}
+                            <IdeaInteraction 
+                                ideaId={idea.id}
+                                slug={idea.slug}
+                                initialUpvotes={idea.upvoteCount}
+                                initialDownvotes={idea.downvoteCount}
+                                initialUserVote={initialUserVote}
+                                isOwner={isOwner}
+                                watchlisted={idea._count?.watchlists ? idea._count.watchlists > 0 : false}
+                            />
 
                             <div className="rounded-xl border border-border bg-card overflow-hidden">
                                 <div className="border-b border-border px-5 py-3">
@@ -231,80 +143,31 @@ export default function IdeaDetailPage() {
                                 </div>
                             </div>
 
+                            {/* Attachments: isPaid false show, isPaid true hide */}
+                            {!idea.isPaid && idea.attachments && idea.attachments.length > 0 && (
+                                <IdeaAttachments attachments={idea.attachments} />
+                            )}
+
                             {/* Tags */}
-                            {idea.tags.length > 0 && (
+                            {idea.tags && idea.tags.length > 0 && (
                                 <div className="flex flex-wrap gap-2">
                                     {idea.tags.map((tag) => (
                                         <span
-                                            key={tag.id}
+                                            key={tag.tagId}
                                             className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground font-medium"
                                         >
-                                            #{tag.name}
+                                            #{tag.tag?.name}
                                         </span>
                                     ))}
                                 </div>
                             )}
 
-                            {/* Comments */}
-                            <div className="rounded-xl border border-border bg-card overflow-hidden">
-                                <div className="border-b border-border px-5 py-3 flex items-center gap-2">
-                                    <MessageSquare className="size-4 text-primary" />
-                                    <h2 className="text-sm font-semibold">
-                                        Comments ({mockComments.length})
-                                    </h2>
-                                </div>
-                                <div className="px-5 py-4 space-y-4">
-                                    {mockComments.map((c) => (
-                                        <div key={c.id} className="flex gap-3">
-                                            <Avatar className="size-8 shrink-0">
-                                                <AvatarImage src={c.author.image} alt={c.author.name} />
-                                                <AvatarFallback className="text-xs">
-                                                    {c.author.name.slice(0, 2)}
-                                                </AvatarFallback>
-                                            </Avatar>
-                                            <div className="flex-1 rounded-lg border border-border bg-muted/30 p-3">
-                                                <div className="mb-1.5 flex items-center gap-2">
-                                                    <span className="text-xs font-semibold">
-                                                        {c.author.name}
-                                                    </span>
-                                                    <span className="text-[11px] text-muted-foreground">
-                                                        {formatRelativeTime(c.createdAt)}
-                                                    </span>
-                                                </div>
-                                                <p className="text-sm text-foreground leading-relaxed">
-                                                    {c.content}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    ))}
-
-                                    {/* Add comment */}
-                                    <Separator />
-                                    <div className="flex gap-3">
-                                        <Avatar className="size-8 shrink-0">
-                                            <AvatarImage
-                                                src={mockCurrentUser.image}
-                                                alt={mockCurrentUser.name}
-                                            />
-                                            <AvatarFallback className="text-xs">
-                                                {mockCurrentUser.name.slice(0, 2)}
-                                            </AvatarFallback>
-                                        </Avatar>
-                                        <div className="flex-1 space-y-2">
-                                            <Textarea
-                                                placeholder="Share your thoughts..."
-                                                className="resize-none text-sm"
-                                                rows={3}
-                                                value={comment}
-                                                onChange={(e) => setComment(e.target.value)}
-                                            />
-                                            <Button size="sm" disabled={!comment.trim()}>
-                                                Post Comment
-                                            </Button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            {/* Use split comments component */}
+                            <IdeaComments 
+                                ideaId={idea.id}
+                                comments={idea.comments || []}
+                                currentUser={currentUser}
+                            />
                         </div>
 
                         <div className="space-y-4">
@@ -317,21 +180,21 @@ export default function IdeaDetailPage() {
                                 </div>
                                 <div className="p-4">
                                     <Link
-                                        href={`/profile/${idea.author.id}`}
+                                        href={`/profile/${idea.author?.id}`}
                                         className="flex items-center gap-3"
                                     >
                                         <Avatar className="size-11">
                                             <AvatarImage
-                                                src={idea.author.image}
-                                                alt={idea.author.name}
+                                                src={idea.author?.image || undefined}
+                                                alt={idea.author?.name}
                                             />
                                             <AvatarFallback>
-                                                {idea.author.name.slice(0, 2)}
+                                                {idea.author?.name?.slice(0, 2) || "U"}
                                             </AvatarFallback>
                                         </Avatar>
                                         <div>
                                             <p className="text-sm font-semibold">
-                                                {idea.author.name}
+                                                {idea.author?.name}
                                             </p>
                                             <p className="text-xs text-primary mt-0.5">
                                                 View profile →
@@ -380,7 +243,7 @@ export default function IdeaDetailPage() {
                                 <div className="divide-y divide-border">
                                     {[
                                         { label: "Views", value: idea.viewCount.toLocaleString() },
-                                        { label: "Upvotes", value: upvoteCount },
+                                        { label: "Upvotes", value: idea.upvoteCount },
                                         { label: "Downvotes", value: idea.downvoteCount },
                                         {
                                             label: "Trending Score",
@@ -401,29 +264,31 @@ export default function IdeaDetailPage() {
                             </div>
 
                             {/* Related Ideas */}
-                            <div className="rounded-xl border border-border bg-card overflow-hidden">
-                                <div className="border-b border-border px-4 py-3">
-                                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                                        Related Ideas
-                                    </p>
+                            {relatedIdeas.length > 0 && (
+                                <div className="rounded-xl border border-border bg-card overflow-hidden">
+                                    <div className="border-b border-border px-4 py-3">
+                                        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                            Related Ideas
+                                        </p>
+                                    </div>
+                                    <div className="divide-y divide-border">
+                                        {relatedIdeas.map((rel: any) => (
+                                            <Link
+                                                key={rel.id}
+                                                href={`/ideas/${rel.id}`}
+                                                className="block px-4 py-3 hover:bg-muted/50"
+                                            >
+                                                <p className="line-clamp-2 text-sm font-medium leading-tight text-neutral-800">
+                                                    {rel.title}
+                                                </p>
+                                                <p className="text-[11px] text-muted-foreground mt-1">
+                                                    {rel.upvoteCount} upvotes
+                                                </p>
+                                            </Link>
+                                        ))}
+                                    </div>
                                 </div>
-                                <div className="divide-y divide-border">
-                                    {relatedIdeas.map((rel) => (
-                                        <Link
-                                            key={rel.id}
-                                            href={`/ideas/${rel.slug}`}
-                                            className="block px-4 py-3 hover:bg-muted/50"
-                                        >
-                                            <p className="line-clamp-2 text-sm font-medium leading-tight">
-                                                {rel.title}
-                                            </p>
-                                            <p className="text-[11px] text-muted-foreground mt-1">
-                                                {rel.upvoteCount} upvotes
-                                            </p>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>
@@ -431,3 +296,4 @@ export default function IdeaDetailPage() {
         </div>
     );
 }
+

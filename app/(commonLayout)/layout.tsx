@@ -1,19 +1,19 @@
 import { Footer } from "@/components/shared/Footer";
 import { Header } from "@/components/shared/Header";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { mockCurrentUser } from "@/lib/mock-data";
+import { getUserInfo } from "@/services/auth.service";
 
-
-
-export default function CommonLayout({
+export default async function CommonLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await getUserInfo();
+
   return (
     <TooltipProvider>
       <div className="flex min-h-screen flex-col">
-        <Header user={mockCurrentUser} />
+          <Header user={user} />
         <main className="flex-1 pt-20">
           {children}
         </main>

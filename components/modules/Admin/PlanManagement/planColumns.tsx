@@ -3,7 +3,7 @@ import StatusBadgeCell from "@/components/shared/cell/StatusBadgeCell";
 import { Badge } from "@/components/ui/badge";
 import { ISubscriptionPlan } from "@/types/subscription";
 import { ColumnDef } from "@tanstack/react-table";
-import { DollarSign, Clock, Layers } from "lucide-react";
+import { DollarSign, Clock, Hash, Sparkles } from "lucide-react";
 
 export const planColumns: ColumnDef<ISubscriptionPlan>[] = [
     {
@@ -11,9 +11,16 @@ export const planColumns: ColumnDef<ISubscriptionPlan>[] = [
         accessorKey: "name",
         header: "Plan Name",
         cell: ({ row }) => (
-            <div className="flex flex-col">
-                <span className="font-bold text-sm text-neutral-900">{row.original.name}</span>
-                <span className="text-[10px] text-neutral-400 uppercase font-black tracking-widest">{row.original.tier}</span>
+            <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                    <span className="font-extrabold text-sm text-neutral-900">{row.original.name}</span>
+                    {row.original.isPopular && (
+                        <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200 border-none px-1.5 py-0 text-[8px] font-black uppercase tracking-tighter h-4">
+                            <Sparkles className="w-2.5 h-2.5 mr-0.5" /> Popular
+                        </Badge>
+                    )}
+                </div>
+                <span className="text-[9px] text-neutral-400 uppercase font-black tracking-widest leading-none">{row.original.tier}</span>
             </div>
         ),
     },
@@ -40,6 +47,19 @@ export const planColumns: ColumnDef<ISubscriptionPlan>[] = [
                     <Clock className="h-4 w-4 text-indigo-600" />
                 </div>
                 <span className="font-bold text-sm text-neutral-900">{row.original.durationDays} Days</span>
+            </div>
+        ),
+    },
+    {
+        id: "order",
+        accessorKey: "order",
+        header: "Rank",
+        cell: ({ row }) => (
+            <div className="flex items-center gap-1.5">
+                <div className="h-8 w-8 rounded-lg bg-neutral-100 flex items-center justify-center">
+                    <Hash className="h-3 w-3 text-neutral-500" />
+                </div>
+                <span className="font-black text-xs text-neutral-900">{row.original.order}</span>
             </div>
         ),
     },

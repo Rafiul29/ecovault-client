@@ -7,6 +7,7 @@ import { useQuery } from "@tanstack/react-query";
 import { planColumns } from "./planColumns";
 import CreatePlanFormModal from "./CreatePlanFormModal";
 import EditPlanFormModal from "./EditPlanFormModal";
+import DeletePlanModal from "./DeletePlanModal";
 import { useRowActionModalState } from "@/hooks/useRowActionModalState";
 
 const PlanTable = () => {
@@ -14,6 +15,9 @@ const PlanTable = () => {
         editingItem,
         isEditModalOpen,
         onEditOpenChange,
+        deletingItem,
+        isDeleteDialogOpen,
+        onDeleteOpenChange,
         tableActions,
     } = useRowActionModalState<ISubscriptionPlan>();
 
@@ -39,6 +43,12 @@ const PlanTable = () => {
                 open={isEditModalOpen}
                 onOpenChange={onEditOpenChange}
                 plan={editingItem}
+            />
+
+            <DeletePlanModal
+                open={isDeleteDialogOpen}
+                onOpenChange={onDeleteOpenChange}
+                plan={deletingItem}
             />
         </>
     )

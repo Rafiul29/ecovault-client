@@ -6,22 +6,27 @@ import { FeaturedIdeas } from "@/components/landing/FeaturedIdeas";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { Pricing } from "@/components/landing/Pricing";
 import { CTA } from "@/components/landing/CTA";
-import { mockIdeas, mockPlans } from "@/lib/mock-data";
+import { getAllSubscriptionPlans } from "@/services/subscription.service";
+import { getIdeas } from "@/services/idea.service";
 
-export default function LandingPage() {
-  const featuredIdeas = mockIdeas
-    .filter((i) => i.status === "PUBLISHED")
-    .slice(0, 3);
+export default async function LandingPage() {
+  // Fetch featured ideas from the backend
+  const ideasResponse = await getIdeas("status=APPROVED&page=1&isFeatured=true&limit=3");
+  const featuredIdeas = ideasResponse?.data ?? [];
+
+  // Fetch active subscription plans from the backend
+  const plansResponse = await getAllSubscriptionPlans("isActive=true&sortOrder=asc&sortBy=order");
+  const plans = plansResponse?.data ?? [];
 
   return (
     <>
-      <Hero featuredIdeas={featuredIdeas} />
+      <Hero featuredIdeas={featuredIdeas as any} />
       <Stats />
       <Features />
       <Process />
-      <FeaturedIdeas ideas={featuredIdeas} />
+      <FeaturedIdeas ideas={featuredIdeas as any} />
       <Testimonials />
-      <Pricing plans={mockPlans} />
+      <Pricing plans={plans as any} />
       <CTA />
     </>
   );

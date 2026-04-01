@@ -12,27 +12,62 @@ export interface IIdea {
     images: string[];
     authorId: string;
     status: IdeaStatus;
+    adminFeedback: string | null;
+    reviewedBy: string | null;
+    reviewedAt: string | null;
     isPaid: boolean;
     price: number;
     isFeatured: boolean;
+    featuredAt: string | null;
     viewCount: number;
-    categories?: { category: ICategory }[];
-    tags?: { tag: ITag }[];
+    upvoteCount: number;
+    downvoteCount: number;
+    trendingScore: number;
+    publishedAt: string | null;
+    isDeleted: boolean;
+    deletedAt: string | null;
+    createdAt: string;
+    updatedAt: string;
+    
+    categories?: { 
+        ideaId: string;
+        categoryId: string;
+        assignedAt: string;
+        category: ICategory 
+    }[];
+    tags?: { 
+        ideaId: string;
+        tagId: string;
+        assignedAt: string;
+        tag: ITag 
+    }[];
     author?: {
         id: string;
         name: string;
         email: string;
-        image?: string;
+        image: string | null;
+        _count?: {
+            followers: number;
+            following: number;
+        }
     };
+    comments?: any[]; // For simple rendering
+    votes?: any[]; // For check user vote
+    attachments?: {
+        id: string;
+        type: string;
+        url: string;
+        title: string;
+        ideaId: string;
+        createdAt: string;
+    }[];
+    
     _count?: {
         comments: number;
         votes: number;
         purchases: number;
         watchlists: number;
     };
-    isDeleted: boolean;
-    createdAt: string;
-    updatedAt: string;
 }
 
 export interface ICreateIdeaPayload {

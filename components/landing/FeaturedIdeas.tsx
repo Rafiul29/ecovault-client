@@ -70,11 +70,11 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
                 <div className="mb-3 flex flex-wrap gap-2">
                   {idea.categories.slice(0, 2).map((cat) => (
                     <Badge
-                      key={cat.id}
+                      key={cat?.category?.id}
                       variant="secondary"
                       className="px-2 py-0 text-[10px] bg-primary/5 text-primary border-primary/10"
                     >
-                      {cat.name}
+                      {cat?.category?.name}
                     </Badge>
                   ))}
                 </div>

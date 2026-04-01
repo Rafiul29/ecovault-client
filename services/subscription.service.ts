@@ -1,17 +1,18 @@
 "use server";
 
 import { httpClient } from "@/lib/axios/httpClient";
-import { 
-    ISubscriptionPlan, 
-    ISubscription, 
-    ICreateSubscriptionPlanPayload, 
-    IUpdateSubscriptionPlanPayload 
+import {
+    ISubscriptionPlan,
+    ISubscription,
+    ICreateSubscriptionPlanPayload,
+    IUpdateSubscriptionPlanPayload
 } from "@/types/subscription";
 
 // Plan Services
-export const getAllSubscriptionPlans = async () => {
+export const getAllSubscriptionPlans = async (queryString?: string) => {
     try {
-        const response = await httpClient.get<ISubscriptionPlan[]>("/subscriptions/plans");
+        const url = queryString ? `/subscriptions/plans?${queryString}` : "/subscriptions/plans";
+        const response = await httpClient.get<ISubscriptionPlan[]>(url);
         return response;
     } catch (error) {
         console.error("Error fetching subscription plans:", error);
@@ -45,6 +46,16 @@ export const updateSubscriptionPlan = async (id: string, payload: IUpdateSubscri
         return response;
     } catch (error) {
         console.error("Error updating subscription plan:", error);
+        throw error;
+    }
+}
+
+export const deleteSubscriptionPlan = async (id: string) => {
+    try {
+        const response = await httpClient.delete<ISubscriptionPlan>(`/subscriptions/plans/${id}`);
+        return response;
+    } catch (error) {
+        console.error("Error deleting subscription plan:", error);
         throw error;
     }
 }

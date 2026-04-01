@@ -18,7 +18,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { Idea } from "@/lib/types";
+import type { Idea } from "@/types/types";
 import {
   cn,
   formatNumber,
@@ -92,13 +92,13 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
       {/* Body */}
       <div className="flex flex-1 flex-col p-4">
         <div className="flex flex-wrap items-center gap-1.5 mb-2">
-          {idea.categories.slice(0, 2).map((cat) => (
+          {idea.categories?.slice(0, 2).map((cat) => (
             <Badge
-              key={cat.id}
+              key={cat.category?.id}
               variant="secondary"
               className="text-[10px] px-2 py-0 font-medium"
             >
-              {cat.name}
+              {cat.category?.name}
             </Badge>
           ))}
           {showStatus && (

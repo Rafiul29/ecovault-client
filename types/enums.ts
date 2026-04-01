@@ -15,6 +15,7 @@ export enum IdeaStatus {
   DRAFT = "DRAFT",
   UNDER_REVIEW = "UNDER_REVIEW",
   APPROVED = "APPROVED",
+  PUBLISHED = "PUBLISHED",
   REJECTED = "REJECTED",
 }
 

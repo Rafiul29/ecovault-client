@@ -34,6 +34,16 @@ export const updateComment = async (id: string, content: string) => {
     }
 }
 
+export const createComment = async (payload: { content: string; ideaId: string; parentId?: string }) => {
+    try {
+        const response = await httpClient.post<IComment>("/comments", payload);
+        return response;
+    } catch (error) {
+        console.error("Error creating comment:", error);
+        throw error;
+    }
+}
+
 export const deleteComment = async (id: string) => {
     try {
         const response = await httpClient.delete<{ message: string }>(`/comments/${id}`);

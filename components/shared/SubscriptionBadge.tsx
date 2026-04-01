@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import type { SubscriptionTier } from "@/lib/types";
+import type { SubscriptionTier } from "@/types/types";
 import { cn } from "@/lib/utils";
 
 interface SubscriptionBadgeProps {

@@ -62,8 +62,8 @@ export interface Idea {
     downvoteCount: number;
     trendingScore: number;
     author: Pick<User, "id" | "name" | "image">;
-    categories: Category[];
-    tags: Tag[];
+    categories: { category: Category }[];
+    tags: { tag: Tag }[];
     adminFeedback?: string;
     createdAt: string;
     publishedAt?: string;

@@ -1,7 +1,5 @@
 import { SubscriptionTier, PaymentStatus } from "./enums";
 
-
-
 export interface ISubscriptionPlan {
     id: string;
     name: string;
@@ -10,6 +8,10 @@ export interface ISubscriptionPlan {
     price: number;
     durationDays: number;
     isActive: boolean;
+    features: string[];
+    order: number;
+    isPopular: boolean;
+    buttonText: string | null;
     createdAt: string;
     updatedAt: string;
 }
@@ -52,6 +54,10 @@ export interface ICreateSubscriptionPlanPayload {
     tier: SubscriptionTier;
     price: number;
     durationDays?: number;
+    features?: string[];
+    order?: number;
+    isPopular?: boolean;
+    buttonText?: string;
 }
 
 export interface IUpdateSubscriptionPlanPayload {
@@ -61,4 +67,8 @@ export interface IUpdateSubscriptionPlanPayload {
     price?: number;
     durationDays?: number;
     isActive?: boolean;
+    features?: string[];
+    order?: number;
+    isPopular?: boolean;
+    buttonText?: string;
 }

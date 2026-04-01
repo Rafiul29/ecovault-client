@@ -3,7 +3,7 @@
 import { createIdea, deleteIdea, getIdeaById, updateIdea } from "@/services/idea.service"
 import { type ApiErrorResponse, type ApiResponse } from "@/types/api.types"
 import { type IIdea } from "@/types/idea.types"
-import { createIdeaZodSchema, updateIdeaZodSchema } from "@/zod/idea.validator"
+import { revalidatePath } from "next/cache"
 
 const getActionErrorMessage = (error: unknown, fallbackMessage: string) => {
     if (
@@ -33,12 +33,17 @@ export const createIdeaAction = async (
 ): Promise<ApiResponse<IIdea> | ApiErrorResponse> => {
     // Validate FormData or just pass? Usually forms use Zod to validate before submission.
     // If we want server-side validation using Zod:
-    const dataObj = Object.fromEntries(payload.entries());
-    // Files are tricky in Object.fromEntries with multiple files
-    // For simplicity, let's just use the services directly if the frontend ensures validation
+    // const dataObj = Object.fromEntries(payload.entries());
 
     try {
-        return await createIdea(payload)
+        const response = await createIdea(payload)
+        
+        if (response.success) {
+            revalidatePath("/admin/dashboard/idea-management")
+            revalidatePath("/moderator/dashboard/ideas")
+        }
+        
+        return response
     } catch (error: unknown) {
         return {
             success: false,
@@ -52,7 +57,14 @@ export const updateIdeaAction = async (
     payload: FormData,
 ): Promise<ApiResponse<IIdea> | ApiErrorResponse> => {
     try {
-        return await updateIdea(id, payload)
+        const response = await updateIdea(id, payload)
+        
+        if (response.success) {
+            revalidatePath("/admin/dashboard/idea-management")
+            revalidatePath("/moderator/dashboard/ideas")
+        }
+        
+        return response
     } catch (error: unknown) {
         return {
             success: false,
@@ -73,7 +85,14 @@ export const deleteIdeaAction = async (
     }
 
     try {
-        return await deleteIdea(id, permanent)
+        const response = await deleteIdea(id, permanent)
+        
+        if (response.success) {
+            revalidatePath("/admin/dashboard/idea-management")
+            revalidatePath("/moderator/dashboard/ideas")
+        }
+        
+        return response
     } catch (error: unknown) {
         return {
             success: false,
