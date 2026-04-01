@@ -4,11 +4,7 @@ import { isTokenExpiringSoon } from '../tokenUtils';
 import { cookies, headers } from 'next/headers';
 import { getNewTokensWithRefreshToken } from '@/services/auth.service';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
-
-if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
-    console.warn('NEXT_PUBLIC_API_BASE_URL is not defined in environment variables, falling back to localhost.');
-}
+import { API_BASE_URL } from '@/lib/env';
 
 async function tryRefreshToken(
     accessToken: string,

@@ -3,7 +3,7 @@ import Image from "next/image"
 
 const RegisterPage = () => {
   return (
-    <div className="flex min-h-screen w-full flex-col lg:flex-row overflow-hidden">
+    <div className="flex w-full flex-col lg:flex-row overflow-hidden">
       {/* Left Column: Image (Desktop only) */}
       <div className="hidden lg:block lg:w-1/2 relative bg-muted overflow-hidden">
         <Image
@@ -26,7 +26,7 @@ const RegisterPage = () => {
         {/* Subtle decorative background element */}
         <div className="absolute top-0 right-0 -z-10 h-[600px] w-[600px] translate-x-[20%] -translate-y-[20%] rounded-full bg-emerald-500/5 blur-[120px]" />
         <div className="absolute bottom-0 left-0 -z-10 h-[600px] w-[600px] -translate-x-[20%] translate-y-[20%] rounded-full bg-blue-500/5 blur-[120px]" />
-        
+
         <RegisterForm />
       </div>
     </div>

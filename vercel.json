@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://ecovault-server.vercel.app/:path*"
+    }
+  ]
+}

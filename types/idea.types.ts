@@ -53,6 +53,14 @@ export interface IIdea {
     };
     comments?: any[]; // For simple rendering
     votes?: any[]; // For check user vote
+    watchlists?: {
+        id: string;
+        userId: string;
+        ideaId: string;
+        isDeleted: boolean;
+        deletedAt: string | null;
+        createdAt: string;
+    }[];
     attachments?: {
         id: string;
         type: string;

@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { API_BASE_URL } from "@/lib/env"
 
 interface LoginFormProps {
     redirectPath?: string
@@ -105,6 +106,11 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                             <AlertDescription>{serverError}</AlertDescription>
                         </Alert>
                     )}
+                    <p className="text-right mb-1">
+                        <Link href="/forgot-password" className="text-sm text-emerald-600 hover:text-emerald-700 transition-colors">
+                            Forgot Password
+                        </Link>
+                    </p>
                     <form.Subscribe
                         selector={(s) => [s.canSubmit, s.isSubmitting] as const}
                     >
@@ -126,9 +132,8 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                 </div>
 
                 <Button variant="outline" className="w-full h-10 border-muted-foreground/20 hover:bg-emerald-50/50 hover:border-emerald-600/30 transition-all duration-200 flex items-center justify-center gap-3" onClick={() => {
-                    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                     //TODO redirect path after login in frontend
-                    window.location.href = `${baseUrl}/auth/login/google`;
+                    window.location.href = `${API_BASE_URL}/auth/login/google`;
                 }}>
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
                         <path

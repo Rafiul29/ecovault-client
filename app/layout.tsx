@@ -31,9 +31,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} ${outfit.variable} antialiased`}
+        suppressHydrationWarning
       >
         <QueryProviders>{children}</QueryProviders>
         <Toaster richColors />

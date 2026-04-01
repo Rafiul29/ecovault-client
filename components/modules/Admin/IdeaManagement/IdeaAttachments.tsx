@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { useRouter } from "next/navigation";
 import { Role } from "@/types/enums";
+import { API_BASE_URL } from "@/lib/env";
 
 interface IdeaAttachmentsProps {
     ideaId: string;
@@ -177,7 +178,7 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                                 </Button>
 
                                 <Button size="icon" variant="secondary" className="h-9 w-9 bg-neutral-100 hover:bg-emerald-100 hover:text-emerald-700 text-neutral-600 rounded-lg shadow-sm border border-neutral-200" asChild title="Download File">
-                                    <a href={`${process.env.NEXT_PUBLIC_API_BASE_URL}/attachments/${file.id}/download`} download={file.title || "download"} target="_blank" rel="noopener noreferrer">
+                                    <a href={`${API_BASE_URL}/attachments/${file.id}/download`} download={file.title || "download"} target="_blank" rel="noopener noreferrer">
                                         <Download className="h-4 w-4" />
                                     </a>
                                 </Button>
@@ -275,7 +276,7 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                         </div>
                         {viewingAttachment && (
                             <Button size="sm" variant="outline" className="rounded-xl font-bold gap-2 h-10 border-neutral-200 hover:bg-neutral-50" asChild>
-                                <a href={`${process.env.NEXT_PUBLIC_API_BASE_URL}/attachments/${viewingAttachment.id}/download`} download={viewingAttachment.title || "download"} target="_blank" rel="noopener noreferrer">
+                                <a href={`${API_BASE_URL}/attachments/${viewingAttachment.id}/download`} download={viewingAttachment.title || "download"} target="_blank" rel="noopener noreferrer">
                                     <Download className="h-4 w-4 text-emerald-600" />
                                     <span>Download</span>
                                 </a>

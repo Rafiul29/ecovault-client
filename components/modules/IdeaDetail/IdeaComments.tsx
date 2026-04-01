@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageSquare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -19,28 +19,56 @@ interface IdeaCommentsProps {
 
 const IdeaComments = ({ ideaId, comments, currentUser }: IdeaCommentsProps) => {
     const router = useRouter();
+    const [localComments, setLocalComments] = useState<any[]>(comments);
     const [newComment, setNewComment] = useState("");
     const [isPending, setIsPending] = useState(false);
+
+    // Sync state if server sends updated prop
+    useEffect(() => {
+        setLocalComments(comments);
+    }, [comments]);
 
     const handlePostComment = async () => {
         if (!currentUser) {
             toast.error("Please login to comment.");
             return;
         }
+        if (!newComment.trim()) return;
 
+        const commentText = newComment;
+        
+        // Build Optimistic Comment
+        const optimisticComment = {
+            id: `temp-${Date.now()}`,
+            content: commentText,
+            createdAt: new Date().toISOString(),
+            author: {
+                id: currentUser.id,
+                name: currentUser.name,
+                image: currentUser.image,
+            }
+        };
+
+        // Optimistic UI Update
+        setLocalComments((prev) => [...prev, optimisticComment]);
+        setNewComment("");
         setIsPending(true);
+
         try {
             const response = await createComment({
-                content: newComment,
+                content: commentText,
                 ideaId,
             });
 
-            if (response.success) {
-                toast.success("Comment posted!");
-                setNewComment("");
-                router.refresh();
+            if (!response.success) {
+                throw new Error(response.message || "Failed to post comment.");
             }
+            toast.success("Comment posted!");
+            // Remove router.refresh() if it blocks the UI or feels slow. The client state now handles the view!
         } catch (error: any) {
+            // Revert state
+            setLocalComments((prev) => prev.filter(c => c.id !== optimisticComment.id));
+            setNewComment(commentText);
             toast.error(error.message || "Failed to post comment.");
         } finally {
             setIsPending(false);
@@ -52,11 +80,11 @@ const IdeaComments = ({ ideaId, comments, currentUser }: IdeaCommentsProps) => {
             <div className="border-b border-border px-5 py-3 flex items-center gap-2">
                 <MessageSquare className="size-4 text-primary" />
                 <h2 className="text-sm font-semibold">
-                    Comments ({comments.length})
+                    Comments ({localComments.length})
                 </h2>
             </div>
             <div className="px-5 py-4 space-y-4">
-                {comments.map((c) => (
+                {localComments.map((c) => (
                     <div key={c.id} className="flex gap-3">
                         <Avatar className="size-8 shrink-0">
                             <AvatarImage src={c.author?.image} alt={c.author?.name} />

@@ -2,8 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from "./lib/authUtils";
 import { jwtUtils } from "./lib/jwtUtils";
 import { isTokenExpiringSoon } from "./lib/tokenUtils";
-
-const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
+import { API_BASE_URL as BASE_API_URL } from "./lib/env";
 
 async function fetchUserInfo(accessToken: string, sessionToken: string) {
     try {

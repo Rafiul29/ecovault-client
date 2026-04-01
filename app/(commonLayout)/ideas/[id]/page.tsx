@@ -45,9 +45,9 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
     const initialUserVote = userVoteObj ? userVoteObj.value : 0;
 
     return (
-        <div className="flex flex-1 flex-col">
-            <main className="flex-1 p-6">
-                <div className="mx-auto max-w-6xl">
+        <div className="flex flex-1 flex-col py-5 px-3 md:px-0">
+            <main className="flex-1">
+                <div className="mx-auto max-w-7xl">
                     {/* Back */}
                     <Button
                         variant="ghost"
@@ -106,14 +106,16 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
                             </div>
 
                             {/* Use split interaction component */}
-                            <IdeaInteraction 
+                            <IdeaInteraction
                                 ideaId={idea.id}
                                 slug={idea.slug}
                                 initialUpvotes={idea.upvoteCount}
                                 initialDownvotes={idea.downvoteCount}
                                 initialUserVote={initialUserVote}
                                 isOwner={isOwner}
-                                watchlisted={idea._count?.watchlists ? idea._count.watchlists > 0 : false}
+                                watchlisted={idea.watchlists?.some((w: any) => w.userId === currentUser?.id) || false}
+                                initialWatchlistCount={idea.watchlists?.length || 0}
+                                isLoggedIn={!!currentUser}
                             />
 
                             <div className="rounded-xl border border-border bg-card overflow-hidden">
@@ -163,7 +165,7 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
                             )}
 
                             {/* Use split comments component */}
-                            <IdeaComments 
+                            <IdeaComments
                                 ideaId={idea.id}
                                 comments={idea.comments || []}
                                 currentUser={currentUser}

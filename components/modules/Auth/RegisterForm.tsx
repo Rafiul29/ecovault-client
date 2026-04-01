@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Eye, EyeOff } from "lucide-react"
 import Link from "next/link"
 import { useState } from "react"
+import { API_BASE_URL } from "@/lib/env"
 
 const RegisterForm = () => {
     const queryClient = useQueryClient()
@@ -134,9 +135,8 @@ const RegisterForm = () => {
                 </div>
 
                 <Button variant="outline" className="w-full h-11 font-semibold border-muted-foreground/20 hover:bg-emerald-50/50 hover:border-emerald-600/30 transition-all duration-200 flex items-center justify-center gap-3" onClick={() => {
-                    const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
                     //TODO redirect path after login in frontend
-                    window.location.href = `${baseUrl}/auth/login/google`;
+                    window.location.href = `${API_BASE_URL}/auth/login/google`;
                 }}>
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
                         <path
