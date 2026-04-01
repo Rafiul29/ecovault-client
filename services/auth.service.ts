@@ -3,10 +3,10 @@
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { cookies } from "next/headers";
 
-const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1";
 
-if (!BASE_API_URL) {
-    throw new Error("NEXT_PUBLIC_API_BASE_URL is not defined");
+if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+    console.warn("NEXT_PUBLIC_API_BASE_URL is not defined in environment variables, falling back to localhost.");
 }
 
 export async function getNewTokensWithRefreshToken(refreshToken: string): Promise<boolean> {

@@ -3,7 +3,7 @@ import { getDefaultDashboardRoute, getRouteOwner, isAuthRoute, UserRole } from "
 import { jwtUtils } from "./lib/jwtUtils";
 import { isTokenExpiringSoon } from "./lib/tokenUtils";
 
-const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const BASE_API_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
 
 async function fetchUserInfo(accessToken: string, sessionToken: string) {
     try {

@@ -4,10 +4,10 @@ import { isTokenExpiringSoon } from '../tokenUtils';
 import { cookies, headers } from 'next/headers';
 import { getNewTokensWithRefreshToken } from '@/services/auth.service';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:5000/api/v1';
 
-if (!API_BASE_URL) {
-    throw new Error('API_BASE_URL is not defined in environment variables');
+if (!process.env.NEXT_PUBLIC_API_BASE_URL) {
+    console.warn('NEXT_PUBLIC_API_BASE_URL is not defined in environment variables, falling back to localhost.');
 }
 
 async function tryRefreshToken(
@@ -78,8 +78,8 @@ const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions): Pr
         });
         return response.data;
     } catch (error: any) {
-        console.error(`GET request to ${endpoint} failed:`, error);
-        throw error.response;
+        console.error(`GET request to ${endpoint} failed:`, error?.response?.data || error?.message || error);
+        throw error?.response?.data || new Error(error?.message || `GET request to ${endpoint} failed`);
     }
 }
 
@@ -101,8 +101,8 @@ const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiReq
         });
         return response.data;
     } catch (error: any) {
-        console.error(`POST request to ${endpoint} failed:`, error);
-        throw error;
+        console.error(`POST request to ${endpoint} failed:`, error?.response?.data || error?.message || error);
+        throw error?.response?.data || new Error(error?.message || `POST request to ${endpoint} failed`);
     }
 }
 
@@ -114,9 +114,9 @@ const httpPut = async <TData>(endpoint: string, data: unknown, options?: ApiRequ
             headers: options?.headers,
         });
         return response.data;
-    } catch (error) {
-        console.error(`PUT request to ${endpoint} failed:`, error);
-        throw error;
+    } catch (error: any) {
+        console.error(`PUT request to ${endpoint} failed:`, error?.response?.data || error?.message || error);
+        throw error?.response?.data || new Error(error?.message || `PUT request to ${endpoint} failed`);
     }
 }
 
@@ -138,9 +138,9 @@ const httpPatch = async <TData>(endpoint: string, data: unknown, options?: ApiRe
         });
         return response.data;
     }
-    catch (error) {
-        console.error(`PATCH request to ${endpoint} failed:`, error);
-        throw error;
+    catch (error: any) {
+        console.error(`PATCH request to ${endpoint} failed:`, error?.response?.data || error?.message || error);
+        throw error?.response?.data || new Error(error?.message || `PATCH request to ${endpoint} failed`);
     }
 }
 
@@ -152,9 +152,9 @@ const httpDelete = async <TData>(endpoint: string, options?: ApiRequestOptions):
             headers: options?.headers,
         });
         return response.data;
-    } catch (error) {
-        console.error(`DELETE request to ${endpoint} failed:`, error);
-        throw error;
+    } catch (error: any) {
+        console.error(`DELETE request to ${endpoint} failed:`, error?.response?.data || error?.message || error);
+        throw error?.response?.data || new Error(error?.message || `DELETE request to ${endpoint} failed`);
     }
 }
 
