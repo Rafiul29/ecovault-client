@@ -114,7 +114,7 @@ export function Header({ user }: HeaderProps) {
           </div>
 
           {/* Mobile Menu Trigger */}
-          <MobileNav links={navLinks} />
+          <MobileNav links={navLinks} user={user} />
         </div>
       </div>
     </header>

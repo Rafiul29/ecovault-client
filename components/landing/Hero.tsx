@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight, Eye, Search, ThumbsUp } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -101,13 +101,15 @@ export function Hero({ featuredIdeas }: HeroProps) {
               )}
             >
               {idea.images[0] && (
-                <div className="mb-3 h-32 overflow-hidden rounded-xl bg-muted/20">
-                  <img
-                    src={idea.images[0]}
-                    alt={idea.title}
-                    className="h-full w-full object-cover transition-transform duration-500"
-                  />
-                </div>
+                <Link href={`/ideas/${idea.id}`}>
+                  <div className="mb-3 h-32 overflow-hidden rounded-xl bg-muted/20">
+                    <img
+                      src={idea.images[0]}
+                      alt={idea.title}
+                      className="h-full w-full object-cover transition-transform duration-500"
+                    />
+                  </div>
+                </Link>
               )}
               <div className="mb-2 flex flex-wrap gap-1">
                 {idea.categories.slice(0, 1).map((cat) => (
@@ -120,16 +122,18 @@ export function Hero({ featuredIdeas }: HeroProps) {
                   </Badge>
                 ))}
               </div>
-              <p className="text-sm font-semibold line-clamp-2 text-foreground group-hover:text-primary transition-colors">
-                {idea.title}
-              </p>
+              <Link href={`/ideas/${idea.id}`}>
+                <p className="text-sm font-semibold line-clamp-2 text-foreground group-hover:text-primary transition-colors">
+                  {idea.title}
+                </p>
+              </Link>
               <div className="mt-3 flex items-center gap-4 text-[11px] text-muted-foreground">
-                <span className="flex items-center gap-1">
-                  <span className="text-primary font-medium">👍</span>{" "}
+                <span className="flex items-center gap-1.5">
+                  <span className="text-primary opacity-80"><ThumbsUp className="size-3.5" /></span>{" "}
                   {formatNumber(idea.upvoteCount)}
                 </span>
-                <span className="flex items-center gap-1">
-                  <span className="text-primary font-medium">👁</span>{" "}
+                <span className="flex items-center gap-1.5">
+                  <span className="text-primary opacity-80"><Eye className="size-3.5" /></span>{" "}
                   {formatNumber(idea.viewCount)}
                 </span>
                 {idea.isPaid && (

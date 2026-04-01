@@ -70,8 +70,8 @@ export interface ApiRequestOptions {
 }
 
 const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
+    const instance = await axiosInstance();
     try {
-        const instance = await axiosInstance();
         const response = await instance.get<ApiResponse<TData>>(endpoint, {
             params: options?.params,
             headers: options?.headers,
@@ -84,8 +84,8 @@ const httpGet = async <TData>(endpoint: string, options?: ApiRequestOptions): Pr
 }
 
 const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
+    const instance = await axiosInstance();
     try {
-        const instance = await axiosInstance();
 
         const headers = options?.headers || {};
         if (data instanceof FormData) {
@@ -107,8 +107,8 @@ const httpPost = async <TData>(endpoint: string, data: unknown, options?: ApiReq
 }
 
 const httpPut = async <TData>(endpoint: string, data: unknown, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
+    const instance = await axiosInstance();
     try {
-        const instance = await axiosInstance();
         const response = await instance.put<ApiResponse<TData>>(endpoint, data, {
             params: options?.params,
             headers: options?.headers,
@@ -121,8 +121,8 @@ const httpPut = async <TData>(endpoint: string, data: unknown, options?: ApiRequ
 }
 
 const httpPatch = async <TData>(endpoint: string, data: unknown, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
+    const instance = await axiosInstance();
     try {
-        const instance = await axiosInstance();
 
         const headers = options?.headers || {};
         if (data instanceof FormData) {
@@ -145,8 +145,8 @@ const httpPatch = async <TData>(endpoint: string, data: unknown, options?: ApiRe
 }
 
 const httpDelete = async <TData>(endpoint: string, options?: ApiRequestOptions): Promise<ApiResponse<TData>> => {
+    const instance = await axiosInstance();
     try {
-        const instance = await axiosInstance();
         const response = await instance.delete<ApiResponse<TData>>(endpoint, {
             params: options?.params,
             headers: options?.headers,

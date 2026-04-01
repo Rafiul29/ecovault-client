@@ -3,6 +3,8 @@ import { Header } from "@/components/shared/Header";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { getUserInfo } from "@/services/auth.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function CommonLayout({
   children,
 }: Readonly<{

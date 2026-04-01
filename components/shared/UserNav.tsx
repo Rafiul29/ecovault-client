@@ -20,6 +20,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { logoutUser } from "@/services/auth.service";
 import type { UserInfo } from "@/types/user.types";
 
 interface UserNavProps {
@@ -27,6 +29,13 @@ interface UserNavProps {
 }
 
 export function UserNav({ user }: UserNavProps) {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logoutUser();
+    router.push("/login");
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -82,7 +91,10 @@ export function UserNav({ user }: UserNavProps) {
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
-        <DropdownMenuItem className="text-destructive focus:bg-destructive/10 focus:text-destructive">
+        <DropdownMenuItem
+          className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+          onClick={handleLogout}
+        >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Log out</span>
         </DropdownMenuItem>

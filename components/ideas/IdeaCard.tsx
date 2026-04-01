@@ -68,7 +68,7 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
       {/* Cover Image */}
       {idea.images[0] && (
         <Link
-          href={`/ideas/${idea.slug}`}
+          href={`/ideas/${idea.id}`}
           className="relative block h-44 shrink-0 overflow-hidden bg-muted"
         >
           <img
@@ -112,7 +112,7 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
         </div>
 
         {/* Title */}
-        <Link href={`/ideas/${idea.slug}`}>
+        <Link href={`/ideas/${idea.id}`}>
           <h3 className="text-sm font-semibold leading-snug text-foreground line-clamp-2 hover:text-primary mb-2">
             {idea.title}
           </h3>

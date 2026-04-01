@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Eye, ThumbsDown, ThumbsUp } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -54,11 +54,13 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
             >
               {idea.images[0] && (
                 <div className="relative h-56 overflow-hidden">
-                  <img
-                    src={idea.images[0]}
-                    alt={idea.title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+                  <Link href={`/ideas/${idea.id}`}>
+                    <img
+                      src={idea.images[0]}
+                      alt={idea.title}
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </Link>
                   {idea.isPaid && (
                     <div className="absolute right-4 top-4 rounded-full bg-background/95 px-3 py-1 text-xs font-bold text-primary shadow-lg backdrop-blur-md">
                       ${idea.price}
@@ -79,7 +81,7 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
                   ))}
                 </div>
                 <CardTitle className="text-xl font-bold leading-snug tracking-tight group-hover:text-primary transition-colors">
-                  <Link href={`/ideas/${idea.slug}`}>{idea.title}</Link>
+                  <Link href={`/ideas/${idea.id}`}>{idea.title}</Link>
                 </CardTitle>
               </CardHeader>
               <CardContent className="flex flex-1 flex-col justify-between">
@@ -103,11 +105,11 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
                   </div>
                   <div className="flex items-center gap-4 text-[11px] font-medium text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <span className="text-primary opacity-80">👍</span>{" "}
+                      <span className="text-primary opacity-80"><ThumbsUp className="size-3.5" /></span>{" "}
                       {formatNumber(idea.upvoteCount)}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="text-primary opacity-80">👁</span>{" "}
+                      <span className="text-primary opacity-80"><Eye className="size-3.5" /></span>{" "}
                       {formatNumber(idea.viewCount)}
                     </span>
                   </div>

@@ -48,15 +48,15 @@ export async function getNewTokensWithRefreshToken(refreshToken: string): Promis
 }
 
 export async function getUserInfo() {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+    const sessionToken = cookieStore.get("better-auth.session_token")?.value
+
+    if (!accessToken) {
+        return null;
+    }
+
     try {
-        const cookieStore = await cookies();
-        const accessToken = cookieStore.get("accessToken")?.value;
-        const sessionToken = cookieStore.get("better-auth.session_token")?.value
-
-        if (!accessToken) {
-            return null;
-        }
-
         const res = await fetch(`${BASE_API_URL}/auth/me`, {
             method: "GET",
             headers: {
@@ -145,5 +145,27 @@ export async function changePassword(payload: any, sessionToken: string) {
     } catch (error: any) {
         console.error("Error in change password:", error);
         return { success: false, message: error.message };
+    }
+}
+
+export async function logoutUser() {
+    const cookieStore = await cookies();
+    const accessToken = cookieStore.get("accessToken")?.value;
+    const sessionToken = cookieStore.get("better-auth.session_token")?.value;
+
+    try {
+        await fetch(`${BASE_API_URL}/auth/logout`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Cookie: `accessToken=${accessToken}; better-auth.session_token=${sessionToken}`,
+            }
+        });
+    } catch (error) {
+        console.error("Error logging out from server:", error);
+    } finally {
+        cookieStore.delete("accessToken");
+        cookieStore.delete("refreshToken");
+        cookieStore.delete("better-auth.session_token");
     }
 }
