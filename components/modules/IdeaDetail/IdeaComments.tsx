@@ -36,7 +36,7 @@ const IdeaComments = ({ ideaId, comments, currentUser }: IdeaCommentsProps) => {
         if (!newComment.trim()) return;
 
         const commentText = newComment;
-        
+
         // Build Optimistic Comment
         const optimisticComment = {
             id: `temp-${Date.now()}`,

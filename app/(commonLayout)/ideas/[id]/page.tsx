@@ -21,8 +21,11 @@ import {
 import IdeaInteraction from "@/components/modules/IdeaDetail/IdeaInteraction";
 import IdeaComments from "@/components/modules/IdeaDetail/IdeaComments";
 import IdeaAttachments from "@/components/modules/IdeaDetail/IdeaAttachments";
+import FollowButton from "@/components/modules/Profile/FollowButton";
 import { notFound } from "next/navigation";
 import { IdeaStatus } from "@/types/types";
+
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1").replace(/\/$/, "");
 
 export default async function IdeaDetailPage({ params }: { params: { id: string } }) {
     const { id } = await params;
@@ -43,6 +46,23 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
     // Determine current user's vote
     const userVoteObj = idea.votes?.find(v => v.userId === currentUser?.id);
     const initialUserVote = userVoteObj ? userVoteObj.value : 0;
+
+    // Fetch author's followers to determine follow state
+    let authorFollowerCount = 0;
+    let isFollowingAuthor = false;
+    try {
+        const followRes = await fetch(`${API_BASE}/follows/followers/${idea.authorId}`);
+        const followJson = await followRes.json();
+        if (followJson?.success) {
+            const followers: any[] = followJson.data || [];
+            authorFollowerCount = followers.length;
+            isFollowingAuthor = followers.some(
+                (f: any) => f.follower?.id === currentUser?.id || f.followerId === currentUser?.id
+            );
+        }
+    } catch {
+        // Non-critical
+    }
 
     return (
         <div className="flex flex-1 flex-col py-5 px-3 md:px-0">
@@ -180,7 +200,7 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
                                         Author
                                     </p>
                                 </div>
-                                <div className="p-4">
+                                <div className="p-4 space-y-3">
                                     <Link
                                         href={`/profile/${idea.author?.id}`}
                                         className="flex items-center gap-3"
@@ -203,6 +223,13 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
                                             </p>
                                         </div>
                                     </Link>
+                                    <FollowButton
+                                        targetUserId={idea.authorId}
+                                        initialIsFollowing={isFollowingAuthor}
+                                        initialFollowerCount={authorFollowerCount}
+                                        currentUserId={currentUser?.id}
+                                        showCount={true}
+                                    />
                                 </div>
                             </div>
 

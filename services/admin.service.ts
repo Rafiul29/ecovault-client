@@ -37,3 +37,7 @@ export const getUserById = async (id: string) => {
 export const deleteUserAccount = async (id: string) => {
     return httpClient.delete(`/admins/users/${id}`);
 };
+
+export const getPublicProfileByUserId = async (id: string) => {
+    return httpClient.get(`/admins/public-profile/${id}`);
+};
