@@ -5,7 +5,7 @@ import { features } from "@/lib/mock-data";
 
 export function Features() {
   return (
-    <section className="py-32 px-6">
+    <section className="py-20 px-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-16 text-center">
           <Badge
@@ -23,7 +23,7 @@ export function Features() {
           </p>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {features[0] && (
             <div
               className="group relative overflow-hidden rounded-3xl border border-border/60 bg-card p-8 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/30 sm:col-span-2 lg:col-span-2"

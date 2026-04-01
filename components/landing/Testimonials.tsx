@@ -5,8 +5,8 @@ import { testimonials } from "@/lib/mock-data";
 
 export function Testimonials() {
   return (
-    <section className="bg-muted/30 py-32 px-6">
-      <div className="mx-auto max-w-6xl">
+    <section className="bg-muted/30 py-32">
+      <div className="mx-auto max-w-7xl">
         <div className="mb-20 text-center">
           <Badge
             variant="outline"

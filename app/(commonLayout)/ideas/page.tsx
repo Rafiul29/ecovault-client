@@ -1,48 +1,82 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { Filter, Plus, SlidersHorizontal, Lightbulb } from "lucide-react";
+import { useMemo } from "react";
+import { Filter, Lightbulb, Loader2 } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
 import IdeaCard from "@/components/ideas/IdeaCard";
+import IdeaFilters from "@/components/ideas/IdeaFilters";
+import IdeaPagination from "@/components/ideas/IdeaPagination";
 
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select";
-import { mockIdeas, mockCategories } from "@/lib/mock-data";
-import { IdeaStatus } from "@/types/enums";
+import { getIdeas } from "@/services/idea.service";
+import { getCategories } from "@/services/category.service";
+import { IIdea } from "@/types/idea.types";
 
 export default function IdeasPage() {
-    const [selectedCategory, setSelectedCategory] = useState<string>("ALL");
-    const [selectedStatus, setSelectedStatus] = useState<IdeaStatus | "ALL">(
-        "ALL",
-    );
-    const [sortBy, setSortBy] = useState<string>("trending");
+    const router = useRouter();
+    const pathname = usePathname();
+    const searchParams = useSearchParams();
 
-    const filtered = mockIdeas
-        .filter(
-            (i) =>
-                selectedCategory === "ALL" ||
-                i.categories.some((c) => c.id === selectedCategory),
-        )
-        .filter((i) => selectedStatus === "ALL" || i.status === selectedStatus)
-        .sort((a, b) => {
-            if (sortBy === "trending") return b.trendingScore - a.trendingScore;
-            if (sortBy === "newest")
-                return (
-                    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-                );
-            if (sortBy === "upvotes") return b.upvoteCount - a.upvoteCount;
-            return b.viewCount - a.viewCount;
-        });
+    // Parse search params
+    const page = Number(searchParams.get("page")) || 1;
+    const limit = Number(searchParams.get("limit")) || 10;
+    const categoryId = searchParams.get("categories.category.id") || "ALL";
+    const sortBy = searchParams.get("sortBy") || "trendingScore";
+    const sortOrder = searchParams.get("sortOrder") || "desc";
+
+    // Build query string
+    const queryString = useMemo(() => {
+        const params = new URLSearchParams();
+        params.set("page", page.toString());
+        params.set("limit", limit.toString());
+        params.set("status", "APPROVED"); // Added status=APPROVED
+        if (categoryId !== "ALL") {
+            params.set("categories.category.id", categoryId);
+        }
+        params.set("sortBy", sortBy);
+        params.set("sortOrder", sortOrder);
+        return params.toString();
+    }, [page, limit, categoryId, sortBy, sortOrder]);
+
+    // Fetch data
+    const { data: ideaResponse, isLoading: isLoadingIdeas, isFetching: isFetchingIdeas } = useQuery({
+        queryKey: ["ideas", queryString],
+        queryFn: () => getIdeas(queryString),
+    });
+
+    const { data: categoryResponse, isLoading: isLoadingCategories } = useQuery({
+        queryKey: ["categories"],
+        queryFn: () => getCategories(),
+    });
+
+    const ideas = ideaResponse?.data || [];
+    const meta = ideaResponse?.meta;
+    const categories = categoryResponse?.data || [];
+
+    const updateParams = (key: string, value: string) => {
+        const params = new URLSearchParams(searchParams.toString());
+        if (value === "ALL" && key === "categories.category.id") {
+            params.delete(key);
+        } else {
+            params.set(key, value);
+        }
+
+        // Reset page when filter/sort changes
+        if (key !== "page") {
+            params.set("page", "1");
+        }
+
+        router.push(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+    const clearFilters = () => {
+        router.push(pathname, { scroll: false });
+    };
 
     return (
         <div className="flex flex-1 flex-col">
-            <main className="mx-auto max-w-6xl px-6">
+            <main className="mx-auto max-w-7xl px-6 py-10 w-full">
                 {/* Page Header */}
                 <div className="mb-8 ">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -62,59 +96,32 @@ export default function IdeasPage() {
                     </div>
                 </div>
 
-                <div className="mb-6 rounded-xl border border-border bg-card p-4">
-                    <div className="flex flex-wrap items-center gap-3">
-                        <div className="flex flex-wrap gap-1.5">
-                            <button
-                                onClick={() => setSelectedCategory("ALL")}
-                                className={`rounded-full px-3 py-1 text-xs font-medium border ${selectedCategory === "ALL"
-                                    ? "bg-primary text-primary-foreground border-primary"
-                                    : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                                    }`}
-                            >
-                                All Categories
-                            </button>
-                            {mockCategories.map((cat) => (
-                                <button
-                                    key={cat.id}
-                                    onClick={() => setSelectedCategory(cat.id)}
-                                    className={`rounded-full px-3 py-1 text-xs font-medium border ${selectedCategory === cat.id
-                                        ? "bg-primary text-primary-foreground border-primary"
-                                        : "border-border text-muted-foreground hover:border-primary/40 hover:text-foreground"
-                                        }`}
-                                >
-                                    {cat.name}
-                                </button>
-                            ))}
-                        </div>
+                {/* Filters Section (Client Component extracted) */}
+                <IdeaFilters
+                    categories={categories}
+                    selectedCategory={categoryId}
+                    onCategoryChange={(val) => updateParams("categories.category.id", val)}
+                    sortBy={sortBy}
+                    onSortByChange={(val) => updateParams("sortBy", val)}
+                    sortOrder={sortOrder}
+                    onSortOrderChange={(val) => updateParams("sortOrder", val)}
+                    onClearFilters={clearFilters}
+                />
 
-                        <div className="hidden h-5 w-px bg-border sm:block" />
-
-                        <div className="ml-auto flex items-center gap-2">
-                            <span className="text-[11px] text-muted-foreground hidden sm:block">
-                                Sort:
-                            </span>
-                            <Select value={sortBy}>
-                                <SelectTrigger className="h-8 w-40 text-xs border-border">
-                                    <SlidersHorizontal className="size-3 mr-1.5 text-muted-foreground" />
-                                    <SelectValue />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="trending">Trending</SelectItem>
-                                    <SelectItem value="newest">Newest</SelectItem>
-                                    <SelectItem value="upvotes">Most Upvoted</SelectItem>
-                                    <SelectItem value="views">Most Viewed</SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
+                <div className="flex items-center justify-between mb-4">
+                    <p className="text-xs text-muted-foreground font-medium">
+                        {meta?.total ?? ideas.length} {(meta?.total ?? ideas.length) === 1 ? "idea" : "ideas"} found
+                    </p>
+                    {isFetchingIdeas && !isLoadingIdeas && (
+                        <Loader2 className="size-3.5 animate-spin text-muted-foreground" />
+                    )}
                 </div>
 
-                <p className="text-xs text-muted-foreground mb-4 font-medium">
-                    {filtered.length} {filtered.length === 1 ? "idea" : "ideas"} found
-                </p>
-
-                {filtered.length === 0 ? (
+                {isLoadingIdeas ? (
+                    <div className="flex h-64 items-center justify-center">
+                        <Loader2 className="size-8 animate-spin text-primary/50" />
+                    </div>
+                ) : ideas.length === 0 ? (
                     <div className="flex h-64 flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-muted/30 text-center">
                         <div className="flex size-12 items-center justify-center rounded-full bg-muted">
                             <Filter className="size-5 text-muted-foreground" />
@@ -129,11 +136,22 @@ export default function IdeasPage() {
                         </div>
                     </div>
                 ) : (
-                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-                        {filtered.map((idea) => (
-                            <IdeaCard key={idea.id} idea={idea} showStatus />
-                        ))}
-                    </div>
+                    <>
+                        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {ideas.map((idea: IIdea) => (
+                                <IdeaCard key={idea.id} idea={idea as any} showStatus />
+                            ))}
+                        </div>
+
+                        {/* Pagination (Client Component extracted) */}
+                        <IdeaPagination
+                            currentPage={page}
+                            totalPages={meta?.totalPages || 0}
+                            totalRows={meta?.total || 0}
+                            onPageChange={(p) => updateParams("page", p.toString())}
+                            isLoading={isFetchingIdeas}
+                        />
+                    </>
                 )}
             </main>
         </div>

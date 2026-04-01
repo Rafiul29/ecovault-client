@@ -13,7 +13,7 @@ export default async function CommonLayout({
   return (
     <TooltipProvider>
       <div className="flex min-h-screen flex-col">
-          <Header user={user} />
+        <Header user={user} />
         <main className="flex-1 pt-20">
           {children}
         </main>

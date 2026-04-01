@@ -46,7 +46,7 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className={headerClasses}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-0 ">
         {/* Brand */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2.5 group">
@@ -54,7 +54,7 @@ export function Header({ user }: HeaderProps) {
               <Leaf className="size-4.5" />
             </div>
             <span className="font-display text-xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
-              EcoValut
+              EcoVault
             </span>
           </Link>
 
