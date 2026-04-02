@@ -44,6 +44,7 @@ const ViewIdeaDialog = ({ open, onOpenChange, idea }: ViewIdeaDialogProps) => {
 
                 <ScrollArea className="flex-1">
                     <div className="p-6 space-y-8 pb-10">
+
                         {/* Summary Section */}
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div className="space-y-1">

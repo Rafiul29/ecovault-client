@@ -84,3 +84,14 @@ export const getMySubscription = async () => {
         throw error;
     }
 }
+// Subscribe
+export const subscribeToPlan = async (payload: { subscriptionPlanId: string }) => {
+    try {
+        // The backend returns { success: boolean, message: string, data: { paymentUrl: string } }
+        const response = await httpClient.post<any>("/subscriptions/subscribe", payload);
+        return response;
+    } catch (error) {
+        console.error("Error subscribing to plan:", error);
+        throw error;
+    }
+}

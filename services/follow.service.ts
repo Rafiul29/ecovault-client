@@ -1,26 +1,18 @@
-// Client-side follow service — no "use server"
-const API_BASE = (process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:5000/api/v1").replace(/\/$/, "");
+"use server";
+
+import { httpClient } from "@/lib/axios/httpClient";
 
 export const toggleFollow = async (followingId: string) => {
-    const res = await fetch(`${API_BASE}/follows`, {
-        method: "POST",
-        credentials: "include",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ followingId }),
-    });
-    return res.json(); // { success, message, data: { action: "followed" | "unfollowed" } }
+    const response = await httpClient.post("/follows", { followingId });
+    return response;
 };
 
 export const getUserFollowers = async (userId: string) => {
-    const res = await fetch(`${API_BASE}/follows/followers/${userId}`, {
-        credentials: "include",
-    });
-    return res.json();
+    const response = await httpClient.get(`/follows/followers/${userId}`);
+    return response;
 };
 
 export const getUserFollowing = async (userId: string) => {
-    const res = await fetch(`${API_BASE}/follows/following/${userId}`, {
-        credentials: "include",
-    });
-    return res.json();
+    const response = await httpClient.get(`/follows/following/${userId}`);
+    return response;
 };

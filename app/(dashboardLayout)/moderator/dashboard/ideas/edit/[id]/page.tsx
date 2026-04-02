@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import { getIdeaById } from "@/services/idea.service";
 import { getCategories } from "@/services/category.service";
-import EditIdeaForm from "@/components/modules/Admin/IdeaManagement/EditIdeaForm";
+import EditIdeaForm from "@/components/modules/Moderator/IdeaManagement/EditIdeaForm";
 import { notFound } from "next/navigation";
 
 const EditIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -33,7 +33,7 @@ const EditIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <div className="max-w-[1600px] mx-auto py-10 px-4 h-full">
-                <EditIdeaForm idea={idea} categories={categories} mode="my-ideas" />
+                <EditIdeaForm idea={idea} categories={categories} />
             </div>
         </HydrationBoundary>
     );

@@ -77,7 +77,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                 description: value.description,
                 problemStatement: value.problemStatement,
                 proposedSolution: value.proposedSolution,
-                status: value.status,
+                status: value.status || "DRAFT",
                 isPaid: value.isPaid,
                 price: Number(value.price),
                 isFeatured: value.isFeatured,
@@ -162,7 +162,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                     </div>
 
                     <div className="p-6 md:p-8 space-y-8 bg-white">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                        <div className="grid grid-cols-1">
                             <form.Field
                                 name="title"
                                 validators={{
@@ -181,26 +181,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                 )}
                             </form.Field>
 
-                            <form.Field name="status">
-                                {(field) => (
-                                    <div className="space-y-2">
-                                        <Label className="text-sm font-medium text-neutral-800">Initial Status</Label>
-                                        <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
-                                            <SelectTrigger className="h-12 rounded-xl transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200">
-                                                <SelectValue placeholder="Select status" />
-                                            </SelectTrigger>
-                                            <SelectContent className="rounded-xl border-neutral-100 shadow-xl">
-                                                <SelectItem value="DRAFT">Draft</SelectItem>
-                                                <SelectItem value="UNDER_REVIEW">Under Review</SelectItem>
-                                                <SelectItem value="APPROVED">Approved</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-                                            <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
-                                        )}
-                                    </div>
-                                )}
-                            </form.Field>
+
                         </div>
 
                         <form.Field
@@ -396,7 +377,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                         <div className="flex flex-col h-full justify-start">
                             <form.Subscribe selector={(state) => state.values.isPaid}>
                                 {(isPaid) => isPaid && (
-                                    <form.Field 
+                                    <form.Field
                                         name="price"
                                         validators={{
                                             onChange: ({ value }) => {
@@ -446,39 +427,39 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
 
                     <div className="p-6 md:p-8 bg-white">
                         <form.Field name="images">
-                        {(field) => (
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-                                    {imagePreviews.map((preview, idx) => (
-                                        <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-neutral-100 group shadow-sm transition-transform hover:scale-95">
-                                            <Image src={preview} alt="Preview" fill className="object-cover" />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeImage(idx)}
-                                                className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
-                                            >
-                                                <X className="h-3 w-3" />
-                                            </button>
+                            {(field) => (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+                                        {imagePreviews.map((preview, idx) => (
+                                            <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-neutral-100 group shadow-sm transition-transform hover:scale-95">
+                                                <Image src={preview} alt="Preview" fill className="object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeImage(idx)}
+                                                    className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-neutral-50 border-neutral-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all cursor-pointer group shadow-inner">
+                                            <Input
+                                                type="file"
+                                                multiple
+                                                accept="image/*"
+                                                className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                                                onChange={handleImageChange}
+                                            />
+                                            <Upload className="h-8 w-8 text-neutral-400 mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
+                                            <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
                                         </div>
-                                    ))}
-                                    <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-neutral-50 border-neutral-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all cursor-pointer group shadow-inner">
-                                        <Input
-                                            type="file"
-                                            multiple
-                                            accept="image/*"
-                                            className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                                            onChange={handleImageChange}
-                                        />
-                                        <Upload className="h-8 w-8 text-neutral-400 mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
-                                        <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
                                     </div>
+                                    {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                                        <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
+                                    )}
                                 </div>
-                                {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-                                    <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
-                                )}
-                            </div>
-                        )}
-                    </form.Field>
+                            )}
+                        </form.Field>
                     </div>
                 </div>
 

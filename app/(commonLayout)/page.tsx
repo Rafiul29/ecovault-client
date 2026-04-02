@@ -8,8 +8,10 @@ import { Pricing } from "@/components/landing/Pricing";
 import { CTA } from "@/components/landing/CTA";
 import { getAllSubscriptionPlans } from "@/services/subscription.service";
 import { getIdeas } from "@/services/idea.service";
+import { getUserInfo } from "@/services/auth.service";
 
 export default async function LandingPage() {
+  const user = await getUserInfo();
   // Fetch featured ideas from the backend
   const ideasResponse = await getIdeas("status=APPROVED&page=1&isFeatured=true&limit=3");
   const featuredIdeas = ideasResponse?.data ?? [];
@@ -26,7 +28,7 @@ export default async function LandingPage() {
       <Process />
       <FeaturedIdeas ideas={featuredIdeas as any} />
       <Testimonials />
-      <Pricing plans={plans as any} />
+      <Pricing plans={plans as any} user={user} />
       <CTA />
     </>
   );

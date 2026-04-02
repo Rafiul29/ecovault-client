@@ -20,8 +20,9 @@ import {
 } from "@/lib/utils";
 import IdeaInteraction from "@/components/modules/IdeaDetail/IdeaInteraction";
 import IdeaComments from "@/components/modules/IdeaDetail/IdeaComments";
-import IdeaAttachments from "@/components/modules/IdeaDetail/IdeaAttachments";
+import IdeaAttachments from "@/components/modules/IdeaManagement/IdeaAttachments";
 import FollowButton from "@/components/modules/Profile/FollowButton";
+import PurchaseIdeaButton from "@/components/modules/IdeaDetail/PurchaseIdeaButton";
 import { notFound } from "next/navigation";
 import { IdeaStatus } from "@/types/types";
 
@@ -165,9 +166,14 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
                                 </div>
                             </div>
 
-                            {/* Attachments: isPaid false show, isPaid true hide */}
-                            {!idea.isPaid && idea.attachments && idea.attachments.length > 0 && (
-                                <IdeaAttachments attachments={idea.attachments} />
+                            {/* Attachments Section */}
+                            {!idea.isPaid && (
+                                <IdeaAttachments 
+                                    ideaId={idea.id} 
+                                    authorId={idea.authorId} 
+                                    currentUserId={currentUser?.id} 
+                                    currentUserRole={currentUser?.role}
+                                />
                             )}
 
                             {/* Tags */}
@@ -234,21 +240,11 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
                             </div>
 
                             {idea.isPaid ? (
-                                <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
-                                    <div className="mb-2 flex items-center gap-2">
-                                        <BadgeDollarSign className="size-5 text-primary" />
-                                        <span className="text-xl font-bold text-primary">
-                                            ${idea.price}
-                                        </span>
-                                    </div>
-                                    <p className="text-xs text-muted-foreground mb-3">
-                                        Unlock full business plan, financial projections, and
-                                        exclusive resources.
-                                    </p>
-                                    <Button className="w-full" size="sm">
-                                        Purchase Idea
-                                    </Button>
-                                </div>
+                                <PurchaseIdeaButton 
+                                    ideaId={idea.id} 
+                                    price={idea.price} 
+                                    isLoggedIn={!!currentUser} 
+                                />
                             ) : (
                                 <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
                                     <div className="mb-1.5 flex items-center gap-2 text-primary">

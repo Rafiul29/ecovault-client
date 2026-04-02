@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { IIdea } from "@/types/idea.types"
-import IdeaAttachments from "@/components/modules/Admin/IdeaManagement/IdeaAttachments"
+import IdeaAttachments from "@/components/modules/IdeaManagement/IdeaAttachments"
 
 // This page renders a premium view of a single Idea entity
 const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -36,7 +36,7 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
     const statusConfig = getStatusConfig(idea.status)
 
     return (
-        <div className="max-w-[1600px] mx-auto py-8 px-4 sm:px-6 lg:px-8 h-full pb-20">
+        <div className="py-8 px-4 sm:px-6 lg:px-8 h-full pb-20">
             {/* Header Section */}
             <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 pb-8 border-b border-neutral-100 mb-8">
                 <div className="flex items-start gap-6">
@@ -63,11 +63,6 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                         <h1 className="text-4xl md:text-5xl font-black text-neutral-900 tracking-tight leading-tight">
                             {idea.title}
                         </h1>
-                        <p className="text-sm font-bold text-neutral-400 flex items-center gap-2">
-                            <Link href={`/projects/${idea.slug}`} className="hover:text-emerald-600 transition-colors hover:underline">
-                                /{idea.slug}
-                            </Link>
-                        </p>
                     </div>
                 </div>
 
@@ -151,8 +146,13 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                     </div>
 
                     {/* Resources & Attachments */}
-                    <div className="bg-white rounded-[2.5rem] p-8 sm:p-12 shadow-sm border border-neutral-100 mt-8">
-                        <IdeaAttachments ideaId={idea.id} authorId={idea.authorId} currentUserId={idea.authorId} currentUserRole="ADMIN" />
+                    <div className="bg-white rounded-3xl p-8 sm:p-12 shadow-sm border border-neutral-100 mt-8">
+                        <IdeaAttachments 
+                            ideaId={idea.id} 
+                            authorId={idea.authorId} 
+                            currentUserId={idea.authorId} 
+                            currentUserRole="ADMIN" 
+                        />
                     </div>
                 </div>
 

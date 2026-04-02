@@ -29,7 +29,7 @@ import { getTags } from "@/services/tag.service"
 import CategoryMultiSelect from "./CategoryMultiSelect"
 import TagMultiSelect from "./TagMultiSelect"
 import Link from "next/link"
-import IdeaAttachments from "./IdeaAttachments"
+import IdeaAttachments from "../../IdeaManagement/IdeaAttachments"
 
 interface EditIdeaFormProps {
     idea: IIdea
@@ -182,15 +182,43 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                 }}
                 className="space-y-8 pb-20"
             >
+
+                {/* SECTION: ADMIN FEEDBACK (READ-ONLY FOR MODERATOR) */}
+                {idea?.adminFeedback && (
+                    <div className="bg-amber-50/50 rounded-2xl shadow-sm border border-amber-200 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                        <div className="px-6 md:px-8 py-4 border-b border-amber-100 bg-amber-50/80 flex items-center gap-3">
+                            <div className="h-8 w-8 rounded-lg bg-amber-100 flex items-center justify-center border border-amber-200">
+                                <Save className="h-4 w-4 text-amber-600" />
+                            </div>
+                            <div>
+                                <h2 className="text-base font-bold text-amber-900">Feedback from Admin</h2>
+                                <p className="text-[11px] text-amber-700/70 font-bold uppercase tracking-wider">Reviewer Comments</p>
+                            </div>
+                        </div>
+
+                        <div className="p-6 md:p-8">
+                            <div className="bg-white/60 rounded-xl p-5 border border-amber-100/50 shadow-inner">
+                                <p className="text-neutral-800 text-[15px] leading-relaxed font-medium">
+                                    {idea.adminFeedback}
+                                </p>
+                            </div>
+                            <div className="mt-4 flex items-center gap-2">
+                                <div className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                                <p className="text-[11px] text-amber-600 font-bold uppercase tracking-widest">Constructive feedback</p>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
                 {/* SECTION: GENERAL INFORMATION */}
                 <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
                     <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
-                        <h2 className="text-lg font-bold text-neutral-900">Basic Information</h2>
+                        <h2 className="text-lg font-bold text-neutral-900">Basic Information vbnm</h2>
                         <p className="text-sm text-neutral-500 font-medium mt-1">Title, description, and overview of your idea</p>
                     </div>
 
                     <div className="p-6 md:p-8 space-y-8 bg-white">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
+                        <div className="grid grid-cols-1 ">
                             <form.Field
                                 name="title"
                                 validators={{
@@ -206,28 +234,6 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
                                         label={<span>Title <span className="text-rose-500">*</span></span> as any}
                                         placeholder="e.g., Solar-Powered Water Purification System"
                                     />
-                                )}
-                            </form.Field>
-
-                            <form.Field name="status">
-                                {(field) => (
-                                    <div className="space-y-2">
-                                        <Label className="text-sm font-medium text-neutral-800">Idea Status</Label>
-                                        <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
-                                            <SelectTrigger className="h-12 rounded-xl transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200">
-                                                <SelectValue placeholder="Select status" />
-                                            </SelectTrigger>
-                                            <SelectContent className="rounded-xl border-neutral-100 shadow-xl">
-                                                <SelectItem value="DRAFT">Draft</SelectItem>
-                                                <SelectItem value="UNDER_REVIEW">Under Review</SelectItem>
-                                                <SelectItem value="APPROVED">Approved</SelectItem>
-                                                <SelectItem value="REJECTED">Rejected</SelectItem>
-                                            </SelectContent>
-                                        </Select>
-                                        {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-                                            <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
-                                        )}
-                                    </div>
                                 )}
                             </form.Field>
                         </div>
@@ -475,39 +481,39 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
 
                     <div className="p-6 md:p-8 bg-white">
                         <form.Field name="newImages">
-                        {(field) => (
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-                                    {imagePreviews.map((preview, idx) => (
-                                        <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-neutral-100 group shadow-sm transition-transform hover:scale-95">
-                                            <Image src={preview} alt="Preview" fill className="object-cover" />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeSelectedImage(idx)}
-                                                className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
-                                            >
-                                                <X className="h-3 w-3" />
-                                            </button>
+                            {(field) => (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+                                        {imagePreviews.map((preview, idx) => (
+                                            <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-neutral-100 group shadow-sm transition-transform hover:scale-95">
+                                                <Image src={preview} alt="Preview" fill className="object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeSelectedImage(idx)}
+                                                    className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-neutral-50 border-neutral-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all cursor-pointer group shadow-inner">
+                                            <Input
+                                                type="file"
+                                                multiple
+                                                accept="image/*"
+                                                className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                                                onChange={handleImageChange}
+                                            />
+                                            <Upload className="h-8 w-8 text-neutral-400 mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
+                                            <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
                                         </div>
-                                    ))}
-                                    <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-neutral-50 border-neutral-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all cursor-pointer group shadow-inner">
-                                        <Input
-                                            type="file"
-                                            multiple
-                                            accept="image/*"
-                                            className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                                            onChange={handleImageChange}
-                                        />
-                                        <Upload className="h-8 w-8 text-neutral-400 mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
-                                        <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
                                     </div>
+                                    {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                                        <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
+                                    )}
                                 </div>
-                                {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-                                    <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
-                                )}
-                            </div>
-                        )}
-                    </form.Field>
+                            )}
+                        </form.Field>
                     </div>
                 </div>
 

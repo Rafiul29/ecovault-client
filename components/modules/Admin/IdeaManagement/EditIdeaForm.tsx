@@ -29,7 +29,8 @@ import { getTags } from "@/services/tag.service"
 import CategoryMultiSelect from "./CategoryMultiSelect"
 import TagMultiSelect from "./TagMultiSelect"
 import Link from "next/link"
-import IdeaAttachments from "./IdeaAttachments"
+import IdeaAttachments from "../../IdeaManagement/IdeaAttachments"
+
 
 interface EditIdeaFormProps {
     idea: IIdea
@@ -78,6 +79,7 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
             categories: idea?.categories?.map(c => c.category.id) || [],
             tags: idea?.tags?.map(t => t.tag.id) || [],
             newImages: [] as File[],
+            adminFeedback: idea?.adminFeedback || "",
         },
         onSubmit: async ({ value }) => {
             const formData = new FormData()
@@ -93,6 +95,7 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
                 isFeatured: value.isFeatured,
                 categories: value.categories,
                 tags: value.tags,
+                adminFeedback: value.adminFeedback,
                 existingImages: imagePreviews.filter(p => !p.startsWith("data:"))
             }
 
@@ -247,6 +250,31 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
                                     <Label className="text-sm font-medium text-neutral-800">Short Description <span className="text-rose-500">*</span></Label>
                                     <Textarea
                                         placeholder="A concise overview of your idea (2–3 sentences)"
+                                        className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
+                                        value={field.state.value}
+                                        onChange={(e) => field.handleChange(e.target.value)}
+                                    />
+                                    {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                                        <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
+                                    )}
+                                </div>
+                            )}
+                        </form.Field>
+
+                        <form.Field
+                            name="adminFeedback"
+                            validators={{
+                                onChange: ({ value }) => {
+                                    const res = updateIdeaZodSchema.shape.adminFeedback.safeParse(value)
+                                    return res.success ? undefined : res.error.issues[0]?.message
+                                }
+                            }}
+                        >
+                            {(field) => (
+                                <div className="space-y-2">
+                                    <Label className="text-sm font-medium text-neutral-800">Admin Feedback (Optional)</Label>
+                                    <Textarea
+                                        placeholder="Provide feedback or reasons for status changes to the moderator..."
                                         className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
@@ -476,39 +504,39 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
 
                     <div className="p-6 md:p-8 bg-white">
                         <form.Field name="newImages">
-                        {(field) => (
-                            <div className="space-y-4">
-                                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
-                                    {imagePreviews.map((preview, idx) => (
-                                        <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-neutral-100 group shadow-sm transition-transform hover:scale-95">
-                                            <Image src={preview} alt="Preview" fill className="object-cover" />
-                                            <button
-                                                type="button"
-                                                onClick={() => removeSelectedImage(idx)}
-                                                className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
-                                            >
-                                                <X className="h-3 w-3" />
-                                            </button>
+                            {(field) => (
+                                <div className="space-y-4">
+                                    <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
+                                        {imagePreviews.map((preview, idx) => (
+                                            <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-neutral-100 group shadow-sm transition-transform hover:scale-95">
+                                                <Image src={preview} alt="Preview" fill className="object-cover" />
+                                                <button
+                                                    type="button"
+                                                    onClick={() => removeSelectedImage(idx)}
+                                                    className="absolute top-2 right-2 bg-rose-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity shadow-lg z-10"
+                                                >
+                                                    <X className="h-3 w-3" />
+                                                </button>
+                                            </div>
+                                        ))}
+                                        <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-neutral-50 border-neutral-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all cursor-pointer group shadow-inner">
+                                            <Input
+                                                type="file"
+                                                multiple
+                                                accept="image/*"
+                                                className="absolute inset-0 opacity-0 cursor-pointer z-20"
+                                                onChange={handleImageChange}
+                                            />
+                                            <Upload className="h-8 w-8 text-neutral-400 mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
+                                            <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
                                         </div>
-                                    ))}
-                                    <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-neutral-50 border-neutral-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all cursor-pointer group shadow-inner">
-                                        <Input
-                                            type="file"
-                                            multiple
-                                            accept="image/*"
-                                            className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                                            onChange={handleImageChange}
-                                        />
-                                        <Upload className="h-8 w-8 text-neutral-400 mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
-                                        <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
                                     </div>
+                                    {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
+                                        <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
+                                    )}
                                 </div>
-                                {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
-                                    <p className="text-[10px] font-bold text-rose-500 uppercase tracking-widest px-1">{field.state.meta.errors[0]}</p>
-                                )}
-                            </div>
-                        )}
-                    </form.Field>
+                            )}
+                        </form.Field>
                     </div>
                 </div>
 

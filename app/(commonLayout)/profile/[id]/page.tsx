@@ -47,7 +47,9 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
     try {
         currentUser = await getUserInfo();
         const followRes = await getUserFollowers(id);
-        if (followRes?.success) followersList = followRes.data || [];
+        if (followRes?.success) {
+            followersList = (followRes.data as any[]) || [];
+        }
     } catch {
         // Non-critical — skip silently
     }
