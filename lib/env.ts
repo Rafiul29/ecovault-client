@@ -9,10 +9,10 @@ export const getApiBaseUrl = () => {
     url = url.slice(0, -1);
   }
 
-  // // Ensure the /api/v1 suffix exists if it's pointing to the root domain
-  // if (!url.endsWith('/api/v1')) {
-  //   url += '/api/v1';
-  // }
+  // Ensure the /api/v1 suffix exists if it's pointing to the root domain
+  if (!url.endsWith('/api/v1')) {
+    url += '/api/v1';
+  }
 
   return url;
 };

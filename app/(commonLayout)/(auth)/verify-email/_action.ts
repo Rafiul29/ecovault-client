@@ -15,11 +15,24 @@ export const verifyEmailAction = async (payload: IVerifyEmailPayload): Promise<a
     }
 
     try {
+        // আপনার API response structure অনুযায়ী data নিন
         const response = await httpClient.post("/auth/verify-email", parsedPayload.data);
-        return {
-            success: true,
-            message: response.message || "Email verified successfully",
+
+        // যদি API সরাসরি response.data তে success পাঠায়
+        const resData = response || {};
+
+        if (resData.success) {
+            return {
+                success: true,
+                message: resData.message || "Email verified successfully",
+            }
         }
+
+        return {
+            success: false,
+            message: resData.message || "Verification failed",
+        }
+
     } catch (error: any) {
         return {
             success: false,

@@ -32,7 +32,7 @@ const EditIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className="max-w-[1600px] mx-auto py-10 px-4 h-full">
+            <div className="">
                 <EditIdeaForm idea={idea} categories={categories} />
             </div>
         </HydrationBoundary>

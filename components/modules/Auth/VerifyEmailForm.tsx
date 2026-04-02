@@ -37,7 +37,11 @@ const VerifyEmailForm = ({ email: initialEmail }: VerifyEmailFormProps) => {
                 const result = await mutateAsync(value)
                 if (result.success) {
                     setServerSuccess(result.message || "Email verified successfully!")
-                    setTimeout(() => router.push("/login"), 2000)
+                    // ১ সেকেন্ড অপেক্ষা করুন যেন ইউজার সাকসেস মেসেজটি দেখতে পায়
+                    setTimeout(() => {
+                        router.push("/dashboard")
+                        router.refresh()
+                    }, 1000)
                 } else {
                     setServerError(result.message || "Verification failed")
                 }

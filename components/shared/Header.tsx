@@ -46,7 +46,7 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className={headerClasses}>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 md:px-0 ">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-2 lg:px-0 ">
         {/* Brand */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2.5 group">

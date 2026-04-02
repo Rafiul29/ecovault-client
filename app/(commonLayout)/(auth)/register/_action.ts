@@ -7,7 +7,7 @@ import { ILoginResponse, IRegisterResponse } from "@/types/auth.types";
 import { IRegisterPayload, registerZodSchema } from "@/zod/auth.validation";
 import { redirect } from "next/navigation";
 
-export const registerAction = async (payload: IRegisterPayload, redirectPath?: string): Promise<ILoginResponse | ApiErrorResponse> => {
+export const registerAction = async (payload: IRegisterPayload, redirectPath?: string): Promise<ILoginResponse | ApiErrorResponse | void> => {
 
     const parsedPayload = registerZodSchema.safeParse(payload);
 
@@ -19,38 +19,40 @@ export const registerAction = async (payload: IRegisterPayload, redirectPath?: s
         }
     }
 
+    // রিডাইরেক্ট পাথ হোল্ড করার জন্য ভেরিয়েবল
+    let redirectTo: string | null = null;
+
     try {
         const response = await httpClient.post<IRegisterResponse>("/auth/register", parsedPayload.data);
         const { accessToken, refreshToken, token, user } = response.data;
-        const { role, emailVerified, email } = user;
+
         await setTokenInCookies("accessToken", accessToken);
         await setTokenInCookies("refreshToken", refreshToken);
-        await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60); // 1 day in seconds
+        await setTokenInCookies("better-auth.session_token", token, 24 * 60 * 60);
 
-        // if (needPasswordChange) {
-        //TODO : refactoring
-        // redirect(`/reset-password?email=${email}`);
-        // } else {
-        // const targetPath = redirectPath && isValidRedirectForRole(redirectPath, role as UserRole) ? redirectPath : getDefaultDashboardRoute(role as UserRole);
+        // Success হলে কোথায় যাবে
+        redirectTo = "/dashboard";
 
-
-        // redirect(targetPath);
-        // }
-
-        redirect("/dashboard");
     } catch (error: any) {
-        // console.log("error", error);
-        if (error && typeof error === "object" && "digest" in error && typeof error.digest === "string" && error.digest.startsWith("NEXT_REDIRECT")) {
+        // ১. যদি এটি Next.js এর নিজস্ব রিডাইরেক্ট এরর হয়, তবে সেটাকে সরাসরি থ্রো করতে হবে
+        if (error && typeof error === "object" && "digest" in error && error.digest?.startsWith("NEXT_REDIRECT")) {
             throw error;
         }
 
-        if (error && error.response && error.response.data.message === "Email not verified") {
-            redirect(`/verify-email?email=${payload.email}`);
+        // ২. স্পেসিফিক বিজনেস লজিক এরর (যেমন: ইমেইল ভেরিফাইড না থাকলে)
+        if (error.response?.data?.message === "Email not verified") {
+            redirectTo = `/verify-email?email=${payload.email}`;
+        } else {
+            // ৩. সাধারণ এরর রিটার্ন করা
+            return {
+                success: false,
+                message: `Register failed: ${error?.message || "Something went wrong"}`,
+            };
         }
-        return {
-            success: false,
-            message: `Register failed: ${error.response.data.message}`,
-        }
+    }
 
+    // ৪. রিডাইরেক্ট সব সময় try-catch এর বাইরে করতে হয়
+    if (redirectTo) {
+        redirect(redirectTo);
     }
 }

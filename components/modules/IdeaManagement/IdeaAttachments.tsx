@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Eye, Link as LinkIcon, Loader2, Upload, FileText, File as FileIcon, Video, Plus, Trash2, Download, Maximize2, X } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Role } from "@/types/enums";
 import { API_BASE_URL } from "@/lib/env";
 import Image from "next/image";
@@ -23,6 +23,13 @@ interface IdeaAttachmentsProps {
 }
 
 const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: IdeaAttachmentsProps) => {
+
+    const pathname = usePathname();
+
+    // Logic: ideas/{id} রাউটে থাকলে বাটন হাইড করার জন্য
+    // যদি pathname এ '/ideas/' থাকে এবং সেটা '/ideas/edit' না হয়
+    const isPublicView = pathname.startsWith("/ideas/") && !pathname.startsWith("/edit");
+
     const queryClient = useQueryClient();
     const [isAddOpen, setIsAddOpen] = useState(false);
     const [viewingAttachment, setViewingAttachment] = useState<{ id: string; url: string; type: string; title: string } | null>(null);
@@ -123,83 +130,95 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
 
     return (
         <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between px-1">
                 <div>
-                    <h3 className="text-xl font-black text-neutral-900 tracking-tight flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100 shadow-sm">
-                            <LinkIcon className="h-5 w-5 text-emerald-600" />
-                        </div>
-                        Attachments & Files
-                    </h3>
-                    <p className="text-xs font-bold text-neutral-400 mt-1.5 uppercase tracking-widest pl-13">Resources & Documentation</p>
+                    <h3 className="text-lg font-bold text-slate-800">Attachments</h3>
+                    <p className="text-xs text-slate-500">Project resources and documentation</p>
                 </div>
-                {hasPermission && (
-                    <Button onClick={() => setIsAddOpen(true)} className="gap-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl shadow-xl shadow-emerald-500/20 font-black px-6 h-11 transition-all hover:scale-105 active:scale-95">
-                        <Plus className="h-5 w-5" /> Add Resource
+                {(!isPublicView && hasPermission) && (
+                    <Button
+                        onClick={() => setIsAddOpen(true)}
+                        size="sm"
+                        className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-4"
+                    >
+                        <Plus className="h-4 w-4 mr-2" /> Add File
                     </Button>
                 )}
             </div>
 
-            {isLoading ? (
-                <div className="flex flex-col items-center justify-center p-20 gap-4">
-                    <div className="relative h-12 w-12">
-                        <div className="absolute inset-0 rounded-full border-4 border-emerald-100/50" />
-                        <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
+            {/* List Section */}
+            <div className="grid grid-cols-1 gap-3">
+                {isLoading ? (
+                    <div className="py-10 text-center animate-pulse text-slate-400 text-sm font-medium">Loading files...</div>
+                ) : attachments?.length === 0 ? (
+                    <div className="bg-white border border-slate-100 rounded-xl p-8 text-center">
+                        <FileIcon className="h-8 w-8 text-slate-200 mx-auto mb-2" />
+                        <p className="text-sm text-slate-400">No attachments found</p>
                     </div>
-                    <p className="text-xs font-black text-emerald-600 uppercase tracking-[0.2em]">Syncing Files...</p>
-                </div>
-            ) : attachments?.length === 0 ? (
-                <div className="p-12 text-center bg-neutral-50 border-2 border-neutral-100 border-dashed rounded-[2.5rem] group hover:bg-white hover:border-emerald-100 transition-all duration-500">
-                    <div className="h-20 w-20 rounded-3xl bg-white shadow-sm border border-neutral-100 flex items-center justify-center mx-auto mb-6 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500">
-                        <FileIcon className="h-10 w-10 text-neutral-300" />
-                    </div>
-                    <h4 className="text-lg font-black text-neutral-800 tracking-tight mb-2">No files yet</h4>
-                    <p className="text-sm font-medium text-neutral-400 max-w-xs mx-auto">Upload documentation, pitch decks, or resource materials to help others understand your project.</p>
-                </div>
-            ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    {attachments.map((file: any) => (
-                        <div key={file.id} className="group relative flex items-center gap-5 p-5 rounded-3xl border border-neutral-100 bg-white hover:border-emerald-200 hover:shadow-2xl hover:shadow-emerald-500/5 transition-all duration-300">
-                            <div className="h-14 w-14 rounded-2xl bg-neutral-50 border border-neutral-50 flex items-center justify-center transition-transform group-hover:scale-110 group-hover:bg-white group-hover:border-neutral-100 shadow-sm shrink-0">
-                                {getIcon(file.type)}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                                <h4 className="font-black text-neutral-900 truncate pr-2 tracking-tight text-[15px]">{file.title || "Untitled Resource"}</h4>
-                                <div className="flex items-center gap-3 mt-1.5">
-                                    <Badge variant="outline" className={`text-[9px] uppercase font-bold tracking-widest px-2 py-0 border-neutral-200 text-neutral-500 bg-neutral-50`}>
-                                        {file.type}
-                                    </Badge>
-                                    <span className="text-[10px] text-neutral-400 font-bold tracking-tighter uppercase flex items-center gap-1">
-                                        <div className="h-1 w-1 rounded-full bg-neutral-300" />
-                                        RESOURCE ID: {file.id.slice(-6)}
-                                    </span>
+                ) : (
+                    attachments.map((file: any) => (
+                        <div
+                            key={file.id}
+                            className="flex items-center justify-between p-3 bg-white border border-slate-100 rounded-xl hover:shadow-sm transition-all"
+                        >
+                            <div className="flex items-center gap-4 min-w-0">
+                                <div className="h-10 w-10 bg-slate-50 rounded-lg flex items-center justify-center shrink-0 border border-slate-50">
+                                    {getIcon(file.type)}
+                                </div>
+                                <div className="min-w-0">
+                                    <h4 className="text-sm font-semibold text-slate-700 truncate max-w-[200px] md:max-w-md">
+                                        {file.title || "Unnamed file"}
+                                    </h4>
+                                    <div className="flex items-center gap-2 mt-0.5">
+                                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{file.type}</span>
+                                        <span className="h-1 w-1 rounded-full bg-slate-200" />
+                                        <span className="text-[10px] text-slate-400 font-mono">ID:{file.id.slice(-5)}</span>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div className="flex items-center gap-2">
-                                <Button size="icon" variant="ghost" className="h-10 w-10 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 text-neutral-400 transition-colors" onClick={() => handleViewFile(file)} title="View File">
-                                    <Eye className="h-5 w-5" />
+                            <div className="flex items-center gap-1">
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"
+                                    onClick={() => {
+                                        setViewingAttachment(file);
+                                        setViewAttachmentUrl(file.url);
+                                    }}
+                                >
+                                    <Eye className="h-4 w-4" />
                                 </Button>
 
-                                <Button size="icon" variant="ghost" className="h-10 w-10 rounded-xl hover:bg-emerald-50 hover:text-emerald-700 text-neutral-400 transition-colors" asChild title="Download File">
-                                    <a href={`${API_BASE_URL}/attachments/${file.id}/download`} download={file.title || "download"} target="_blank" rel="noopener noreferrer">
-                                        <Download className="h-5 w-5" />
+                                <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    className="h-8 w-8 text-slate-400 hover:text-blue-600 hover:bg-blue-50"
+                                    asChild
+                                >
+                                    <a href={`${process.env.NEXT_PUBLIC_API_URL}/attachments/${file.id}/download`} target="_blank">
+                                        <Download className="h-4 w-4" />
                                     </a>
                                 </Button>
 
-                                {hasPermission && (
-                                    <Button size="icon" variant="ghost" className="h-10 w-10 rounded-xl hover:bg-rose-50 hover:text-rose-600 text-neutral-300 transition-colors" onClick={() => deleteMutation.mutate(file.id)} title="Remove Attachment">
-                                        <Trash2 className="h-5 w-5" />
+                                {(!isPublicView && hasPermission) && (
+                                    <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-8 w-8 text-slate-300 hover:text-red-600 hover:bg-red-50"
+                                        onClick={() => {/* delete mutation */ }}
+                                    >
+                                        <Trash2 className="h-4 w-4" />
                                     </Button>
                                 )}
                             </div>
                         </div>
-                    ))}
-                </div>
-            )}
+                    ))
+                )}
+            </div>
 
             <Dialog open={isAddOpen} onOpenChange={setIsAddOpen}>
-                <DialogContent className="sm:max-w-xl rounded-3xl p-6 border-none shadow-3xl bg-white overflow-hidden">
+                <DialogContent className="sm:max-w-xl rounded-3xl p-2 border-none shadow-3xl bg-white overflow-hidden">
                     <DialogHeader className="space-y-1">
                         <DialogTitle className="text-xl font-black text-neutral-900 tracking-tight flex items-center gap-3">
                             <div className="h-9 w-9 rounded-xl bg-rose-50 flex items-center justify-center">
@@ -277,49 +296,71 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                     setViewingAttachment(null);
                 }
             }}>
-                <DialogContent className="max-w-[50vw] w-full h-[92vh] sm:max-w-[92vw] p-0 flex flex-col rounded-4xl overflow-hidden border-none shadow-[0_0_100px_rgba(0,0,0,0.1)] outline-none bg-white">
-                    <DialogHeader className="px-10 py-7 border-b border-neutral-50 flex flex-row items-center justify-between shrink-0 bg-white/80 backdrop-blur-xl z-20">
-                        <div className="flex items-center gap-5">
-                            <div className="h-14 w-14 rounded-2xl bg-neutral-50 flex items-center justify-center border border-neutral-100 shadow-inner">
-                                {viewingAttachment && getIcon(viewingAttachment.type)}
+                <DialogContent className="h-[90vh] md:max-w-[800px] w-[95vw] p-0 flex flex-col rounded-3xl overflow-hidden border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] outline-none bg-white transition-all">
+                    {/* Header Section */}
+                    <DialogHeader className="px-6 py-4 border-b border-neutral-100 flex flex-row items-center justify-between shrink-0 bg-white/90 backdrop-blur-md z-20">
+                        <div className="flex items-center gap-4">
+                            {/* Icon Container */}
+                            <div className="h-12 w-12 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100/50 shadow-sm shrink-0">
+                                {viewingAttachment && (
+                                    <div className="text-emerald-600 scale-110">
+                                        {getIcon(viewingAttachment.type)}
+                                    </div>
+                                )}
                             </div>
-                            <div className="space-y-1">
-                                <DialogTitle className="font-black text-neutral-900 text-2xl tracking-tight leading-none">
+
+                            <div className="flex flex-col gap-1">
+                                <DialogTitle className="font-bold text-neutral-800 text-lg md:text-xl tracking-tight leading-tight line-clamp-1">
                                     {viewingAttachment?.title || "Project Material"}
                                 </DialogTitle>
                                 <div className="flex items-center gap-3">
-                                    <Badge variant="secondary" className="px-3 py-0.5 text-[10px] font-black uppercase tracking-widest rounded-lg bg-emerald-50 text-emerald-600 border border-emerald-100">
-                                        Verified {viewingAttachment?.type}
+                                    <Badge variant="secondary" className="px-2.5 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md bg-emerald-100/50 text-emerald-700 border-none">
+                                        {viewingAttachment?.type}
                                     </Badge>
-                                    <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest flex items-center gap-2">
-                                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-                                        Secure Viewer Active
+                                    <div className="h-1 w-1 rounded-full bg-neutral-300" />
+                                    <span className="text-[10px] font-medium text-neutral-500 uppercase tracking-widest flex items-center gap-1.5">
+                                        <span className="relative flex h-2 w-2">
+                                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                        </span>
+                                        Secure Viewer
                                     </span>
                                 </div>
                             </div>
                         </div>
 
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2">
                             {viewingAttachment && (
-                                <Button size="lg" variant="outline" className="rounded-2xl font-black gap-2 h-12 border-neutral-100 hover:bg-neutral-50 shadow-sm transition-all hover:scale-105 active:scale-95 px-6" asChild>
+                                <Button
+                                    size="sm"
+                                    variant="ghost"
+                                    className="rounded-xl font-bold gap-2 h-10 px-3 text-neutral-600 hover:bg-neutral-100 transition-all active:scale-95"
+                                    asChild
+                                >
                                     <a href={`${API_BASE_URL}/attachments/${viewingAttachment.id}/download`} download={viewingAttachment.title || "download"} target="_blank" rel="noopener noreferrer">
-                                        <Download className="h-5 w-5 text-emerald-600" />
-                                        <span className="text-sm">Download Source</span>
+                                        <Download className="h-4 w-4" />
+                                        <span className="hidden sm:inline text-xs">Download</span>
                                     </a>
                                 </Button>
                             )}
-                            <Button size="icon" variant="ghost" className="h-12 w-12 rounded-2xl text-neutral-400 hover:bg-rose-50 hover:text-rose-500" onClick={() => setViewAttachmentUrl(null)}>
-                                <X className="h-6 w-6" />
+                            <Button
+                                size="icon"
+                                variant="ghost"
+                                className="h-10 w-10 rounded-xl text-neutral-400 hover:bg-rose-50 hover:text-rose-500 transition-colors"
+                                onClick={() => setViewAttachmentUrl(null)}
+                            >
+                                <X className="h-5 w-5" />
                             </Button>
                         </div>
                     </DialogHeader>
 
-                    <div className="relative flex-1 bg-neutral-50/50 overflow-hidden flex items-center justify-center p-4">
-                        <div className="w-full h-full rounded-4xl overflow-hidden shadow-3xl bg-white border border-neutral-100 relative group">
+                    {/* Main Content / Viewer Section */}
+                    <div className="relative flex-1 bg-neutral-50 overflow-hidden flex items-center justify-center p-4 md:p-6">
+                        <div className="w-full h-full rounded-2xl overflow-hidden shadow-sm bg-white border border-neutral-200/60 relative group">
                             {viewAttachmentUrl && viewingAttachment?.type === "VIDEO" ? (
                                 <video
                                     src={viewAttachmentUrl}
-                                    className="w-full h-full object-contain bg-black"
+                                    className="w-full h-full object-contain bg-black rounded-xl"
                                     controls
                                     autoPlay
                                 />
@@ -332,12 +373,18 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                                     title="Material Viewer"
                                 />
                             ) : (
-                                <div className="w-full h-full flex flex-col items-center justify-center gap-6">
-                                    <div className="relative h-16 w-16">
-                                        <div className="absolute inset-0 rounded-full border-4 border-emerald-100" />
-                                        <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin" />
+                                /* Loading State */
+                                <div className="w-full h-full flex flex-col items-center justify-center gap-5">
+                                    <div className="relative h-12 w-12">
+                                        <div className="absolute inset-0 rounded-full border-[3px] border-emerald-100" />
+                                        <div className="absolute inset-0 rounded-full border-[3px] border-emerald-500 border-t-transparent animate-spin" />
                                     </div>
-                                    <p className="text-xs font-black text-emerald-600 uppercase tracking-[0.3em] animate-pulse">Initializing Viewer</p>
+                                    <div className="flex flex-col items-center gap-1">
+                                        <p className="text-[10px] font-bold text-emerald-600 uppercase tracking-[0.2em]">
+                                            Loading Assets
+                                        </p>
+                                        <p className="text-[9px] text-neutral-400">Please wait a moment...</p>
+                                    </div>
                                 </div>
                             )}
                         </div>

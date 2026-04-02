@@ -45,7 +45,7 @@ const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: stri
                         </p>
                     </div>
                 </div>
-                <div className="overflow-hidden rounded-[2.5rem] bg-white p-6 shadow-sm border border-neutral-100/60 relative">
+                <div className="overflow-hidden">
                     <IdeasTable initialQueryString={queryString} />
                 </div>
             </div>
