@@ -39,7 +39,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
             {/* Navigation Area */}
             <ScrollArea className="flex-1 px-3 py-4">
                 <nav className="space-y-6">
-                    {navItems.map((section, sectionId) => (
+                    {navItems?.map((section, sectionId) => (
                         <div key={sectionId}>
                             {section.title && (
                                 <h4 className="mb-2 px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
@@ -84,7 +84,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
                 <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                         <span className="text-sm font-semibold text-primary">
-                            {userInfo.name.charAt(0).toUpperCase()}
+                            {userInfo?.name?.charAt(0).toUpperCase()}
                         </span>
                     </div>
 

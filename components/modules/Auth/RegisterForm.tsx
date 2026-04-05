@@ -164,7 +164,6 @@ const RegisterForm = () => {
                 Already have an account?{" "}
                 <Link
                     href="/login"
-                    disable-nav-link-transition={true}
                     className="text-emerald-600 font-extrabold hover:underline underline-offset-4 transition-all"
                 >
                     Login here

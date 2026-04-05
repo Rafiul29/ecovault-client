@@ -54,9 +54,17 @@ export async function proxy(request: NextRequest) {
         const accessToken = request.cookies.get("accessToken")?.value;
         const refreshToken = request.cookies.get("refreshToken")?.value;
 
+        const host = request.headers.get("host");
+        console.log("Middleware check:", { pathname, host, hasAccessToken: accessToken, hasRefreshToken: refreshToken });
+
         const decodedAccessToken = accessToken && jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string).data;
 
-        const isValidAccessToken = accessToken && jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string).success;
+        const verifyResult = accessToken ? jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string) : null;
+        const isValidAccessToken = verifyResult?.success || false;
+
+        if (accessToken && !isValidAccessToken) {
+            console.warn("Invalid access token in middleware:", verifyResult?.error);
+        }
 
         let userRole: UserRole | null = null;
 
@@ -74,7 +82,7 @@ export async function proxy(request: NextRequest) {
 
 
         //proactively refresh token if refresh token exists and access token is expired or about to expire
-        if (isValidAccessToken && refreshToken && (await isTokenExpiringSoon(accessToken))) {
+        if (isValidAccessToken && refreshToken && (await isTokenExpiringSoon(accessToken as string))) {
             const requestHeaders = new Headers(request.headers);
 
             const response = NextResponse.next({

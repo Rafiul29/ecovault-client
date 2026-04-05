@@ -34,6 +34,8 @@ export function Header({ user }: HeaderProps) {
     return () => window.removeEventListener("scroll", checkScroll);
   }, []);
 
+  console.log("user", user);
+
   const headerClasses = cn(
     "fixed top-0 z-50 w-full transition-all duration-300",
     !mounted &&

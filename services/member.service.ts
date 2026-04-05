@@ -29,3 +29,7 @@ export const getMemberInvoice = async (paymentId: string) => {
 export const getAllMembers = async (queryString: string = "") => {
     return httpClient.get(`/members?${queryString}`);
 };
+
+export const updateMyMemberProfile = async (payload: any) => {
+    return httpClient.patch("/members/profile", payload);
+};

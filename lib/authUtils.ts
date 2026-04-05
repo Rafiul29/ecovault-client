@@ -1,6 +1,6 @@
 export type UserRole = "SUPER_ADMIN" | "ADMIN" | "MEMBER" | "MODERATOR";
 
-export const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email", "/payment/success", "/payment/cancel"];
+export const authRoutes = ["/login", "/register", "/forgot-password", "/reset-password", "/verify-email"];
 
 export const isAuthRoute = (pathname: string) => {
     return authRoutes.some((router: string) => router === pathname)
@@ -12,7 +12,7 @@ export type RouteConfig = {
 }
 
 export const commonProtectedRoutes: RouteConfig = {
-    exact: ["/my-profile", "/change-password", "/achievements"],
+    exact: ["/my-profile", "/change-password", "/achievements", "/payment/success", "/payment/cancel"],
     pattern: []
 }
 
@@ -26,14 +26,10 @@ export const adminProtectedRoutes: RouteConfig = {
     exact: []
 }
 
-// export const superAdminProtectedRoutes : RouteConfig = {
-//     pattern: [/^\/admin\/dashboard/ ], // Matches any path that starts with /super-admin/dashboard
-//     exact : []
-// }
 
 export const memberProtectedRoutes: RouteConfig = {
     pattern: [/^\/dashboard/], // Matches any path that starts with /dashboard
-    exact: ["/payment/success"]
+    exact: []
 }
 
 export const isRouteMatches = (pathname: string, routes: RouteConfig) => {

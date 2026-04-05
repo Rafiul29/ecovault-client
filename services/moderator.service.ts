@@ -7,6 +7,7 @@ export const getMyModeratorProfile = async () => {
 };
 
 export const updateMyModeratorProfile = async (payload: any) => {
+    console.log("payload", payload);
     return httpClient.patch("/moderators/profile", payload);
 };
 

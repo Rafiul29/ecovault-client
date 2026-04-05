@@ -10,7 +10,7 @@ import { getMyPurchases } from "@/services/purchase.service";
 import { IIdeaPurchase } from "@/types/purchase.types";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useMemo } from "react";
 import { myPurchaseColumns } from "./myPurchaseColumns";
 import { PaginationMeta } from "@/types/api.types";
@@ -18,15 +18,18 @@ import {
     DataTableFilterConfig,
     DataTableFilterValues,
 } from "@/components/shared/table/DataTableFilters";
+import { useRowActionModalState } from "@/hooks/useRowActionModalState";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
+
 const MY_PURCHASE_FILTER_DEFINITIONS = [
     serverManagedFilter.single("status"),
 ];
 
 const MyPurchasesTable = ({ initialQueryString }: { initialQueryString: string }) => {
     const searchParams = useSearchParams();
+    const router = useRouter();
 
     const {
         queryStringFromUrl,
@@ -42,47 +45,54 @@ const MyPurchasesTable = ({ initialQueryString }: { initialQueryString: string }
         defaultLimit: DEFAULT_LIMIT,
     });
 
+    const {
+        tableActions,
+    } = useRowActionModalState<IIdeaPurchase>();
+
     const queryString = queryStringFromUrl || initialQueryString;
 
-    const { searchTermFromUrl, handleDebouncedSearchChange } =
-        useServerManagedDataTableSearch({ searchParams, updateParams });
+    const {
+        searchTermFromUrl,
+        handleDebouncedSearchChange,
+    } = useServerManagedDataTableSearch({
+        searchParams,
+        updateParams,
+    });
 
-    const { filterValues, handleFilterChange, clearAllFilters } =
-        useServerManagedDataTableFilters({
-            searchParams,
-            definitions: MY_PURCHASE_FILTER_DEFINITIONS,
-            updateParams,
-        });
+    const {
+        filterValues,
+        handleFilterChange,
+        clearAllFilters,
+    } = useServerManagedDataTableFilters({
+        searchParams,
+        definitions: MY_PURCHASE_FILTER_DEFINITIONS,
+        updateParams,
+    });
 
     const { data: purchasesResponse, isLoading, isFetching } = useQuery({
         queryKey: ["my-purchases", queryString],
-        queryFn: () => getMyPurchases(),
+        queryFn: () => getMyPurchases(queryString),
     });
 
     const records: IIdeaPurchase[] = purchasesResponse?.data ?? [];
     const meta: PaginationMeta | undefined = purchasesResponse?.meta;
 
-    const filterConfigs = useMemo<DataTableFilterConfig[]>(
-        () => [
-            {
-                id: "status",
-                label: "Idea Status",
-                type: "single-select",
-                options: [
-                    { label: "Approved", value: "APPROVED" },
-                    { label: "Under Review", value: "UNDER_REVIEW" },
-                    { label: "Draft", value: "DRAFT" },
-                    { label: "Rejected", value: "REJECTED" },
-                ],
-            },
-        ],
-        []
-    );
+    const filterConfigs: DataTableFilterConfig[] = [
+        {
+            id: "status",
+            label: "Status",
+            type: "single-select",
+            options: [
+                { label: "Approved", value: "APPROVED" },
+                { label: "Under Review", value: "UNDER_REVIEW" },
+                { label: "Rejected", value: "REJECTED" },
+            ],
+        },
+    ];
 
-    const filterValuesForTable = useMemo<DataTableFilterValues>(
-        () => ({ status: filterValues.status }),
-        [filterValues]
-    );
+    const filterValuesForTable: DataTableFilterValues = {
+        status: filterValues.status,
+    };
 
     return (
         <DataTable
@@ -100,7 +110,7 @@ const MyPurchasesTable = ({ initialQueryString }: { initialQueryString: string }
             }}
             search={{
                 initialValue: searchTermFromUrl,
-                placeholder: "Search by idea title, description...",
+                placeholder: "Search purchased ideas...",
                 debounceMs: 700,
                 onDebouncedChange: handleDebouncedSearchChange,
             }}
@@ -111,6 +121,10 @@ const MyPurchasesTable = ({ initialQueryString }: { initialQueryString: string }
                 onClearAll: clearAllFilters,
             }}
             meta={meta}
+            actions={{
+                ...tableActions,
+                onView: (purchase) => router.push(`/dashboard/ideas/${purchase.ideaId}`),
+            }}
         />
     );
 };

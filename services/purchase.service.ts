@@ -23,9 +23,12 @@ export const getSoldIdeas = async (queryString?: string) => {
 /**
  * MEMBER: Get the current user's purchased ideas.
  */
-export const getMyPurchases = async () => {
+export const getMyPurchases = async (queryString?: string) => {
     try {
-        const response = await httpClient.get<IIdeaPurchase[]>("/ideas/my-purchases");
+        const endpoint = queryString
+            ? `/ideas/my-purchases?${queryString}`
+            : `/ideas/my-purchases`;
+        const response = await httpClient.get<IIdeaPurchase[]>(endpoint);
         return response;
     } catch (error) {
         console.error("Error fetching my purchases:", error);

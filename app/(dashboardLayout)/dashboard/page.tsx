@@ -14,10 +14,10 @@ const MemberDashboardPage = async () => {
   });
 
   return (
-    <div className="p-4 md:p-6 lg:p-10 max-w-7xl mx-auto min-h-screen">
+    <div className="p-4 md:p-6 lg:p-10 min-h-screen">
       <div className="mb-10">
         <h1 className="text-4xl font-black tracking-tighter text-gray-900 mb-2">
-          Member <span className="text-primary">Dashboard</span>
+          <span className="text-primary">Dashboard</span>
         </h1>
         <p className="text-gray-500 font-medium tracking-tight">
           Manage your ideas, track your purchases, and monitor your platform growth.

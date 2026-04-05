@@ -3,6 +3,7 @@
 import { setTokenInCookies } from "@/lib/tokenUtils";
 import { cookies } from "next/headers";
 import { API_BASE_URL as BASE_API_URL } from "@/lib/env";
+import { httpClient } from "@/lib/axios/httpClient";
 
 export async function getNewTokensWithRefreshToken(refreshToken: string): Promise<boolean> {
     try {
@@ -78,14 +79,14 @@ export async function getUserInfo() {
 
 export async function verifyEmail(payload: { email: string; otp: string }) {
     try {
-        const res = await fetch(`${BASE_API_URL}/auth/verify-email`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-        });
+        // const res = await fetch(`${BASE_API_URL}/auth/verify-email`, {
+        //     method: "POST",
+        //     headers: { "Content-Type": "application/json" },
+        //     body: JSON.stringify(payload),
+        // });
 
-        const result = await res.json();
-        return result;
+        // const result = await res.json();
+        return;
     } catch (error: any) {
         console.error("Error verifying email:", error);
         return { success: false, message: error.message };
@@ -124,7 +125,10 @@ export async function resetPassword(payload: any) {
     }
 }
 
-export async function changePassword(payload: any, sessionToken: string) {
+export async function changePassword(payload: any, providedToken?: string) {
+    const cookieStore = await cookies();
+    const sessionToken = providedToken || cookieStore.get("better-auth.session_token")?.value;
+
     try {
         const res = await fetch(`${BASE_API_URL}/auth/change-password`, {
             method: "POST",
@@ -142,6 +146,7 @@ export async function changePassword(payload: any, sessionToken: string) {
         return { success: false, message: error.message };
     }
 }
+
 
 export async function logoutUser() {
     const cookieStore = await cookies();
@@ -163,4 +168,8 @@ export async function logoutUser() {
         cookieStore.delete("refreshToken");
         cookieStore.delete("better-auth.session_token");
     }
+}
+
+export async function updateProfile(payload: any) {
+    return httpClient.patch("/auth/update-profile", payload);
 }

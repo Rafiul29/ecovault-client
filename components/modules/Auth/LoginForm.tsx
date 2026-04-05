@@ -161,7 +161,6 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                 Don&apos;t have an account?{" "}
                 <Link
                     href="/register"
-                    disable-nav-link-transition={true}
                     className="text-emerald-600 font-extrabold hover:underline underline-offset-4 transition-all"
                 >
                     Create Account

@@ -13,7 +13,7 @@ import { getUserInfo } from "@/services/auth.service";
 export default async function LandingPage() {
   const user = await getUserInfo();
   // Fetch featured ideas from the backend
-  const ideasResponse = await getIdeas("status=APPROVED&page=1&isFeatured=true&limit=3");
+  const ideasResponse = await getIdeas("status=APPROVED&page=1&isFeatured=true&limit=6");
   const featuredIdeas = ideasResponse?.data ?? [];
 
   // Fetch active subscription plans from the backend
@@ -22,11 +22,11 @@ export default async function LandingPage() {
 
   return (
     <>
-      <Hero featuredIdeas={featuredIdeas as any} />
+      <Hero featuredIdeas={featuredIdeas.slice(0, 3) as any} />
       <Stats />
       <Features />
       <Process />
-      <FeaturedIdeas ideas={featuredIdeas as any} />
+      <FeaturedIdeas ideas={featuredIdeas.slice(3, 6) as any} />
       <Testimonials />
       <Pricing plans={plans as any} user={user} />
       <CTA />

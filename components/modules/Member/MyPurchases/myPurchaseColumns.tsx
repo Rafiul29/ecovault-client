@@ -87,9 +87,8 @@ export const myPurchaseColumns: ColumnDef<IIdeaPurchase>[] = [
             };
             return (
                 <span
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[10px] font-black uppercase tracking-widest ${
-                        colorMap[status] ?? "bg-neutral-100 text-neutral-500 border-neutral-200"
-                    }`}
+                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full border text-[10px] font-black uppercase tracking-widest ${colorMap[status] ?? "bg-neutral-100 text-neutral-500 border-neutral-200"
+                        }`}
                 >
                     {status.replace("_", " ")}
                 </span>
@@ -113,5 +112,5 @@ export const myPurchaseColumns: ColumnDef<IIdeaPurchase>[] = [
                 </span>
             </div>
         ),
-    },
+    }
 ];
