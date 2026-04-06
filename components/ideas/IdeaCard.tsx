@@ -156,7 +156,7 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
                       ? "bg-primary/10 text-primary"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
-                  onClick={handleUpvote}
+                // onClick={handleUpvote}
                 >
                   <ThumbsUp className="size-3.5" />
                   {formatNumber(upvoteCount)}
@@ -174,7 +174,7 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
                       ? "bg-destructive/10 text-destructive"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
-                  onClick={handleDownvote}
+                // onClick={handleDownvote}
                 >
                   <ThumbsDown className="size-3.5" />
                   {formatNumber(idea.downvoteCount)}
@@ -197,15 +197,21 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
                       ? "text-primary bg-primary/10"
                       : "text-muted-foreground hover:bg-muted hover:text-foreground",
                   )}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setWatchlisted((w) => !w);
-                  }}
+                // onClick={(e) => {
+                //   e.preventDefault();
+                //   setWatchlisted((w) => !w);
+                // }}
                 >
                   {watchlisted ? (
-                    <BookmarkCheck className="size-3.5" />
+                    <>
+                      <BookmarkCheck className="size-3.5" />
+                      {idea?._count?.watchlistCount && formatNumber(idea?._count?.watchlistCount || 0)}
+                    </>
                   ) : (
-                    <Bookmark className="size-3.5" />
+                    <>
+                      <Bookmark className="size-3.5" />
+                      {idea?._count?.watchlistCount && formatNumber(idea?._count?.watchlistCount || 0)}
+                    </>
                   )}
                 </button>
               </TooltipTrigger>

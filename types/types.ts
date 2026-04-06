@@ -67,6 +67,9 @@ export interface Idea {
     adminFeedback?: string;
     createdAt: string;
     publishedAt?: string;
+    _count?: {
+        watchlistCount: number;
+    };
 }
 
 export interface Comment {

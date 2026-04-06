@@ -11,17 +11,49 @@ import { Separator } from "@/components/ui/separator"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { IIdea } from "@/types/idea.types"
 import IdeaAttachments from "@/components/modules/IdeaManagement/IdeaAttachments"
+import IdeaComments from "@/components/modules/IdeaDetail/IdeaComments"
+import { getUserInfo } from "@/services/auth.service"
+import { API_BASE_URL } from "@/lib/env"
+import IdeaInteraction from "@/components/modules/IdeaDetail/IdeaInteraction"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import FollowButton from "@/components/modules/Profile/FollowButton"
 
 // This page renders a premium view of a single Idea entity
 const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => {
     const { id } = await params
     const response = await getIdeaById(id)
+    const currentUser = await getUserInfo();
+
 
     if (!response?.success || !response.data) {
         notFound()
     }
 
     const idea = response.data as IIdea
+
+    const isOwner = currentUser?.id === idea.authorId;
+
+
+    // Determine current user's vote
+    const userVoteObj = idea.votes?.find(v => v.userId === currentUser?.id);
+    const initialUserVote = userVoteObj ? userVoteObj.value : 0;
+
+    // Fetch author's followers to determine follow state
+    let authorFollowerCount = 0;
+    let isFollowingAuthor = false;
+    try {
+        const followRes = await fetch(`${API_BASE_URL}/follows/followers/${idea.authorId}`);
+        const followJson = await followRes.json();
+        if (followJson?.success) {
+            const followers: any[] = followJson.data || [];
+            authorFollowerCount = followers.length;
+            isFollowingAuthor = followers.some(
+                (f: any) => f.follower?.id === currentUser?.id || f.followerId === currentUser?.id
+            );
+        }
+    } catch {
+        // Non-critical
+    }
 
     // Helper functions for status styling
     const getStatusConfig = (status: string) => {
@@ -40,8 +72,34 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
         <div className="py-8 px-4 sm:px-6 space-y-5 bg-slate-50/30 min-h-screen">
 
             {/* Top Navigation & Interaction Bar (Matches Image Design) */}
-            <div className="flex flex-wrap items-center justify-between gap-4 bg-white p-3 rounded-2xl border border-slate-100 shadow-sm">
-                <div className="flex items-center gap-2">
+            {/* SECTION: ADMIN FEEDBACK (READ-ONLY FOR MODERATOR) */}
+            {idea?.adminFeedback && (
+                <div className="bg-amber-50/50 rounded-2xl shadow-sm border border-amber-200 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="px-6 md:px-8 py-4 border-b border-amber-100 bg-amber-50/80 flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-lg bg-amber-100 flex items-center justify-center border border-amber-200">
+                            <Save className="h-4 w-4 text-amber-600" />
+                        </div>
+                        <div>
+                            <h2 className="text-base font-bold text-amber-900">Feedback from Admin</h2>
+                            <p className="text-[11px] text-amber-700/70 font-bold uppercase tracking-wider">Reviewer Comments</p>
+                        </div>
+                    </div>
+
+                    <div className="p-6 md:p-8">
+                        <div className="bg-white/60 rounded-xl p-5 border border-amber-100/50 shadow-inner">
+                            <p className="text-neutral-800 text-[15px] leading-relaxed font-medium">
+                                {idea.adminFeedback}
+                            </p>
+                        </div>
+                        <div className="mt-4 flex items-center gap-2">
+                            <div className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+                            <p className="text-[11px] text-amber-600 font-bold uppercase tracking-widest">Constructive feedback</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+            <div className="">
+                {/* <div className="flex items-center gap-2">
                     <Button variant="ghost" size="sm" className="h-9 px-3 rounded-xl hover:bg-slate-50 text-slate-500 font-bold text-xs" asChild>
                         <Link href="/admin/dashboard/idea-management">
                             <ChevronLeft className="h-4 w-4 mr-1" /> Back
@@ -68,7 +126,19 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                             <Edit3 className="h-3.5 w-3.5 mr-2" /> Edit Idea
                         </Button>
                     </Link>
-                </div>
+                </div> */}
+
+                <IdeaInteraction
+                    ideaId={idea.id}
+                    slug={idea.slug}
+                    initialUpvotes={idea.upvoteCount}
+                    initialDownvotes={idea.downvoteCount}
+                    initialUserVote={initialUserVote}
+                    isOwner={isOwner}
+                    watchlisted={idea.watchlists?.some((w: any) => w.userId === currentUser?.id) || false}
+                    initialWatchlistCount={idea.watchlists?.length || 0}
+                    isLoggedIn={!!currentUser}
+                />
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
@@ -127,6 +197,12 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                             currentUserRole="MODERATOR"
                         />
                     </div>
+
+                    <IdeaComments
+                        ideaId={idea.id}
+                        comments={idea.comments || []}
+                        currentUser={currentUser}
+                    />
                 </div>
 
                 {/* Right Column: Sidebar (Sticky) */}
@@ -134,7 +210,7 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                     <div className="sticky top-6 space-y-5">
 
                         {/* Author Card (Modern Profile Style) */}
-                        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
+                        {/* <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5">
                             <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-4">Project Author</h4>
                             <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-xl border border-slate-100">
                                 <div className="h-10 w-10 rounded-lg bg-emerald-100 flex items-center justify-center font-bold text-emerald-700 overflow-hidden relative">
@@ -146,6 +222,45 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                                     <p className="text-sm font-bold text-slate-800 truncate">{idea.author?.name}</p>
                                     <p className="text-[10px] text-slate-500 truncate">{idea.author?.email}</p>
                                 </div>
+                            </div>
+                        </div> */}
+
+                        <div className="rounded-xl border border-border bg-card overflow-hidden">
+                            <div className="border-b border-border px-4 py-3">
+                                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                                    Author
+                                </p>
+                            </div>
+                            <div className="p-4 space-y-3">
+                                <Link
+                                    href={`/profile/${idea.author?.id}`}
+                                    className="flex items-center gap-3"
+                                >
+                                    <Avatar className="size-11">
+                                        <AvatarImage
+                                            src={idea.author?.image || undefined}
+                                            alt={idea.author?.name}
+                                        />
+                                        <AvatarFallback>
+                                            {idea.author?.name?.slice(0, 2) || "U"}
+                                        </AvatarFallback>
+                                    </Avatar>
+                                    <div>
+                                        <p className="text-sm font-semibold">
+                                            {idea.author?.name}
+                                        </p>
+                                        <p className="text-xs text-primary mt-0.5">
+                                            View profile →
+                                        </p>
+                                    </div>
+                                </Link>
+                                <FollowButton
+                                    targetUserId={idea.authorId}
+                                    initialIsFollowing={isFollowingAuthor}
+                                    initialFollowerCount={authorFollowerCount}
+                                    currentUserId={currentUser?.id}
+                                    showCount={true}
+                                />
                             </div>
                         </div>
 

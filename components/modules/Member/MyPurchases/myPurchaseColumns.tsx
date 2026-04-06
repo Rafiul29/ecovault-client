@@ -2,6 +2,7 @@ import { IIdeaPurchase } from "@/types/purchase.types";
 import { ColumnDef } from "@tanstack/react-table";
 import { User, ShoppingBag } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 export const myPurchaseColumns: ColumnDef<IIdeaPurchase>[] = [
     {
@@ -26,8 +27,10 @@ export const myPurchaseColumns: ColumnDef<IIdeaPurchase>[] = [
                         </div>
                     )}
                     <div className="flex flex-col min-w-0">
-                        <span className="font-bold text-sm text-neutral-900 truncate max-w-[220px]">
-                            {idea?.title}
+                        <span className="font-bold text-sm text-neutral-900 truncate max-w-[220px] hover:text-emerald-500 transition-colors duration-200 hover:underline">
+                            <Link href={`/dashboard/ideas/${row.original.ideaId}`}>
+                                {idea?.title}
+                            </Link>
                         </span>
                         <span className="text-[10px] text-neutral-400 font-medium truncate max-w-[220px] mt-0.5">
                             {idea?.description}

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useForm } from "@tanstack/react-form"
 import { z } from "zod"
 import { toast } from "sonner"
@@ -57,6 +57,10 @@ const profileValidationSchema = z.object({
 
 const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
 
+
+    console.log(userInfo)
+
+
     const route = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
@@ -64,11 +68,16 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [imagePreview, setImagePreview] = useState<string | null>(userInfo.image || null)
 
+    useEffect(() => {
+        setImagePreview(userInfo.image || null)
+    }, [userInfo.image])
+
     const isModerator = userInfo.role === UserRole.MODERATOR
     const isMember = userInfo.role === UserRole.MEMBER
     const isAdmin = userInfo.role === UserRole.ADMIN || userInfo.role === UserRole.SUPER_ADMIN
 
     const socialLinks = profileData?.socialLinks || {}
+
 
     const form = useForm({
         defaultValues: {
@@ -105,9 +114,11 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                 if (selectedImage) {
                     const formData = new FormData()
                     formData.append("name", value.name)
-                    formData.append("bio", value.bio)
 
+
+                    formData.append("file", selectedImage)
                     if (isModerator) {
+                        formData.append("bio", value.bio)
                         formData.append("phoneNumber", value.phoneNumber)
                         formData.append("address", value.address)
                         formData.append("contactNumber", value.contactNumber)
@@ -117,9 +128,9 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                 } else {
                     payload = {
                         name: value.name,
-                        bio: value.bio,
                     }
                     if (isModerator) {
+                        payload.bio = value.bio
                         payload.phoneNumber = value.phoneNumber
                         payload.address = value.address
                         payload.contactNumber = value.contactNumber
@@ -162,7 +173,27 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
             reader.readAsDataURL(file)
             const formData = new FormData()
             formData.append("file", file)
-            updateMyModeratorProfile(formData)
+
+            formData.append("data", JSON.stringify({ name: userInfo.name }))
+
+            let res: any;
+            if (isModerator) {
+                res = await updateMyModeratorProfile(formData) as any
+            } else if (isMember) {
+                res = await updateMyMemberProfile(formData) as any
+            } else {
+                res = await updateProfile(formData) as any
+            }
+
+            if (res?.success) {
+                toast.success("Profile image updated")
+                setSelectedImage(null) // Clear because it's already uploaded
+                route.refresh()
+            } else {
+                toast.error(res?.message || "Failed to update profile image")
+                // Rollback optimistic update
+                setImagePreview(userInfo.image || null)
+            }
         }
     }
 
@@ -174,8 +205,8 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                 <div className="absolute -top-16 -right-16 w-64 h-64 bg-emerald-500/20 rounded-full blur-[100px] group-hover:bg-emerald-500/30 transition-colors duration-700" />
 
                 <div className="relative group/avatar">
-                    <Avatar className="h-32 w-32 border-4 border-emerald-500/30 shadow-2xl transition-all duration-500 group-hover/avatar:scale-105 group-hover/avatar:border-emerald-500">
-                        <AvatarImage src={imagePreview || ""} />
+                    <Avatar className="h-32 w-32 border-4 border-emerald-500/30 shadow-2xl transition-all duration-500 group-hover/avatar:scale-105 group-hover/avatar:border-emerald-500 overflow-hidden">
+                        <AvatarImage src={imagePreview || ""} key={imagePreview || "no-image"} className="object-cover" />
                         <AvatarFallback className="bg-emerald-100 text-3xl font-black text-emerald-700">
                             {userInfo.name?.charAt(0).toUpperCase()}
                         </AvatarFallback>
@@ -211,22 +242,22 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
 
             {/* Vertical Tabs Sections */}
             <Tabs orientation="vertical" defaultValue="overview" className="flex flex-col md:flex-row gap-6">
-                <TabsList className="flex md:flex-col h-fit p-1.5 bg-white/80 backdrop-blur-md shadow-xl shadow-gray-200/40 rounded-3xl border border-gray-100 min-w-[240px]">
-                    <TabsTrigger value="overview" className="flex-1 md:flex-none justify-start gap-3 py-3.5 px-5 rounded-2xl transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-600/20 group">
+                <TabsList className="flex md:flex-col h-fit p-1.5 bg-white/80 backdrop-blur-md shadow-xl shadow-gray-200/40 rounded-xl border border-gray-100 min-w-[240px]">
+                    <TabsTrigger value="overview" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-600/20 group">
                         <Info className="size-5 group-data-[state=active]:text-white" />
                         <span className="font-bold tracking-tight">Overview</span>
                     </TabsTrigger>
-                    <TabsTrigger value="edit" className="flex-1 md:flex-none justify-start gap-3 py-4 px-6 rounded-2xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
+                    <TabsTrigger value="edit" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
                         <Edit2 className="size-5 group-data-[state=active]:text-emerald-600" />
                         <span className="font-bold tracking-tight">Personal Info</span>
                     </TabsTrigger>
                     {isModerator && (
-                        <TabsTrigger value="social" className="flex-1 md:flex-none justify-start gap-3 py-4 px-6 rounded-2xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
+                        <TabsTrigger value="social" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
                             <Globe className="size-5 group-data-[state=active]:text-emerald-600" />
-                            <span className="font-bold tracking-tight">Social Connect</span>
+                            <span className="font-bold tracking-tight">Social Connect</span>``
                         </TabsTrigger>
                     )}
-                    <TabsTrigger value="security" className="flex-1 md:flex-none justify-start gap-3 py-4 px-6 rounded-2xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
+                    <TabsTrigger value="security" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
                         <Shield className="size-5 group-data-[state=active]:text-emerald-600" />
                         <span className="font-bold tracking-tight">Change Password</span>
                     </TabsTrigger>
@@ -326,50 +357,59 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                                                     <AppField field={field} label="Full Name" placeholder="Eco Champ" />
                                                 )}
                                             />
-                                            <form.Field
-                                                name="bio"
-                                                children={(field) => (
-                                                    <div className="flex flex-col gap-2">
-                                                        <label className="text-sm font-bold text-slate-700 tracking-tight">Biography</label>
-                                                        <textarea
-                                                            className="min-h-[160px] flex w-full rounded-2xl border-2 border-gray-100 bg-white px-5 py-4 text-sm font-medium transition-all focus-visible:ring-4 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-500 outline-none resize-none placeholder:text-gray-300"
-                                                            value={field.state.value}
-                                                            onChange={(e) => field.handleChange(e.target.value)}
-                                                            placeholder="Tell your story. What drives you?"
-                                                        />
-                                                    </div>
-                                                )}
-                                            />
+                                            {
+                                                isModerator && (
+                                                    <form.Field
+                                                        name="bio"
+                                                        children={(field) => (
+                                                            <div className="flex flex-col gap-2">
+                                                                <label className="text-sm font-bold text-slate-700 tracking-tight">Biography</label>
+                                                                <textarea
+                                                                    className="min-h-[160px] flex w-full rounded-2xl border-2 border-gray-100 bg-white px-5 py-4 text-sm font-medium transition-all focus-visible:ring-4 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-500 outline-none resize-none placeholder:text-gray-300"
+                                                                    value={field.state.value}
+                                                                    onChange={(e) => field.handleChange(e.target.value)}
+                                                                    placeholder="Tell your story. What drives you?"
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    />
+                                                )
+                                            }
+
                                         </div>
 
-                                        <div className="space-y-6">
-                                            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-600 mb-6 flex items-center gap-3">
-                                                <div className="h-[2px] w-8 bg-blue-500" /> Contact Details
-                                            </h3>
-                                            <form.Field
-                                                name="phoneNumber"
-                                                children={(field) => (
-                                                    <AppField field={field} label="Phone primary" placeholder="+1 (555) 000-0000" prepend={<Phone className="size-4" />} />
-                                                )}
-                                            />
-                                            <form.Field
-                                                name="address"
-                                                children={(field) => (
-                                                    <AppField field={field} label="Home Base" placeholder="San Francisco, CA" prepend={<MapPin className="size-4" />} />
-                                                )}
-                                            />
-                                            <form.Field
-                                                name="contactNumber"
-                                                children={(field) => (
-                                                    <AppField field={field} label="Emergency / Alternative Contact" placeholder="+1 (555) 111-2222" prepend={<Shield className="size-4" />} />
-                                                )}
-                                            />
-                                        </div>
+                                        {
+                                            isModerator && (
+                                                <div className="space-y-6">
+                                                    <h3 className="text-xs font-black uppercase tracking-[0.2em] text-blue-600 mb-6 flex items-center gap-3">
+                                                        <div className="h-[2px] w-8 bg-blue-500" /> Contact Details
+                                                    </h3>
+                                                    <form.Field
+                                                        name="phoneNumber"
+                                                        children={(field) => (
+                                                            <AppField field={field} label="Phone primary" placeholder="+1 (555) 000-0000" prepend={<Phone className="size-4" />} />
+                                                        )}
+                                                    />
+                                                    <form.Field
+                                                        name="address"
+                                                        children={(field) => (
+                                                            <AppField field={field} label="Home Base" placeholder="San Francisco, CA" prepend={<MapPin className="size-4" />} />
+                                                        )}
+                                                    />
+                                                    <form.Field
+                                                        name="contactNumber"
+                                                        children={(field) => (
+                                                            <AppField field={field} label="Emergency / Alternative Contact" placeholder="+1 (555) 111-2222" prepend={<Shield className="size-4" />} />
+                                                        )}
+                                                    />
+                                                </div>
+                                            )
+                                        }
                                     </div>
 
                                     <div className="flex justify-end pt-4">
-                                        <AppSubmitButton isPending={isPending} className="w-full md:w-64 h-12 bg-linear-to-br from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white rounded-xl font-bold text-base shadow-xl shadow-slate-900/10 active:scale-95 transition-all">
-                                            <Save className="size-4 mr-2" /> Sync Changes
+                                        <AppSubmitButton isPending={isPending} className="w-full md:w-56 h-12 bg-linear-to-br from-slate-900 to-slate-800 hover:from-slate-800 hover:to-slate-700 text-white rounded-md font-bold text-base shadow-xl shadow-slate-900/10 active:scale-95 transition-all">
+                                            <Save className="size-5 mr-2" /> Sync Changes
                                         </AppSubmitButton>
                                     </div>
                                 </form>

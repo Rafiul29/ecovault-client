@@ -168,10 +168,10 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
 
                             {/* Attachments Section */}
                             {!idea.isPaid && (
-                                <IdeaAttachments 
-                                    ideaId={idea.id} 
-                                    authorId={idea.authorId} 
-                                    currentUserId={currentUser?.id} 
+                                <IdeaAttachments
+                                    ideaId={idea.id}
+                                    authorId={idea.authorId}
+                                    currentUserId={currentUser?.id}
                                     currentUserRole={currentUser?.role}
                                 />
                             )}
@@ -240,10 +240,10 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
                             </div>
 
                             {idea.isPaid ? (
-                                <PurchaseIdeaButton 
-                                    ideaId={idea.id} 
-                                    price={idea.price} 
-                                    isLoggedIn={!!currentUser} 
+                                <PurchaseIdeaButton
+                                    ideaId={idea.id}
+                                    price={idea.price}
+                                    isLoggedIn={!!currentUser}
                                 />
                             ) : (
                                 <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">

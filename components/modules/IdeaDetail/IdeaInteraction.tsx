@@ -118,9 +118,6 @@ const IdeaInteraction = ({
 
     }
 
-
-
-
     return (
         <div className="flex flex-wrap items-center gap-2 rounded-xl border border-border bg-card p-3">
             <button

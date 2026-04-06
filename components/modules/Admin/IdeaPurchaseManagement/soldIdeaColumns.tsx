@@ -3,7 +3,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { User } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-
+import Link from "next/link";
 export const soldIdeaColumns: ColumnDef<IIdeaPurchase>[] = [
     {
         id: "buyer",
@@ -36,9 +36,11 @@ export const soldIdeaColumns: ColumnDef<IIdeaPurchase>[] = [
         header: "Idea",
         cell: ({ row }) => (
             <div className="flex flex-col min-w-0 max-w-[260px]">
-                <span className="font-bold text-sm text-neutral-900 truncate">
-                    {row.original.idea?.title}
-                </span>
+                <Link href={`/moderator/dashboard/ideas/view/${row.original.idea?.id}`}>
+                    <span className="font-bold text-sm text-neutral-900 truncate hover:underline cursor-pointer hover:text-blue-500">
+                        {row.original.idea?.title}
+                    </span>
+                </Link>
                 <span className="text-[10px] text-neutral-400 font-medium mt-0.5 truncate">
                     {row.original.idea?.description}
                 </span>

@@ -121,10 +121,6 @@ const MyPurchasesTable = ({ initialQueryString }: { initialQueryString: string }
                 onClearAll: clearAllFilters,
             }}
             meta={meta}
-            actions={{
-                ...tableActions,
-                onView: (purchase) => router.push(`/dashboard/ideas/${purchase.ideaId}`),
-            }}
         />
     );
 };

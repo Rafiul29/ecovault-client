@@ -13,7 +13,6 @@ import { Badge } from "@/components/ui/badge";
 import { usePathname, useRouter } from "next/navigation";
 import { Role } from "@/types/enums";
 import { API_BASE_URL } from "@/lib/env";
-import Image from "next/image";
 
 interface IdeaAttachmentsProps {
     ideaId: string;
@@ -135,7 +134,7 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                     <h3 className="text-lg font-bold text-slate-800">Attachments</h3>
                     <p className="text-xs text-slate-500">Project resources and documentation</p>
                 </div>
-                {(!isPublicView && hasPermission) && (
+                {(!isPublicView && hasPermission && currentUserRole !== "MEMBER") && (
                     <Button
                         onClick={() => setIsAddOpen(true)}
                         size="sm"
@@ -196,12 +195,13 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                                     className="h-8 w-8 text-slate-400 hover:text-blue-600 hover:bg-blue-50"
                                     asChild
                                 >
-                                    <a href={`${process.env.NEXT_PUBLIC_API_URL}/attachments/${file.id}/download`} target="_blank">
+                                    {/* href={`${API_BASE_URL}/attachments/${viewingAttachment.id}/download`} */}
+                                    <a href={`${API_BASE_URL}/attachments/${file.id}/download`} target="_blank">
                                         <Download className="h-4 w-4" />
                                     </a>
                                 </Button>
 
-                                {(!isPublicView && hasPermission) && (
+                                {(!isPublicView && hasPermission && currentUserRole !== "MEMBER") && (
                                     <Button
                                         variant="ghost"
                                         size="icon"
@@ -298,8 +298,8 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
             }}>
                 <DialogContent className="h-[90vh] md:max-w-[800px] w-[95vw] p-0 flex flex-col rounded-3xl overflow-hidden border-none shadow-[0_32px_64px_-15px_rgba(0,0,0,0.2)] outline-none bg-white transition-all">
                     {/* Header Section */}
-                    <DialogHeader className="px-6 py-4 border-b border-neutral-100 flex flex-row items-center justify-between shrink-0 bg-white/90 backdrop-blur-md z-20">
-                        <div className="flex items-center gap-4">
+                    <DialogHeader className="px-4 py-2 border-b border-neutral-100 flex flex-row items-center justify-between shrink-0 bg-white/90 backdrop-blur-md z-20">
+                        <div className="flex items-center gap-2">
                             {/* Icon Container */}
                             <div className="h-12 w-12 rounded-2xl bg-emerald-50 flex items-center justify-center border border-emerald-100/50 shadow-sm shrink-0">
                                 {viewingAttachment && (
@@ -334,7 +334,7 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                                 <Button
                                     size="sm"
                                     variant="ghost"
-                                    className="rounded-xl font-bold gap-2 h-10 px-3 text-neutral-600 hover:bg-neutral-100 transition-all active:scale-95"
+                                    className="rounded-xl font-bold gap-2 h-10 px-2 text-neutral-600 hover:bg-neutral-100 transition-all active:scale-95"
                                     asChild
                                 >
                                     <a href={`${API_BASE_URL}/attachments/${viewingAttachment.id}/download`} download={viewingAttachment.title || "download"} target="_blank" rel="noopener noreferrer">
@@ -355,7 +355,7 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                     </DialogHeader>
 
                     {/* Main Content / Viewer Section */}
-                    <div className="relative flex-1 bg-neutral-50 overflow-hidden flex items-center justify-center p-4 md:p-6">
+                    <div className="relative flex-1 bg-neutral-50 overflow-hidden flex items-center justify-center p-2 md:p-4">
                         <div className="w-full h-full rounded-2xl overflow-hidden shadow-sm bg-white border border-neutral-200/60 relative group">
                             {viewAttachmentUrl && viewingAttachment?.type === "VIDEO" ? (
                                 <video
