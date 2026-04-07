@@ -55,7 +55,7 @@ export async function proxy(request: NextRequest) {
         const refreshToken = request.cookies.get("refreshToken")?.value;
 
         const host = request.headers.get("host");
-        console.log("Middleware check:", { pathname, host, hasAccessToken: accessToken, hasRefreshToken: refreshToken });
+        // console.log("Middleware check:", { pathname, host, hasAccessToken: accessToken, hasRefreshToken: refreshToken });
 
         const decodedAccessToken = accessToken && jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string).data;
 

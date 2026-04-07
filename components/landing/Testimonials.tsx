@@ -1,9 +1,30 @@
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { testimonials } from "@/lib/mock-data";
 
-export function Testimonials() {
+interface Comment {
+  id: string;
+  content: string;
+  author: {
+    name: string;
+    email: string;
+    image: string | null;
+  };
+  idea: {
+    title: string;
+    slug: string;
+  };
+}
+
+interface TestimonialsProps {
+  comments?: Comment[];
+}
+
+export function Testimonials({ comments = [] }: TestimonialsProps) {
+  if (!comments || comments.length === 0) {
+    return null; // hide if no comments are passed
+  }
+
   return (
     <section className="bg-muted/30 py-32">
       <div className="mx-auto max-w-7xl">
@@ -25,14 +46,14 @@ export function Testimonials() {
         </div>
 
         <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {testimonials.map((t) => (
+          {comments.map((t) => (
             <div
-              key={t.author}
+              key={t.id}
               className="group flex flex-col rounded-3xl border border-border/60 bg-card p-8 shadow-sm transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1.5"
             >
               {/* Stars */}
               <div className="mb-6 flex gap-1.5">
-                {Array.from({ length: t.stars }).map((_, i) => (
+                {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
                     className="size-4.5 fill-primary text-primary transition-transform group-hover:scale-110"
@@ -41,22 +62,22 @@ export function Testimonials() {
               </div>
 
               <blockquote className="flex-1 text-base text-muted-foreground leading-relaxed italic">
-                &ldquo;{t.quote}&rdquo;
+                &ldquo;{t.content}&rdquo;
               </blockquote>
 
               <div className="mt-8 flex items-center gap-4 border-t border-border/50 pt-8">
                 <Avatar className="size-10 ring-2 ring-background transition-transform hover:scale-105">
-                  <AvatarImage src={t.avatar} alt={t.author} />
+                  <AvatarImage src={t.author.image || ""} alt={t.author.name} />
                   <AvatarFallback className="text-xs bg-secondary text-primary font-bold">
-                    {t.author[0]}
+                    {t.author.name?.[0]?.toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-bold tracking-tight text-foreground">
-                    {t.author}
+                  <p className="text-sm font-bold tracking-tight text-foreground line-clamp-1">
+                    {t.author.name}
                   </p>
-                  <p className="text-[11px] font-medium text-muted-foreground uppercase tracking-widest">
-                    {t.role}
+                  <p className="text-[11px] font-medium text-muted-foreground tracking-widest line-clamp-1 mt-0.5">
+                    {t.idea.title}
                   </p>
                 </div>
               </div>

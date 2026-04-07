@@ -11,38 +11,33 @@ import {
 } from "@/hooks/useServerManagedDataTableFilters";
 import { useServerManagedDataTableSearch } from "@/hooks/useServerManagedDataTableSearch";
 import { useServerManagedDataTable } from "@/hooks/useServerManagedDataTable";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getAllModerators } from "@/services/moderator.service";
+import { deleteUserAccount } from "@/services/admin.service";
 import { moderatorColumns } from "./moderatorColumns";
-import { toast } from "sonner";
-import { UserCog, ShieldCheck, ShieldOff, Shield, Trash2, Eye } from "lucide-react";
+import { UserCog, ShieldCheck, ShieldOff, Trash2, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { changeUserRole, changeUserStatus } from "@/services/admin.service";
-import { Role } from "@/types/enums";
-import { 
-    DropdownMenu, 
-    DropdownMenuContent, 
-    DropdownMenuItem, 
-    DropdownMenuLabel, 
-    DropdownMenuSeparator, 
-    DropdownMenuTrigger 
-} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
+import { Role, UserStatus } from "@/types/enums";
 import { useSearchParams } from "next/navigation";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PaginationMeta } from "@/types/api.types";
 import { useRowActionModalState } from "@/hooks/useRowActionModalState";
 import DeleteModeratorConfirmationDialog from "./DeleteModeratorConfirmationDialog";
+import ChangeUserStatusDialog from "@/components/modules/Admin/shared/ChangeUserStatusDialog";
+import ChangeUserRoleDialog from "@/components/modules/Admin/shared/ChangeUserRoleDialog";
+import { useRouter } from "next/navigation";
 
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 10;
-const MODERATOR_FILTER_DEFINITIONS = [
-    serverManagedFilter.single("status"),
-];
+const MODERATOR_FILTER_DEFINITIONS = [serverManagedFilter.single("user.status")];
 
 const ModeratorTable = ({ initialQueryString }: { initialQueryString: string }) => {
     const queryClient = useQueryClient();
     const searchParams = useSearchParams();
+    const router = useRouter();
 
+    // ── Delete modal (existing pattern) ──────────────────────────────────────
     const {
         deletingItem,
         isDeleteDialogOpen,
@@ -50,6 +45,29 @@ const ModeratorTable = ({ initialQueryString }: { initialQueryString: string }) 
         tableActions,
     } = useRowActionModalState<any>();
 
+    // ── Status modal ──────────────────────────────────────────────────────────
+    const [statusModal, setStatusModal] = useState<{
+        open: boolean;
+        user: any | null;
+        targetStatus: UserStatus.ACTIVE | UserStatus.BLOCKED;
+    }>({ open: false, user: null, targetStatus: UserStatus.BLOCKED });
+
+    const openStatusModal = (moderator: any) => {
+        const isActive = moderator.user?.status === UserStatus.ACTIVE;
+        setStatusModal({
+            open: true,
+            user: moderator,
+            targetStatus: isActive ? UserStatus.BLOCKED : UserStatus.ACTIVE,
+        });
+    };
+
+    // ── Role modal ────────────────────────────────────────────────────────────
+    const [roleModal, setRoleModal] = useState<{
+        open: boolean;
+        user: any | null;
+    }>({ open: false, user: null });
+
+    // ── Server-managed table state ────────────────────────────────────────────
     const {
         queryStringFromUrl,
         optimisticSortingState,
@@ -66,67 +84,56 @@ const ModeratorTable = ({ initialQueryString }: { initialQueryString: string }) 
 
     const queryString = queryStringFromUrl || initialQueryString;
 
-    const {
-        searchTermFromUrl,
-        handleDebouncedSearchChange,
-    } = useServerManagedDataTableSearch({
-        searchParams,
-        updateParams,
-    });
+    const { searchTermFromUrl, handleDebouncedSearchChange } =
+        useServerManagedDataTableSearch({ searchParams, updateParams });
 
-    const {
-        filterValues,
-        handleFilterChange,
-        clearAllFilters,
-    } = useServerManagedDataTableFilters({
-        searchParams,
-        definitions: MODERATOR_FILTER_DEFINITIONS,
-        updateParams,
-    });
+    const { filterValues, handleFilterChange, clearAllFilters } =
+        useServerManagedDataTableFilters({
+            searchParams,
+            definitions: MODERATOR_FILTER_DEFINITIONS,
+            updateParams,
+        });
 
     const { data: moderatorsResponse, isLoading, isFetching } = useQuery({
         queryKey: ["moderators", queryString],
         queryFn: () => getAllModerators(queryString),
     });
 
-    const moderators = Array.isArray(moderatorsResponse?.data) ? moderatorsResponse.data : [];
+    const deleteMutation = useMutation({
+        mutationFn: (id: string) => deleteUserAccount(id),
+        onSuccess: () => {
+            toast.success("Moderator account deleted successfully");
+            queryClient.invalidateQueries({ queryKey: ["moderators"] });
+        },
+        onError: (err: any) =>
+            toast.error(err?.response?.data?.message || "Failed to delete moderator account"),
+    });
+
+    const moderators = Array.isArray(moderatorsResponse?.data)
+        ? moderatorsResponse.data
+        : [];
     const meta: PaginationMeta | undefined = moderatorsResponse?.meta;
 
-    const statusMutation = useMutation({
-        mutationFn: (payload: { userId: string; userStatus: string }) => changeUserStatus(payload),
-        onSuccess: () => {
-            toast.success("Account status successfully updated")
-            queryClient.invalidateQueries({ queryKey: ["moderators"] })
-        }
-    });
-
-    const roleMutation = useMutation({
-        mutationFn: (payload: { userId: string; role: string }) => changeUserRole(payload),
-        onSuccess: () => {
-            toast.success("Moderator role successfully changed")
-            queryClient.invalidateQueries({ queryKey: ["moderators"] })
-        }
-    });
-
-    const filterConfigs = useMemo<DataTableFilterConfig[]>(() => {
-        return [
+    const filterConfigs = useMemo<DataTableFilterConfig[]>(
+        () => [
             {
-                id: "status",
-                label: "Account Access",
+                id: "user.status",
+                label: "Account Status",
                 type: "single-select",
                 options: [
-                    { label: "Active Admins", value: "ACTIVE" },
-                    { label: "Blocked Access", value: "BLOCKED" },
+                    { label: "Active", value: "ACTIVE" },
+                    { label: "Blocked", value: "BLOCKED" },
+                    { label: "Deleted", value: "DELETED" },
                 ],
             },
-        ];
-    }, []);
+        ],
+        []
+    );
 
-    const filterValuesForTable = useMemo<DataTableFilterValues>(() => {
-        return {
-            status: filterValues.status,
-        };
-    }, [filterValues]);
+    const filterValuesForTable = useMemo<DataTableFilterValues>(
+        () => ({ "user.status": filterValues["user.status"] }),
+        [filterValues]
+    );
 
     return (
         <>
@@ -139,52 +146,83 @@ const ModeratorTable = ({ initialQueryString }: { initialQueryString: string }) 
                         header: "Quick Control",
                         cell: ({ row }) => {
                             const moderator = row.original;
-                            const isActive = moderator.user?.status === "ACTIVE";
-                            
+                            const isActive =
+                                moderator.user?.status === UserStatus.ACTIVE;
+
                             return (
                                 <div className="flex items-center gap-2">
+                                    {/* View Profile */}
                                     <Button
                                         size="icon"
                                         variant="secondary"
-                                        className={`h-9 w-9 rounded-xl transition-all shadow-sm ${isActive ? 'bg-rose-50 text-rose-500 hover:bg-rose-500 hover:text-white' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white'}`}
-                                        onClick={() => {
-                                            const newStatus = isActive ? "BLOCKED" : "ACTIVE";
-                                            statusMutation.mutate({ userId: moderator.userId, userStatus: newStatus });
-                                        }}
-                                        title={isActive ? "Block Admin" : "Authorize Admin"}
+                                        className="h-9 w-9 rounded-xl bg-neutral-100 hover:bg-neutral-200 transition-all shadow-sm"
+                                        onClick={() =>
+                                            router.push(
+                                                `/admin/dashboard/moderator-management/view/${moderator.id}`
+                                            )
+                                        }
+                                        title="View Profile"
                                     >
-                                        {isActive ? <ShieldOff className="h-4.5 w-4.5" /> : <ShieldCheck className="h-4.5 w-4.5" />}
+                                        <Eye className="h-4.5 w-4.5" />
                                     </Button>
 
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger asChild>
-                                            <Button size="icon" variant="secondary" className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white shadow-sm transition-all group" title="Modify Permissions">
-                                                <UserCog className="h-4.5 w-4.5 group-hover:rotate-45 duration-300" />
-                                            </Button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent align="end" className="rounded-[1.5rem] border-neutral-100 shadow-2xl overflow-hidden font-bold min-w-[200px] p-2">
-                                            <DropdownMenuLabel className="text-[10px] uppercase font-black tracking-widest text-neutral-400 p-3 italic">System Privilege</DropdownMenuLabel>
-                                            <DropdownMenuSeparator className="bg-neutral-50 mb-1" />
-                                            <DropdownMenuItem className="p-3 rounded-xl focus:bg-emerald-50 focus:text-emerald-700 cursor-pointer text-sm" onClick={() => roleMutation.mutate({ userId: moderator.userId, role: Role.ADMIN })}>
-                                                <Shield className="h-4 w-4 mr-3 text-emerald-500" /> Standard Admin
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="p-3 rounded-xl focus:bg-indigo-50 focus:text-indigo-700 cursor-pointer text-sm" onClick={() => roleMutation.mutate({ userId: moderator.userId, role: Role.MODERATOR })}>
-                                                <ShieldCheck className="h-4 w-4 mr-3 text-indigo-500" /> Dedicated Moderator
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="p-3 rounded-xl focus:bg-amber-50 focus:text-amber-700 cursor-pointer text-sm" onClick={() => roleMutation.mutate({ userId: moderator.userId, role: Role.MEMBER })}>
-                                                <ShieldOff className="h-4 w-4 mr-3 text-amber-500" /> Revoke to Member
-                                            </DropdownMenuItem>
-                                            
-                                            <DropdownMenuSeparator className="bg-neutral-50 my-1" />
-                                            <DropdownMenuItem className="p-3 rounded-xl focus:bg-rose-50 focus:text-rose-700 cursor-pointer text-sm text-rose-600" onClick={() => tableActions.onDelete?.(moderator)}>
-                                                <Trash2 className="h-4 w-4 mr-3" /> Terminate Account
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                                    {/* Block / Activate → modal */}
+                                    <Button
+                                        size="icon"
+                                        variant="secondary"
+                                        className={`h-9 w-9 rounded-xl transition-all shadow-sm ${isActive
+                                            ? "bg-amber-50 text-amber-600 hover:bg-amber-100"
+                                            : "bg-emerald-50 text-emerald-600 hover:bg-emerald-100"
+                                            }`}
+                                        onClick={() => openStatusModal(moderator)}
+                                        title={
+                                            isActive
+                                                ? "Block Moderator"
+                                                : "Activate Moderator"
+                                        }
+                                    >
+                                        {isActive ? (
+                                            <ShieldOff className="h-4.5 w-4.5" />
+                                        ) : (
+                                            <ShieldCheck className="h-4.5 w-4.5" />
+                                        )}
+                                    </Button>
+
+                                    {/* Change Role → modal */}
+                                    <Button
+                                        size="icon"
+                                        variant="secondary"
+                                        className="h-9 w-9 rounded-xl bg-indigo-50 text-indigo-600 hover:bg-indigo-100 shadow-sm transition-all group"
+                                        onClick={() =>
+                                            setRoleModal({ open: true, user: moderator })
+                                        }
+                                        title="Change Role"
+                                    >
+                                        <UserCog className="h-4.5 w-4.5 group-hover:rotate-45 duration-300" />
+                                    </Button>
+
+                                    {/* Delete Account */}
+                                    <Button
+                                        size="icon"
+                                        variant="secondary"
+                                        className="h-9 w-9 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-500 hover:text-white transition-all shadow-sm group"
+                                        onClick={() => {
+                                            if (
+                                                confirm(
+                                                    "Are you sure you want to delete this moderator account?"
+                                                )
+                                            ) {
+                                                deleteMutation.mutate(moderator.user?.id || moderator.userId);
+                                            }
+                                        }}
+                                        title="Delete Account"
+                                    >
+                                        <Trash2 className="h-4.5 w-4.5 group-hover:scale-110 duration-200" />
+                                    </Button>
                                 </div>
                             );
-                        }
-                    }
+                        },
+                    },
                 ]}
                 isLoading={isLoading || isFetching || isRouteRefreshPending}
                 emptyMessage="No moderators matching these credentials."
@@ -209,13 +247,34 @@ const ModeratorTable = ({ initialQueryString }: { initialQueryString: string }) 
                     onClearAll: clearAllFilters,
                 }}
                 meta={meta}
-                actions={tableActions}
+            // actions={tableActions}
             />
 
+            {/* Delete confirmation */}
             <DeleteModeratorConfirmationDialog
                 open={isDeleteDialogOpen}
                 onOpenChange={onDeleteOpenChange}
                 moderator={deletingItem}
+            />
+
+            {/* Status change modal */}
+            <ChangeUserStatusDialog
+                open={statusModal.open}
+                onOpenChange={(open) =>
+                    setStatusModal((prev) => ({ ...prev, open }))
+                }
+                user={statusModal.user}
+                targetStatus={statusModal.targetStatus}
+                queryKey="moderators"
+            />
+
+            {/* Role change modal — Moderators can be MEMBER, MODERATOR, or ADMIN */}
+            <ChangeUserRoleDialog
+                open={roleModal.open}
+                onOpenChange={(open) => setRoleModal((prev) => ({ ...prev, open }))}
+                user={roleModal.user}
+                allowedRoles={[Role.MEMBER, Role.MODERATOR, Role.ADMIN]}
+                queryKey="moderators"
             />
         </>
     );

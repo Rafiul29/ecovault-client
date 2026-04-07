@@ -9,6 +9,7 @@ import { CTA } from "@/components/landing/CTA";
 import { getAllSubscriptionPlans } from "@/services/subscription.service";
 import { getIdeas } from "@/services/idea.service";
 import { getUserInfo } from "@/services/auth.service";
+import { getComments } from "@/services/comment.service";
 
 export default async function LandingPage() {
   const user = await getUserInfo();
@@ -20,6 +21,8 @@ export default async function LandingPage() {
   const plansResponse = await getAllSubscriptionPlans("isActive=true&sortOrder=asc&sortBy=order");
   const plans = plansResponse?.data ?? [];
 
+  const comments = await getComments("page=1&limit=3&sortOrder=desc");
+
   return (
     <>
       <Hero featuredIdeas={featuredIdeas.slice(0, 3) as any} />
@@ -27,7 +30,7 @@ export default async function LandingPage() {
       <Features />
       <Process />
       <FeaturedIdeas ideas={featuredIdeas.slice(3, 6) as any} />
-      <Testimonials />
+      <Testimonials comments={comments?.data.data as any} />
       <Pricing plans={plans as any} user={user} />
       <CTA />
     </>

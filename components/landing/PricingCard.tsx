@@ -36,7 +36,7 @@ export function PricingCard({ plan, user }: PricingCardProps) {
   const handleSubscribe = (planId: string) => {
     if (!user) {
       toast.info("Please login to subscribe to a plan");
-      router.push(`/login?redirect=${encodeURIComponent("/")}#pricing`);
+      router.push(`/login?redirect=${encodeURIComponent("/pricing")}`);
       return;
     }
     subscribeMutation.mutate(planId);

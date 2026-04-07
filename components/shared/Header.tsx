@@ -79,7 +79,7 @@ export function Header({ user }: HeaderProps) {
           <div className="hidden items-center gap-3 sm:flex">
             {user ? (
               <>
-                <Link
+                {/* <Link
                   href="/ideas/create"
                   className={cn(
                     buttonVariants({ variant: "outline", size: "sm" }),
@@ -88,7 +88,7 @@ export function Header({ user }: HeaderProps) {
                 >
                   <Plus className="size-3.5" />
                   Submit Idea
-                </Link>
+                </Link> */}
                 <UserNav user={user} />
               </>
             ) : (

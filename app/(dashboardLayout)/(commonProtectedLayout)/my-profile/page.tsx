@@ -1,4 +1,5 @@
 import ProfileModule from "@/components/modules/Profile/ProfileModule";
+import { getMyAdminProfile } from "@/services/admin.service";
 import { getUserInfo } from "@/services/auth.service";
 import { getMyMemberProfile } from "@/services/member.service";
 import { getMyModeratorProfile } from "@/services/moderator.service";
@@ -19,6 +20,9 @@ const MyProfilePage = async () => {
             profileData = res.data;
         } else if (userInfo.role === UserRole.MEMBER) {
             const res = await getMyMemberProfile() as any;
+            profileData = res.data;
+        } else if (userInfo.role === UserRole.ADMIN || userInfo.role === UserRole.SUPER_ADMIN) {
+            const res = await getMyAdminProfile() as any;
             profileData = res.data;
         }
     } catch (error) {

@@ -19,8 +19,8 @@ const companyLinks = [
 
 export function Footer() {
   return (
-    <footer className="border-t border-border/50 bg-muted/40 px-6 py-16 lg:py-24">
-      <div className="mx-auto max-w-7xl">
+    <footer className="border-t border-border/50 bg-muted/40">
+      <div className="mx-auto max-w-7xl py-16">
         <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-4 lg:gap-16">
           <div className="md:col-span-2 space-y-6">
             <Link href="/" className="flex items-center gap-3 group">

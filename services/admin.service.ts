@@ -2,16 +2,16 @@
 
 import { httpClient } from "@/lib/axios/httpClient";
 
-export const getAllAdmins = async () => {
-    return httpClient.get("/admins");
+export const getAllAdmins = async (queryString: string = "") => {
+    return httpClient.get(`/admins?${queryString}`);
 };
 
-export const getAdminById = async (id: string) => {
-    return httpClient.get(`/admins/${id}`);
+export const getMyAdminProfile = async () => {
+    return httpClient.get(`/admins/profile`);
 };
 
-export const updateAdmin = async (id: string, payload: any) => {
-    return httpClient.patch(`/admins/${id}`, payload);
+export const updateMyAdminProfile = async (payload: any) => {
+    return httpClient.patch("/admins/profile", payload);
 };
 
 export const deleteAdmin = async (id: string) => {
@@ -40,4 +40,16 @@ export const deleteUserAccount = async (id: string) => {
 
 export const getPublicProfileByUserId = async (id: string) => {
     return httpClient.get(`/admins/public-profile/${id}`);
+};
+
+export const createAdmin = async (payload: FormData) => {
+    try {
+        return await httpClient.post("/admins", payload, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        });
+    } catch (error: any) {
+        return error;
+    }
 };

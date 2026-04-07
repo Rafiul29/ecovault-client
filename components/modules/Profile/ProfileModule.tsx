@@ -33,9 +33,9 @@ import { UserInfo } from "@/types/user.types"
 import { UserRole } from "@/types/userRole"
 import { updateMyModeratorProfile } from "@/services/moderator.service"
 import { updateMyMemberProfile } from "@/services/member.service";
-import { updateProfile } from "@/services/auth.service";
-import { cn } from "@/lib/utils"
 import { useRouter } from "next/navigation"
+import { updateMyAdminProfile } from "@/services/admin.service"
+import { updateProfile } from "@/services/auth.service"
 
 interface ProfileModuleProps {
     userInfo: UserInfo;
@@ -57,16 +57,14 @@ const profileValidationSchema = z.object({
 
 const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
 
-
-    console.log(userInfo)
-
-
     const route = useRouter()
 
     const [isEditing, setIsEditing] = useState(false)
     const [isPending, setIsPending] = useState(false)
     const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [imagePreview, setImagePreview] = useState<string | null>(userInfo.image || null)
+
+    console.log("userInfo", 'imagePreview', imagePreview, userInfo)
 
     useEffect(() => {
         setImagePreview(userInfo.image || null)
@@ -116,7 +114,7 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                     formData.append("name", value.name)
 
 
-                    formData.append("file", selectedImage)
+                    formData.append("image", selectedImage)
                     if (isModerator) {
                         formData.append("bio", value.bio)
                         formData.append("phoneNumber", value.phoneNumber)
@@ -143,10 +141,9 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                     res = await updateMyModeratorProfile(payload) as any
                 } else if (isMember) {
                     res = await updateMyMemberProfile(payload) as any
-                } else {
-                    res = await updateProfile(payload) as any
+                } else if (isAdmin) {
+                    res = await updateMyAdminProfile(payload) as any
                 }
-
                 if (res.success) {
                     toast.success("Profile updated successfully")
                     setIsEditing(false)
@@ -172,22 +169,26 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
             }
             reader.readAsDataURL(file)
             const formData = new FormData()
-            formData.append("file", file)
+            formData.append("image", file)
 
-            formData.append("data", JSON.stringify({ name: userInfo.name }))
+            formData.append("name", form.getFieldValue("name"))
 
             let res: any;
             if (isModerator) {
                 res = await updateMyModeratorProfile(formData) as any
             } else if (isMember) {
                 res = await updateMyMemberProfile(formData) as any
-            } else {
-                res = await updateProfile(formData) as any
+            } else if (isAdmin) {
+
+                res = await updateMyAdminProfile(formData) as any
             }
 
             if (res?.success) {
                 toast.success("Profile image updated")
                 setSelectedImage(null) // Clear because it's already uploaded
+                if (res.data?.image) {
+                    setImagePreview(res.data.image)
+                }
                 route.refresh()
             } else {
                 toast.error(res?.message || "Failed to update profile image")
@@ -206,10 +207,18 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
 
                 <div className="relative group/avatar">
                     <Avatar className="h-32 w-32 border-4 border-emerald-500/30 shadow-2xl transition-all duration-500 group-hover/avatar:scale-105 group-hover/avatar:border-emerald-500 overflow-hidden">
-                        <AvatarImage src={imagePreview || ""} key={imagePreview || "no-image"} className="object-cover" />
-                        <AvatarFallback className="bg-emerald-100 text-3xl font-black text-emerald-700">
-                            {userInfo.name?.charAt(0).toUpperCase()}
-                        </AvatarFallback>
+                        {imagePreview ? (
+                            <img
+                                src={imagePreview.startsWith("data:") ? imagePreview : `${imagePreview}${imagePreview.includes("?") ? "&" : "?"}t=${new Date().getTime()}`}
+                                alt={userInfo.name}
+                                className="aspect-square size-full object-cover"
+                                key={imagePreview}
+                            />
+                        ) : (
+                            <AvatarFallback className="bg-emerald-100 text-3xl font-black text-emerald-700">
+                                {userInfo.name?.charAt(0).toUpperCase()}
+                            </AvatarFallback>
+                        )}
                     </Avatar>
                     {/* {isEditing && ( */}
                     <label className="absolute bottom-1 right-1 p-2 bg-emerald-600 text-white rounded-xl shadow-xl cursor-pointer hover:bg-emerald-500 transition-all hover:scale-110 active:scale-95 border-2 border-slate-900">
