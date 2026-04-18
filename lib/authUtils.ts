@@ -59,7 +59,12 @@ export const getRouteOwner = (pathname: string): "ADMIN" | "MODERATOR" | "MEMBER
 }
 
 export const getDefaultDashboardRoute = (role: UserRole) => {
-    if (role === "ADMIN" || role === "SUPER_ADMIN") {
+    const unifySuperAdminAndAdminRole = role === "SUPER_ADMIN" ? "ADMIN" : role;
+
+    role = unifySuperAdminAndAdminRole;
+    console.log("role in default dashboard", role);
+
+    if (role === "ADMIN") {
         return "/admin/dashboard";
     }
     if (role === "MODERATOR") {

@@ -19,6 +19,7 @@ async function fetchUserInfo(accessToken: string, sessionToken: string) {
         }
 
         const { data } = await res.json();
+        console.log("user info", data);
         return data;
     } catch (error) {
         console.error("Error fetching user info in proxy:", error);
@@ -66,9 +67,17 @@ export async function proxy(request: NextRequest) {
             console.warn("Invalid access token in middleware:", verifyResult?.error);
         }
 
+
+
         let userRole: UserRole | null = null;
 
-        if (decodedAccessToken) {
+        if (accessToken) {
+            const sessionToken = request.cookies.get("better-auth.session_token")?.value || "";
+            const userInfo = await fetchUserInfo(accessToken, sessionToken);
+            if (userInfo) {
+                userRole = userInfo.role as UserRole;
+            }
+        } else if (decodedAccessToken) {
             userRole = decodedAccessToken.role as UserRole;
         }
 

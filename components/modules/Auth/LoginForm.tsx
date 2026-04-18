@@ -130,9 +130,8 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                         <span className="bg-background px-3 text-muted-foreground/60">Or continue with</span>
                     </div>
                 </div>
-
+                {/* 
                 <Button variant="outline" className="w-full h-10 border-muted-foreground/20 hover:bg-emerald-50/50 hover:border-emerald-600/30 transition-all duration-200 flex items-center justify-center gap-3" onClick={() => {
-                    //TODO redirect path after login in frontend
                     window.location.href = `${API_BASE_URL}/auth/login/google`;
                 }}>
                     <svg className="w-5 h-5" viewBox="0 0 24 24">
@@ -154,7 +153,7 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                         />
                     </svg>
                     Google Account
-                </Button>
+                </Button> */}
             </div>
 
             <p className="text-center text-sm text-muted-foreground font-medium">
