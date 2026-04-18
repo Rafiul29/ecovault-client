@@ -55,7 +55,7 @@ export async function proxy(request: NextRequest) {
         const refreshToken = request.cookies.get("refreshToken")?.value;
 
         const host = request.headers.get("host");
-        // console.log("Middleware check:", { pathname, host, hasAccessToken: accessToken, hasRefreshToken: refreshToken });
+        console.log("Middleware check:", { pathname, host, hasAccessToken: accessToken, hasRefreshToken: refreshToken });
 
         const decodedAccessToken = accessToken && jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string).data;
 
@@ -114,6 +114,30 @@ export async function proxy(request: NextRequest) {
             }
 
             return response;
+        }
+
+        // Force token refresh after successful payment if the user is currently a MEMBER
+        // so that they immediately receive their updated plan/role permissions.
+        if (pathname === "/payment/success" && userRole === "MEMBER" && refreshToken) {
+            const requestHeaders = new Headers(request.headers);
+            const response = NextResponse.next({
+                request: {
+                    headers: requestHeaders
+                },
+            });
+
+            try {
+                const refreshed = await refreshTokenMiddleware(refreshToken);
+                if (refreshed) {
+                    requestHeaders.set("x-token-refreshed", "1");
+                }
+                return NextResponse.next({
+                    request: { headers: requestHeaders },
+                    headers: response.headers
+                });
+            } catch (error) {
+                console.error("Error refreshing token on payment success:", error);
+            }
         }
 
 

@@ -12,16 +12,18 @@ import { getUserInfo } from "@/services/auth.service";
 import { getComments } from "@/services/comment.service";
 
 export default async function LandingPage() {
-  const user = await getUserInfo();
-  // Fetch featured ideas from the backend
-  const ideasResponse = await getIdeas("status=APPROVED&page=1&isFeatured=true&limit=6");
-  const featuredIdeas = ideasResponse?.data ?? [];
+  const [user, ideasResponse, plansResponse, comments] = await Promise.all([
+    getUserInfo(),
+    getIdeas("status=APPROVED&page=1&isFeatured=true&limit=6"),
+    getAllSubscriptionPlans("isActive=true&sortOrder=asc&sortBy=order"),
+    getComments("page=1&limit=3&sortOrder=desc")
+  ]);
 
-  // Fetch active subscription plans from the backend
-  const plansResponse = await getAllSubscriptionPlans("isActive=true&sortOrder=asc&sortBy=order");
+  const featuredIdeas = ideasResponse?.data ?? [];
   const plans = plansResponse?.data ?? [];
 
-  const comments = await getComments("page=1&limit=3&sortOrder=desc");
+  console.log("user", user);
+
 
   return (
     <>

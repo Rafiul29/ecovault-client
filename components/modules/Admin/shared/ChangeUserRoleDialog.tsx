@@ -82,6 +82,7 @@ const ChangeUserRoleDialog = ({
       onOpenChange(false);
     },
     onError: (error: any) => {
+      console.log(error)
       const msg =
         error?.response?.data?.message || "Failed to change role. Check your permissions.";
       toast.error(msg);

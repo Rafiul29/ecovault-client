@@ -17,6 +17,7 @@ interface DashboardSidebarContentProps {
 }
 
 const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: DashboardSidebarContentProps) => {
+    console.log("userInfo", userInfo);
     const pathname = usePathname()
     return (
         <aside className="hidden md:flex h-full w-72 flex-col border-r border-gray-200 bg-white shadow-[1px_0_0_0_rgba(0,0,0,0.02)] transition-all duration-300">
@@ -89,7 +90,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
                     </div>
 
                     <div className="flex-1 overflow-hidden">
-                        <p className="text-sm font-medium truncate">{userInfo.name}</p>
+                        <p className="text-sm font-medium truncate">{userInfo?.name}</p>
                         <p className="text-xs text-muted-foreground capitalize">
                             {userInfo.role.toLocaleLowerCase().replace("_", " ")}
                         </p>
