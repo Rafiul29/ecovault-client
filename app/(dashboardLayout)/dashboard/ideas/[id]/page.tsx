@@ -171,7 +171,7 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                     {/* Use split comments component */}
                     <IdeaComments
                         ideaId={idea.id}
-                        comments={idea.comments || []}
+                        totalComments={idea._count?.comments || 0}
                         currentUser={currentUser}
                     />
                 </div>

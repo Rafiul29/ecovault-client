@@ -78,6 +78,8 @@ export default async function IdeaDetailPage({
     // Non-critical
   }
 
+  console.log(idea);
+
   return (
     <div className="flex flex-1 flex-col py-5 ">
       <main className="flex-1">
@@ -207,7 +209,7 @@ export default async function IdeaDetailPage({
               {/* Use split comments component */}
               <IdeaComments
                 ideaId={idea.id}
-                comments={idea.comments || []}
+                totalComments={idea._count?.comments || 0}
                 currentUser={currentUser}
               />
             </div>
