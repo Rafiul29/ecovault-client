@@ -78,7 +78,6 @@ export default async function IdeaDetailPage({
     // Non-critical
   }
 
-  console.log(idea);
 
   return (
     <div className="flex flex-1 flex-col py-5 ">

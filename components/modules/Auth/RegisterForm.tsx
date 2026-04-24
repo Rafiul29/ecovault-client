@@ -36,7 +36,6 @@ const RegisterForm = () => {
                     setServerError(result.message || "Registration failed")
                 }
             } catch (error: any) {
-                console.log(error.message)
                 setServerError(error.message || "Registration failed")
             }
 

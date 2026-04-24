@@ -40,7 +40,6 @@ export const createCategory = async (payload: FormData) => {
 export const updateCategory = async (id: string, payload: FormData | any) => {
     try {
         const response = await httpClient.patch<ICategory>(`/categories/${id}`, payload);
-        console.log("Update response:", response.data)
         return response;
     } catch (error) {
         console.error("Error updating category:", error);

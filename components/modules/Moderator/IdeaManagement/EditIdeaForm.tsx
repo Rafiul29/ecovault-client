@@ -35,6 +35,7 @@ interface EditIdeaFormProps {
     idea: IIdea
     categories: ICategory[]
     isLoadingCategories?: boolean
+    user?: any
 }
 
 const getErrorMessage = (error: unknown): string => {
@@ -43,7 +44,7 @@ const getErrorMessage = (error: unknown): string => {
     return "Invalid input"
 }
 
-const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormProps) => {
+const EditIdeaForm = ({ idea, categories, isLoadingCategories, user }: EditIdeaFormProps) => {
     const [imagePreviews, setImagePreviews] = useState<string[]>([])
     const queryClient = useQueryClient()
     const router = useRouter()
@@ -112,7 +113,11 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories }: EditIdeaFormPro
 
             toast.success(result.message || "Idea updated successfully")
             void queryClient.invalidateQueries({ queryKey: ["ideas"] })
-            router.push("/admin/dashboard/idea-management")
+            if (user.role === "MODERATOR") {
+                router.push("/moderator/dashboard/ideas")
+            } else {
+                router.push("/admin/dashboard/idea-management")
+            }
         },
     })
 

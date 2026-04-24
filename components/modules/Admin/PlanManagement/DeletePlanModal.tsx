@@ -28,18 +28,15 @@ const DeletePlanModal = ({ open, onOpenChange, plan }: DeletePlanModalProps) => 
 
     const { mutateAsync, isPending } = useMutation({
         mutationFn: async (id: string) => {
-            console.log("[DeletePlanModal] Calling server action with ID:", id)
             return await deleteSubscriptionPlanAction(id)
         },
     })
 
     const handleDelete = async () => {
-        console.log("[DeletePlanModal] handleDelete triggered for plan:", plan?.name)
         if (!plan) return
 
         try {
             const result = await mutateAsync(plan.id)
-            console.log("[DeletePlanModal] Result:", result)
 
             if (!result.success) {
                 toast.error(result.message || "Failed to terminate the selected plan.")

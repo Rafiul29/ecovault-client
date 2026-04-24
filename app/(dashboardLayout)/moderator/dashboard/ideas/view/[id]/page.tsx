@@ -200,7 +200,7 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
 
                     <IdeaComments
                         ideaId={idea.id}
-                        comments={idea.comments || []}
+                        totalComments={idea?._count?.comments || 0}
                         currentUser={currentUser}
                     />
                 </div>

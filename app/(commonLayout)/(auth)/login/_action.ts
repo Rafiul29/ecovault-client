@@ -45,7 +45,6 @@ export const loginAction = async (payload: ILoginPayload, redirectPath?: string)
         if (error && error.response && error.response.data?.message === "Email not verified") {
             targetRedirectPath = `/verify-email?email=${payload.email}`;
         } else {
-            console.log("error", error);
             return {
                 success: false,
                 message: `Login failed: ${error.response?.data?.message || error.message}`,

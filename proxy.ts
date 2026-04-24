@@ -19,7 +19,6 @@ async function fetchUserInfo(accessToken: string, sessionToken: string) {
         }
 
         const { data } = await res.json();
-        console.log("user info", data);
         return data;
     } catch (error) {
         console.error("Error fetching user info in proxy:", error);
@@ -56,7 +55,6 @@ export async function proxy(request: NextRequest) {
         const refreshToken = request.cookies.get("refreshToken")?.value;
 
         const host = request.headers.get("host");
-        console.log("Middleware check:", { pathname, host, hasAccessToken: accessToken, hasRefreshToken: refreshToken });
 
         const decodedAccessToken = accessToken && jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string).data;
 
@@ -80,6 +78,9 @@ export async function proxy(request: NextRequest) {
         } else if (decodedAccessToken) {
             userRole = decodedAccessToken.role as UserRole;
         }
+
+        console.log("User role in proxy:", userRole);
+
 
         const routerOwner = getRouteOwner(pathname);
 

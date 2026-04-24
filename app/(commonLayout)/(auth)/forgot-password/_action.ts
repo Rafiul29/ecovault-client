@@ -16,7 +16,6 @@ export const forgotPasswordAction = async (payload: IForgotPasswordPayload): Pro
 
     try {
         const response = await httpClient.post("/auth/forget-password", parsedPayload.data);
-        console.log(response)
         return {
             success: true,
             message: response.message || "OTP sent to your email",

@@ -32,6 +32,7 @@ import Link from "next/link"
 interface CreateIdeaFormProps {
     categories: ICategory[]
     isLoadingCategories?: boolean
+    user?: any
 }
 
 const getErrorMessage = (error: unknown): string => {
@@ -40,7 +41,7 @@ const getErrorMessage = (error: unknown): string => {
     return "Invalid input"
 }
 
-const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps) => {
+const CreateIdeaForm = ({ categories, isLoadingCategories, user }: CreateIdeaFormProps) => {
     const [imagePreviews, setImagePreviews] = useState<string[]>([])
     const queryClient = useQueryClient()
     const router = useRouter()
@@ -105,7 +106,11 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
             setImagePreviews([])
 
             void queryClient.invalidateQueries({ queryKey: ["ideas"] })
-            router.push("/admin/dashboard/idea-management")
+            if (user.role === "MODERATOR") {
+                router.push("/moderator/dashboard/ideas")
+            } else {
+                router.push("/admin/dashboard/idea-management")
+            }
         },
     })
 

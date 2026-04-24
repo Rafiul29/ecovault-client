@@ -14,15 +14,20 @@ import type { ISubscriptionPlan } from "@/types/subscription";
 interface PricingCardProps {
   plan: ISubscriptionPlan;
   user: any;
+  returnUrl?: string;
 }
 
-export function PricingCard({ plan, user }: PricingCardProps) {
+export function PricingCard({ plan, user, returnUrl }: PricingCardProps) {
   const router = useRouter();
 
   const subscribeMutation = useMutation({
     mutationFn: (planId: string) => subscribeToPlan({ subscriptionPlanId: planId }),
     onSuccess: (res: any) => {
       if (res?.data?.url) {
+        // Persist returnUrl so the post-payment success page can redirect back
+        if (returnUrl && typeof window !== "undefined") {
+          sessionStorage.setItem("subscriptionReturnUrl", returnUrl);
+        }
         window.location.href = res.data.url;
       } else {
         toast.error(res?.message || "Failed to initiate subscription");
@@ -36,7 +41,7 @@ export function PricingCard({ plan, user }: PricingCardProps) {
   const handleSubscribe = (planId: string) => {
     if (!user) {
       toast.info("Please login to subscribe to a plan");
-      router.push(`/login?redirect=${encodeURIComponent("/pricing")}`);
+      router.push(`/login?redirect=${encodeURIComponent("/pricing" + (returnUrl ? `?returnUrl=${encodeURIComponent(returnUrl)}` : ""))}`);
       return;
     }
     subscribeMutation.mutate(planId);
@@ -95,7 +100,7 @@ export function PricingCard({ plan, user }: PricingCardProps) {
 
       <Button
         onClick={() => handleSubscribe(plan.id)}
-        disabled={subscribeMutation.isPending}
+        disabled={subscribeMutation.isPending || !plan.isActive}
         className={cn(
           buttonVariants({
             variant: plan.isPopular ? "default" : "outline",

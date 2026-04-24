@@ -32,7 +32,6 @@ export default function PurchaseIdeaButton({
         startTransition(async () => {
             try {
                 const result = await createCheckoutSession(ideaId);
-                console.log("result", result)
 
                 if (result.data?.url) {
                     // Redirect to Stripe checkout URL

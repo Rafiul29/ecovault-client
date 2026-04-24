@@ -64,7 +64,6 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
     const [selectedImage, setSelectedImage] = useState<File | null>(null)
     const [imagePreview, setImagePreview] = useState<string | null>(userInfo.image || null)
 
-    console.log("userInfo", 'imagePreview', imagePreview, userInfo)
 
     useEffect(() => {
         setImagePreview(userInfo.image || null)

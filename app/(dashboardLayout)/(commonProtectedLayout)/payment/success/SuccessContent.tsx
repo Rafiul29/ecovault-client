@@ -4,12 +4,27 @@ import { motion } from "framer-motion"
 import { CheckCircle2, ShoppingBag, ArrowRight } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
+import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 
 interface SuccessContentProps {
     redirectUrl: string
 }
 
 export default function SuccessContent({ redirectUrl }: SuccessContentProps) {
+    const router = useRouter();
+    const [returnUrl, setReturnUrl] = useState<string | null>(null);
+
+    useEffect(() => {
+        // Check if we came from a protected route redirect
+        const savedUrl = sessionStorage.getItem("subscriptionReturnUrl");
+        if (savedUrl) {
+            setReturnUrl(savedUrl);
+            // Optional: Automatically clean up
+            sessionStorage.removeItem("subscriptionReturnUrl");
+        }
+    }, []);
+
     return (
         <div className="min-h-[80vh] flex items-center justify-center p-4">
             <motion.div
@@ -52,12 +67,23 @@ export default function SuccessContent({ redirectUrl }: SuccessContentProps) {
                 </div>
 
                 <div className="flex flex-col gap-3">
-                    <Button asChild className="h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-600/20 group transition-all duration-300">
-                        <Link href="/dashboard" className="flex items-center justify-center gap-2">
-                            Go to Dashboard
-                            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                        </Link>
-                    </Button>
+                    {returnUrl ? (
+                        <Button
+                            onClick={() => router.push(returnUrl)}
+                            className="h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-600/20 group transition-all duration-300"
+                        >
+                            Return to Previous Page
+                            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                        </Button>
+                    ) : (
+                        <Button asChild className="h-12 bg-emerald-600 hover:bg-emerald-700 text-white rounded-2xl font-bold shadow-lg shadow-emerald-600/20 group transition-all duration-300">
+                            <Link href="/dashboard" className="flex items-center justify-center gap-2">
+                                Go to Dashboard
+                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                        </Button>
+                    )}
+
                     <Button asChild variant="ghost" className="h-12 rounded-2xl font-semibold hover:bg-emerald-50 dark:hover:bg-emerald-900/10 text-muted-foreground hover:text-emerald-600 transition-colors">
                         <Link href={redirectUrl} className="flex items-center justify-center gap-2">
                             <ShoppingBag className="w-4 h-4" />

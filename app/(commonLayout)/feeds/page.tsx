@@ -110,7 +110,6 @@ export default function FeedsPage() {
   useEffect(() => {
     // Fetch next page when bottom div is in view and not already loading
     if (entry?.isIntersecting && hasNextPage && !isFetchingNextPage) {
-      console.log("Fetching next page...");
       fetchNextPage();
     }
   }, [entry?.isIntersecting, hasNextPage, isFetchingNextPage, fetchNextPage]);
