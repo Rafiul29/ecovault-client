@@ -5,13 +5,14 @@ import { Filter, Lightbulb, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-import IdeaCard from "@/components/ideas/IdeaCard";
+import IdeaCard, { IdeaCardSkeleton } from "@/components/ideas/IdeaCard";
 import IdeaFilters from "@/components/ideas/IdeaFilters";
 import IdeaPagination from "@/components/ideas/IdeaPagination";
 
 import { getIdeas } from "@/services/idea.service";
 import { getCategories } from "@/services/category.service";
 import { IIdea } from "@/types/idea.types";
+import IdeaListLoading from "./loading";
 
 export default function IdeasPage() {
     const router = useRouter();
@@ -118,8 +119,10 @@ export default function IdeasPage() {
                 </div>
 
                 {isLoadingIdeas ? (
-                    <div className="flex h-64 items-center justify-center">
-                        <Loader2 className="size-8 animate-spin text-primary/50" />
+                    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {[...Array(8)].map((_, i) => (
+                            <IdeaCardSkeleton key={i} />
+                        ))}
                     </div>
                 ) : ideas.length === 0 ? (
                     <div className="flex h-64 flex-col items-center justify-center gap-3 rounded-xl border border-dashed border-border bg-muted/30 text-center">

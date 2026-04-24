@@ -2,6 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { createPortal } from "react-dom";
@@ -70,10 +71,12 @@ export default function IdeaImageGallery({
                         onClick={() => openLightbox(0)}
                         className="relative h-72 sm:h-[450px] w-full cursor-zoom-in overflow-hidden"
                     >
-                        <img
+                        <Image
                             src={images[0]}
                             alt={title}
-                            className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                            fill
+                            sizes="(max-width: 640px) 100vw, 800px"
+                            className="object-cover transition-transform duration-700 group-hover:scale-105"
                         />
                         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                             <Maximize2 className="text-white size-8 drop-shadow-lg" />
@@ -89,10 +92,12 @@ export default function IdeaImageGallery({
                                 onClick={() => openLightbox(i)}
                                 className="relative h-48 sm:h-80 w-full cursor-zoom-in overflow-hidden group/item"
                             >
-                                <img
+                                <Image
                                     src={img}
                                     alt={`${title} - ${i + 1}`}
-                                    className="h-full w-full object-cover transition-transform duration-700 group-item-hover:scale-110"
+                                    fill
+                                    sizes="(max-width: 640px) 100vw, 400px"
+                                    className="object-cover transition-transform duration-700 group-item-hover:scale-110"
                                 />
                                 <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                                     <Maximize2 className="text-white size-6 drop-shadow-lg" />
@@ -108,10 +113,12 @@ export default function IdeaImageGallery({
                             onClick={() => openLightbox(0)}
                             className="relative h-64 md:h-[400px] md:col-span-2 cursor-zoom-in overflow-hidden group/main"
                         >
-                            <img
+                            <Image
                                 src={images[0]}
                                 alt={title}
-                                className="h-full w-full object-cover transition-transform duration-700 group-main-hover:scale-105"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 600px"
+                                className="object-cover transition-transform duration-700 group-main-hover:scale-105"
                             />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center opacity-0 group-hover:opacity-100">
                                 <Maximize2 className="text-white size-10 drop-shadow-lg" />
@@ -124,10 +131,12 @@ export default function IdeaImageGallery({
                                     onClick={() => openLightbox(i + 1)}
                                     className="relative h-full w-full cursor-zoom-in overflow-hidden border-l border-border/10 group/sub"
                                 >
-                                    <img
+                                    <Image
                                         src={img}
                                         alt={`${title} - ${i + 2}`}
-                                        className="h-full w-full object-cover transition-all duration-700 hover:scale-110"
+                                        fill
+                                        sizes="(max-width: 768px) 50vw, 300px"
+                                        className="object-cover transition-all duration-700 hover:scale-110"
                                     />
                                     {i === 1 && images.length > 3 && (
                                         <div className="absolute inset-0 bg-black/50 backdrop-blur-[2px] flex flex-col items-center justify-center text-white pointer-events-none">
@@ -185,10 +194,11 @@ export default function IdeaImageGallery({
                                     transition={{ type: "spring", stiffness: 260, damping: 25 }}
                                     className="relative w-full h-full flex items-center justify-center p-1 lg:p-2"
                                 >
-                                    <img
+                                    <Image
                                         src={images[selectedImageIndex]}
                                         alt={`${title} fullscreen`}
-                                        className="w-full h-full object-contain shadow-2xl rounded-sm sm:rounded-lg"
+                                        fill
+                                        className="object-contain shadow-2xl rounded-sm sm:rounded-lg"
                                         onClick={(e) => e.stopPropagation()}
                                     />
                                 </motion.div>
@@ -227,10 +237,12 @@ export default function IdeaImageGallery({
                                                     : "border-transparent opacity-40 hover:opacity-100"
                                             )}
                                         >
-                                            <img
+                                            <Image
                                                 src={img}
                                                 alt={`Thumbnail ${i + 1}`}
-                                                className="h-full w-full object-cover"
+                                                fill
+                                                sizes="(max-width: 1024px) 80px, 300px"
+                                                className="object-cover"
                                             />
                                             {selectedImageIndex === i && (
                                                 <div className="absolute inset-0 bg-primary/10 flex items-center justify-center">

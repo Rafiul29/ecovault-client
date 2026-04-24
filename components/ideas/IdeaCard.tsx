@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   ThumbsUp,
   ThumbsDown,
@@ -14,6 +15,7 @@ import {
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
@@ -72,10 +74,12 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
           href={`/ideas/${idea.id}`}
           className="relative block h-44 shrink-0 overflow-hidden bg-muted"
         >
-          <img
+          <Image
             src={idea.images[0]}
             alt={idea.title}
-            className="h-full w-full object-cover"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
           />
           {idea.isFeatured && (
             <div className="absolute left-2 top-2 flex items-center gap-1 rounded-full bg-accent px-2 py-0.5 text-[11px] font-semibold text-white shadow">
@@ -128,12 +132,12 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
             {idea.description || idea.problemStatement}
           </p>
           {idea.isPaid && (
-             <div className="absolute inset-0 flex items-center justify-center bg-background/10 backdrop-blur-[1px]">
-               <div className="flex bg-background/80 rounded-full px-2 py-1 items-center gap-1.5 shadow-sm border border-border/50">
-                 <Lock className="size-3 text-primary" />
-                 <span className="text-[10px] font-medium text-foreground">Paid Content</span>
-               </div>
-             </div>
+            <div className="absolute inset-0 flex items-center justify-center bg-background/10 backdrop-blur-[1px]">
+              <div className="flex bg-background/80 rounded-full px-2 py-1 items-center gap-1.5 shadow-sm border border-border/50">
+                <Lock className="size-3 text-primary" />
+                <span className="text-[10px] font-medium text-foreground">Paid Content</span>
+              </div>
+            </div>
           )}
         </div>
 
@@ -233,6 +237,39 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
                 {watchlisted ? "Remove from watchlist" : "Add to watchlist"}
               </TooltipContent>
             </Tooltip>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function IdeaCardSkeleton() {
+  return (
+    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
+      <Skeleton className="h-44 w-full rounded-none" />
+      <div className="p-4 space-y-4 flex-1 flex flex-col">
+        <div className="flex gap-2">
+          <Skeleton className="h-4 w-12 rounded-full" />
+          <Skeleton className="h-4 w-12 rounded-full" />
+        </div>
+        <Skeleton className="h-6 w-3/4" />
+        <div className="space-y-2 flex-1">
+          <Skeleton className="h-3 w-full" />
+          <Skeleton className="h-3 w-5/6" />
+        </div>
+        <div className="border-t border-border pt-3 space-y-3">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Skeleton className="size-6 rounded-full" />
+              <Skeleton className="h-3 w-20" />
+            </div>
+            <Skeleton className="h-3 w-12" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-7 w-12 rounded-md" />
+            <Skeleton className="h-7 w-12 rounded-md" />
+            <Skeleton className="h-7 w-12 rounded-md" />
           </div>
         </div>
       </div>

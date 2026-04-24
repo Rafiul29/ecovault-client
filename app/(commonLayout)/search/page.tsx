@@ -5,7 +5,7 @@ import { Filter, Search, Loader2 } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 
-import IdeaCard from "@/components/ideas/IdeaCard";
+import IdeaCard, { IdeaCardSkeleton } from "@/components/ideas/IdeaCard";
 import IdeaFilters from "@/components/ideas/IdeaFilters";
 import IdeaPagination from "@/components/ideas/IdeaPagination";
 import SearchInput from "@/components/search/SearchInput";
@@ -84,26 +84,26 @@ export default function SearchPage() {
     return (
         <div className="flex flex-1 flex-col">
             <main className="mx-auto max-w-7xl px-2 py-12 w-full">
-        {/* Search Header */}
-        <div className="text-center mb-6 sm:mb-10 max-w-2xl mx-auto">
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 sm:mb-3">
-            Find Eco-Innovations
-          </h1>
-          <p className="text-xs sm:text-sm text-muted-foreground px-4">
-            Search through hundreds of problem-solving concepts submitted by the community
-          </p>
-        </div>
+                {/* Search Header */}
+                <div className="text-center mb-6 sm:mb-10 max-w-2xl mx-auto">
+                    <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 sm:mb-3">
+                        Find Eco-Innovations
+                    </h1>
+                    <p className="text-xs sm:text-sm text-muted-foreground px-4">
+                        Search through hundreds of problem-solving concepts submitted by the community
+                    </p>
+                </div>
 
-        {/* Big Search Input with results count inside or sticky bar feel */}
-        <div className="mb-6 sm:mb-10">
-            <SearchInput
-                initialValue={searchTerm}
-                onSearch={(val) => updateParams("searchTerm", val)}
-                isLoading={isFetchingIdeas && !isLoadingIdeas}
-            />
-        </div>
+                {/* Big Search Input with results count inside or sticky bar feel */}
+                <div className="mb-6 sm:mb-10">
+                    <SearchInput
+                        initialValue={searchTerm}
+                        onSearch={(val) => updateParams("searchTerm", val)}
+                        isLoading={isFetchingIdeas && !isLoadingIdeas}
+                    />
+                </div>
 
-        <div className="border-t border-border/40 pt-6 sm:pt-10">
+                <div className="border-t border-border/40 pt-6 sm:pt-10">
                     <IdeaFilters
                         categories={categories}
                         selectedCategory={categoryId}
@@ -132,30 +132,32 @@ export default function SearchPage() {
                     </div>
 
                     {isLoadingIdeas ? (
-                        <div className="flex h-64 items-center justify-center">
-                            <Loader2 className="size-10 animate-spin text-primary/30" strokeWidth={2.5} />
+                        <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                            {[...Array(8)].map((_, i) => (
+                                <IdeaCardSkeleton key={i} />
+                            ))}
                         </div>
-          ) : ideas.length === 0 ? (
-            <div className="flex h-64 sm:h-80 flex-col items-center justify-center gap-3 sm:gap-4 rounded-2xl sm:rounded-3xl border border-dashed border-border/60 bg-muted/20 text-center">
-              <div className="flex size-12 sm:size-14 items-center justify-center rounded-xl sm:rounded-2xl bg-muted shadow-inner">
-                <Search className="size-6 sm:size-7 text-muted-foreground/40" />
-              </div>
-              <div className="max-w-xs px-6">
-                <p className="text-base sm:text-lg font-bold text-foreground">
-                  No matches found
-                </p>
-                <p className="text-[11px] sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
-                  Try using different keywords or broadening your category filter
-                </p>
-              </div>
-            </div>
+                    ) : ideas.length === 0 ? (
+                        <div className="flex h-64 sm:h-80 flex-col items-center justify-center gap-3 sm:gap-4 rounded-2xl sm:rounded-3xl border border-dashed border-border/60 bg-muted/20 text-center">
+                            <div className="flex size-12 sm:size-14 items-center justify-center rounded-xl sm:rounded-2xl bg-muted shadow-inner">
+                                <Search className="size-6 sm:size-7 text-muted-foreground/40" />
+                            </div>
+                            <div className="max-w-xs px-6">
+                                <p className="text-base sm:text-lg font-bold text-foreground">
+                                    No matches found
+                                </p>
+                                <p className="text-[11px] sm:text-sm text-muted-foreground mt-0.5 sm:mt-1">
+                                    Try using different keywords or broadening your category filter
+                                </p>
+                            </div>
+                        </div>
                     ) : (
-          <div className="space-y-8 sm:space-y-12">
-            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-              {ideas.map((idea: IIdea) => (
-                <IdeaCard key={idea.id} idea={idea as any} showStatus />
-              ))}
-            </div>
+                        <div className="space-y-8 sm:space-y-12">
+                            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                                {ideas.map((idea: IIdea) => (
+                                    <IdeaCard key={idea.id} idea={idea as any} showStatus />
+                                ))}
+                            </div>
 
                             <IdeaPagination
                                 currentPage={page}

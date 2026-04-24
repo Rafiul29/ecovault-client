@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, Eye, ThumbsDown, ThumbsUp } from "lucide-react";
 import { cn, formatNumber } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -55,10 +56,12 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
               {idea.images[0] && (
                 <div className="relative h-56 overflow-hidden">
                   <Link href={`/ideas/${idea.id}`}>
-                    <img
+                    <Image
                       src={idea.images[0]}
                       alt={idea.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      fill
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </Link>
                   {idea.isPaid && (

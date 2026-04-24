@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useInfiniteQuery } from "@tanstack/react-query";
 
-import IdeaCard from "@/components/ideas/IdeaCard";
+import IdeaCard, { IdeaCardSkeleton } from "@/components/ideas/IdeaCard";
 import { getIdeas } from "@/services/idea.service";
 import { IIdea } from "@/types/idea.types";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
@@ -163,10 +163,7 @@ export default function FeedsPage() {
           {isLoading ? (
             /* Initial loading shimmer */
             [...Array(3)].map((_, i) => (
-              <div
-                key={i}
-                className="flex h-48 w-full flex-col animate-pulse rounded-xl bg-muted/60"
-              />
+              <IdeaCardSkeleton key={i} />
             ))
           ) : ideas.length === 0 ? (
             /* Empty state */

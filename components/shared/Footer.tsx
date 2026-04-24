@@ -7,7 +7,7 @@ import { Separator } from "@/components/ui/separator";
 
 const platformLinks = [
   { label: "Browse Ideas", href: "/ideas" },
-  { label: "Explore", href: "/search" },
+  { label: "Explore", href: "/feeds" },
   // { label: "Watchlist", href: "/watchlist" },
 ];
 
