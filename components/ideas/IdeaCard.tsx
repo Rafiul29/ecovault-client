@@ -9,6 +9,7 @@ import {
   BookmarkCheck,
   BadgeDollarSign,
   Star,
+  Lock,
 } from "lucide-react";
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
@@ -119,9 +120,22 @@ export default function IdeaCard({ idea, showStatus = false }: IdeaCardProps) {
         </Link>
 
         {/* Description */}
-        <p className="text-[13px] text-muted-foreground leading-relaxed line-clamp-2 flex-1 mb-4">
-          {idea.description}
-        </p>
+        <div className="relative line-clamp-2 flex-1 mb-4">
+          <p className={cn(
+            "text-[13px] leading-relaxed",
+            idea.isPaid ? "text-muted-foreground/50 blur-[3px] select-none" : "text-muted-foreground"
+          )}>
+            {idea.description || idea.problemStatement}
+          </p>
+          {idea.isPaid && (
+             <div className="absolute inset-0 flex items-center justify-center bg-background/10 backdrop-blur-[1px]">
+               <div className="flex bg-background/80 rounded-full px-2 py-1 items-center gap-1.5 shadow-sm border border-border/50">
+                 <Lock className="size-3 text-primary" />
+                 <span className="text-[10px] font-medium text-foreground">Paid Content</span>
+               </div>
+             </div>
+          )}
+        </div>
 
         {/* Divider */}
         <div className="border-t border-border pt-3">

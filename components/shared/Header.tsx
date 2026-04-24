@@ -1,12 +1,13 @@
 "use client";
 import Link from "next/link";
-import { Leaf, ArrowRight, Plus } from "lucide-react";
+import { Leaf, ArrowRight, Plus, Search as SearchIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 import { UserNav } from "./UserNav";
 import { MobileNav } from "./MobileNav";
 import type { UserInfo } from "@/types/user.types";
 import { useState, useEffect } from "react";
+import { GlobalSearch } from "../search/GlobalSearch";
 
 interface HeaderProps {
   user?: UserInfo;
@@ -14,13 +15,14 @@ interface HeaderProps {
 
 const navLinks = [
   { label: "Ideas", href: "/ideas" },
-  { label: "Explore", href: "/search" },
+  { label: "Explore", href: "/feeds" },
   { label: "Achievements", href: "/achievements" },
 ];
 
 export function Header({ user }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -29,15 +31,24 @@ export function Header({ user }: HeaderProps) {
       setIsScrolled(window.scrollY > 10);
     };
 
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setIsSearchOpen((open) => !open);
+      }
+    };
+
+    document.addEventListener("keydown", down);
     checkScroll();
     window.addEventListener("scroll", checkScroll);
-    return () => window.removeEventListener("scroll", checkScroll);
+    return () => {
+      window.removeEventListener("scroll", checkScroll);
+      document.removeEventListener("keydown", down);
+    };
   }, []);
 
-  console.log("user", user);
-
   const headerClasses = cn(
-    "fixed top-0 z-50 w-full transition-all duration-300",
+    "fixed top-0 z-50 left-0 right-0 transition-[background-color,border-color] duration-300",
     !mounted &&
     "bg-background/80 border-b border-border/50 py-3 backdrop-blur-xl", // Initial CSS state
     mounted &&
@@ -76,6 +87,33 @@ export function Header({ user }: HeaderProps) {
 
         {/* Actions */}
         <div className="flex items-center gap-3">
+          {/* Search Trigger */}
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="flex h-10 items-center gap-2 rounded-full border border-border/50 bg-background/50 hover:bg-background px-4 pr-12 text-sm text-muted-foreground transition-all hover:border-primary/30 hover:ring-4 hover:ring-primary/5 hidden lg:flex shadow-sm group"
+          >
+            <SearchIcon className="size-4 group-hover:text-primary transition-colors" />
+            <span className="font-medium">Search for innovations...</span>
+            <kbd className="absolute right-4 hidden lg:inline-flex h-5 select-none items-center gap-1 rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+              <span className="text-xs">⌘</span>K
+            </kbd>
+          </button>
+
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="flex h-10 items-center gap-2 rounded-full border border-border/50 bg-background/50 hover:bg-background px-3 pr-8 text-sm text-muted-foreground transition-all hover:border-primary/30 lg:hidden hidden md:flex shadow-sm"
+          >
+            <SearchIcon className="size-4" />
+            <span>Search...</span>
+          </button>
+
+          <button
+            onClick={() => setIsSearchOpen(true)}
+            className="flex size-10 items-center justify-center rounded-full border border-border/50 bg-muted/30 text-muted-foreground transition-all hover:bg-muted/50 md:hidden"
+          >
+            <SearchIcon className="size-4" />
+          </button>
+
           <div className="hidden items-center gap-3 sm:flex">
             {user ? (
               <>
@@ -119,6 +157,8 @@ export function Header({ user }: HeaderProps) {
           <MobileNav links={navLinks} user={user} />
         </div>
       </div>
+
+      <GlobalSearch isOpen={isSearchOpen} onOpenChange={setIsSearchOpen} />
     </header>
   );
 }
