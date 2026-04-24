@@ -10,7 +10,7 @@ const EditIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
 
     const [ideaResponse, categoriesResponse] = await Promise.all([
         getIdeaById(id),
-        getCategories(),
+        getCategories("limit=1000"),
     ]);
 
     if (!ideaResponse?.success || !ideaResponse.data) {

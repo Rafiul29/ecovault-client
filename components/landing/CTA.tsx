@@ -7,7 +7,7 @@ import { buttonVariants } from "@/components/ui/button";
 
 export function CTA() {
   return (
-    <section className="relative overflow-hidden px-6 py-40">
+    <section className="relative overflow-hidden px-2 py-40">
       <img
         src="https://images.pexels.com/photos/2833758/pexels-photo-2833758.jpeg"
         alt="Aerial view of lush green forest canopy by Kelly on Pexels"

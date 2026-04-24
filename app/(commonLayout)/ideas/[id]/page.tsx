@@ -66,9 +66,9 @@ export default async function IdeaDetailPage({ params }: { params: { id: string 
     }
 
     return (
-        <div className="flex flex-1 flex-col py-5 px-3 md:px-0">
+        <div className="flex flex-1 flex-col py-5 ">
             <main className="flex-1">
-                <div className="mx-auto max-w-7xl">
+                <div className="mx-auto max-w-7xl px-2">
                     {/* Back */}
                     <Button
                         variant="ghost"

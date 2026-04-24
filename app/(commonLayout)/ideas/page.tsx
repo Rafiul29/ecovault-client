@@ -76,7 +76,7 @@ export default function IdeasPage() {
 
     return (
         <div className="flex flex-1 flex-col">
-            <main className="mx-auto max-w-7xl px-6 py-10 w-full">
+            <main className="mx-auto max-w-7xl px-2 py-10 w-full">
                 {/* Page Header */}
                 <div className="mb-8 ">
                     <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">

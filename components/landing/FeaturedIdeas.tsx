@@ -15,8 +15,8 @@ interface FeaturedIdeasProps {
 
 export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
   return (
-    <section className="py-32 px-6">
-      <div className="mx-auto max-w-6xl">
+    <section className="py-32">
+      <div className="mx-auto max-w-7xl px-2">
         <div className="mb-16 flex flex-wrap items-end justify-between gap-8 md:gap-12">
           <div className="max-w-2xl">
             <Badge
@@ -90,26 +90,35 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
                 </p>
                 <div className="mt-8 flex items-center justify-between gap-4 border-t border-border/50 pt-6">
                   <div className="flex items-center gap-3">
-                    <Avatar className="size-8 ring-2 ring-background ring-offset-2 ring-offset-muted/10">
-                      <AvatarImage
-                        src={idea.author.image}
-                        alt={idea.author.name}
-                      />
-                      <AvatarFallback className="text-[10px] font-bold">
-                        {idea.author.name[0]}
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="text-xs font-semibold text-foreground/80">
-                      {idea.author.name}
-                    </span>
+                    <Link
+                      href={`/profile/${idea.author.id}`}
+                      className="flex items-center gap-3"
+                    >
+                      <Avatar className="size-8 ring-2 ring-background ring-offset-2 ring-offset-muted/10">
+                        <AvatarImage
+                          src={idea.author.image}
+                          alt={idea.author.name}
+                        />
+                        <AvatarFallback className="text-[10px] font-bold">
+                          {idea.author.name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      <span className="text-xs font-semibold text-foreground/80">
+                        {idea.author.name}
+                      </span>
+                    </Link>
                   </div>
                   <div className="flex items-center gap-4 text-[11px] font-medium text-muted-foreground">
                     <span className="flex items-center gap-1.5">
-                      <span className="text-primary opacity-80"><ThumbsUp className="size-3.5" /></span>{" "}
+                      <span className="text-primary opacity-80">
+                        <ThumbsUp className="size-3.5" />
+                      </span>{" "}
                       {formatNumber(idea.upvoteCount)}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <span className="text-primary opacity-80"><Eye className="size-3.5" /></span>{" "}
+                      <span className="text-primary opacity-80">
+                        <Eye className="size-3.5" />
+                      </span>{" "}
                       {formatNumber(idea.viewCount)}
                     </span>
                   </div>

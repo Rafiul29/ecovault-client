@@ -6,7 +6,7 @@ import { features } from "@/lib/mock-data";
 export function Features() {
   return (
     <section className="py-20 px-6">
-      <div className="mx-auto max-w-6xl">
+      <div className="mx-auto max-w-7xl px-2">
         <div className="mb-16 text-center">
           <Badge
             variant="outline"

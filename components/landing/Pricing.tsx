@@ -9,8 +9,8 @@ interface PricingProps {
 
 export function Pricing({ plans, user }: PricingProps) {
   return (
-    <section id="pricing" className="py-32 px-6">
-      <div className="mx-auto max-w-6xl">
+    <section id="pricing" className="py-32">
+      <div className="mx-auto max-w-7xl px-2">
         <div className="mb-20 text-center">
           <Badge
             variant="outline"

@@ -21,8 +21,8 @@ export default function AchievementsPage() {
   const locked = mockAchievements.filter((a) => a.isLocked);
 
   return (
-    <div className="flex flex-1 flex-col">
-      <main className="mx-auto max-w-6xl px-6">
+    <div className="py-10">
+      <main className="mx-auto max-w-7xl px-2">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-heading font-bold flex items-center gap-2">

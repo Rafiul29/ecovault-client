@@ -8,11 +8,11 @@ import { Separator } from "@/components/ui/separator";
 const platformLinks = [
   { label: "Browse Ideas", href: "/ideas" },
   { label: "Explore", href: "/search" },
-  { label: "Watchlist", href: "/watchlist" },
+  // { label: "Watchlist", href: "/watchlist" },
 ];
 
 const companyLinks = [
-  { label: "Pricing", href: "#pricing" },
+  { label: "Pricing", href: "/pricing" },
   { label: "Sign In", href: "/login" },
   { label: "Register", href: "/register" },
 ];
@@ -20,7 +20,7 @@ const companyLinks = [
 export function Footer() {
   return (
     <footer className="border-t border-border/50 bg-muted/40">
-      <div className="mx-auto max-w-7xl py-16">
+      <div className="mx-auto max-w-7xl py-16 px-2 ">
         <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-4 lg:gap-16">
           <div className="md:col-span-2 space-y-6">
             <Link href="/" className="flex items-center gap-3 group">
@@ -67,7 +67,7 @@ export function Footer() {
               Platform
             </h4>
             <ul className="space-y-4">
-              {platformLinks.map((l) => (
+              {platformLinks?.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}
@@ -86,7 +86,7 @@ export function Footer() {
               Company
             </h4>
             <ul className="space-y-4">
-              {companyLinks.map((l) => (
+              {companyLinks?.map((l) => (
                 <li key={l.href}>
                   <Link
                     href={l.href}

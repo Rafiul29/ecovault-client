@@ -58,7 +58,7 @@ const EditIdeaForm = ({ idea, categories, isLoadingCategories, mode = "all" }: E
 
     const { data: tagsResponse, isLoading: isLoadingTags } = useQuery({
         queryKey: ["tags"],
-        queryFn: () => getTags(),
+        queryFn: () => getTags("limit=1000"),
     })
     const tags = tagsResponse?.data || []
 

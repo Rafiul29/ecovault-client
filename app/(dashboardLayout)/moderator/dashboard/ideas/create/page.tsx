@@ -10,7 +10,7 @@ const CreateIdeaPage = async () => {
         queryFn: () => getCategories(),
     });
 
-    const categoryData = await getCategories();
+    const categoryData = await getCategories("limit=1000");
     const categories = categoryData?.data || [];
 
     return (

@@ -83,7 +83,7 @@ export default function SearchPage() {
 
     return (
         <div className="flex flex-1 flex-col">
-            <main className="mx-auto max-w-7xl px-6 py-12 w-full">
+            <main className="mx-auto max-w-7xl px-2 py-12 w-full">
                 {/* Search Header */}
                 <div className="text-center mb-10 max-w-2xl mx-auto">
                     <h1 className="text-4xl font-extrabold tracking-tight mb-3">

@@ -27,7 +27,7 @@ export function Testimonials({ comments = [] }: TestimonialsProps) {
 
   return (
     <section className="bg-muted/30 py-32">
-      <div className="mx-auto max-w-7xl">
+      <div className="mx-auto max-w-7xl px-2">
         <div className="mb-20 text-center">
           <Badge
             variant="outline"
