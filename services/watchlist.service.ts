@@ -11,3 +11,12 @@ export const toggleWatchlist = async (payload: { ideaId: string }) => {
         throw error;
     }
 }
+export const getMyWatchlist = async () => {
+    try {
+        const response = await httpClient.get<any>("/watchlists/me");
+        return response;
+    } catch (error) {
+        console.error("Error fetching watchlist:", error);
+        throw error;
+    }
+}

@@ -1,3 +1,6 @@
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
+
 export const dynamic = "force-dynamic";
 export default function CommonDashboardLayout({
     children,
@@ -6,7 +9,10 @@ export default function CommonDashboardLayout({
 }>) {
     return (
         <>
-            {children}
+            <TooltipProvider>
+                {children}
+            </TooltipProvider>
+            <Toaster richColors />
         </>
     );
 }

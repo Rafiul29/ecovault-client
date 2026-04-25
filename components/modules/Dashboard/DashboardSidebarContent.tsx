@@ -91,7 +91,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
                     <div className="flex-1 overflow-hidden">
                         <p className="text-sm font-medium truncate">{userInfo?.name}</p>
                         <p className="text-xs text-muted-foreground capitalize">
-                            {userInfo.role.toLocaleLowerCase().replace("_", " ")}
+                            {userInfo?.role?.toLocaleLowerCase().replace("_", " ")}
                         </p>
                     </div>
                 </div>

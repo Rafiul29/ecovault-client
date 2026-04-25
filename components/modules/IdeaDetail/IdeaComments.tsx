@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { MessageSquare, CornerDownRight, ChevronUp } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { formatRelativeTime, cn } from "@/lib/utils";
 import { createComment, getCommentsByIdeaId } from "@/services/comment.service";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 
 interface IdeaCommentsProps {
     ideaId: string;
@@ -143,31 +142,31 @@ const CommentItem = ({ comment, currentUser, onReply, depth = 0 }: any) => {
 };
 
 const IdeaComments = ({ ideaId, totalComments, currentUser }: IdeaCommentsProps) => {
-    const router = useRouter();
     const [localComments, setLocalComments] = useState<any[]>([]);
     const [newComment, setNewComment] = useState("");
     const [isPending, setIsPending] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        const fetchComments = async () => {
-            setIsLoading(true);
-            try {
-                const response = await getCommentsByIdeaId(ideaId);
-                if (response.success && response.data) {
-                    setLocalComments(response.data);
-                }
-            } catch (error) {
-                console.error("Failed to load comments:", error);
-            } finally {
-                setIsLoading(false);
+    // Extracted so it can be called after a successful post to sync with DB
+    const fetchComments = useCallback(async (silent = false) => {
+        if (!silent) setIsLoading(true);
+        try {
+            const response = await getCommentsByIdeaId(ideaId);
+            if (response.success && response.data) {
+                setLocalComments(response.data);
             }
-        };
+        } catch (error) {
+            console.error("Failed to load comments:", error);
+        } finally {
+            if (!silent) setIsLoading(false);
+        }
+    }, [ideaId]);
 
+    useEffect(() => {
         if (ideaId) {
             fetchComments();
         }
-    }, [ideaId]);
+    }, [ideaId, fetchComments]);
 
     const insertReply = (nodes: any[], parentId: string | null, newEntity: any): any[] => {
         if (!parentId) {
@@ -227,10 +226,16 @@ const IdeaComments = ({ ideaId, totalComments, currentUser }: IdeaCommentsProps)
             });
 
             if (!response.success) {
-                throw new Error(response.message || "Failed to post comment.");
+                // Roll back optimistic update on API failure
+                setLocalComments((prev) => removeReply(prev, optimisticId));
+                if (parentId === null) setNewComment(content);
+                toast.error(response.message || "Failed to post comment.");
+                return false;
             }
+
             toast.success(parentId ? "Reply posted!" : "Comment posted!");
-            router.refresh();
+            // Re-fetch from DB silently — replaces optimistic temp ID with real data
+            await fetchComments(true);
             return true;
         } catch (error: any) {
             setLocalComments((prev) => removeReply(prev, optimisticId));
