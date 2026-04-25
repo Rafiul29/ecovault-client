@@ -49,7 +49,7 @@ const WatchlistContent = () => {
     return (
         <div className="space-y-8 p-4">
             {/* Header Section */}
-            <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+            <div className="flex flex-col gap-6 sm:flex-row md:items-center md:justify-between">
                 <div>
                     <div className="flex items-center gap-2 mb-2">
                         <div className="p-2 bg-primary/10 rounded-lg">

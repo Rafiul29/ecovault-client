@@ -8,6 +8,7 @@ import {
     LogOut,
     CreditCard,
     Bell,
+    BookMarked,
 } from "lucide-react";
 import {
     DropdownMenu,
@@ -69,6 +70,12 @@ export function UserDropdown({ user }: UserNavProps) {
                         <Link href={`/profile/${user.id}`} className="cursor-pointer w-full flex items-center">
                             <UserIcon className="mr-2 h-4 w-4" />
                             <span>Profile</span>
+                        </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                        <Link href={`/watchlist`} className="cursor-pointer w-full flex items-center">
+                            <BookMarked className="mr-2 h-4 w-4" />
+                            <span>Watchlist</span>
                         </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>

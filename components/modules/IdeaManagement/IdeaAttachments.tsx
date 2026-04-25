@@ -85,6 +85,7 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
 
     const handleAdd = (e: React.FormEvent) => {
         e.preventDefault();
+        e.stopPropagation();
         if (!file) {
             toast.error("File is required");
             return;
@@ -136,7 +137,11 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                 </div>
                 {(!isPublicView && hasPermission && currentUserRole !== "MEMBER") && (
                     <Button
-                        onClick={() => setIsAddOpen(true)}
+                        onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setIsAddOpen(true)
+                        }}
                         size="sm"
                         className="bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg px-4"
                     >
@@ -181,7 +186,9 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                                     variant="ghost"
                                     size="icon"
                                     className="h-8 w-8 text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
                                         setViewingAttachment(file);
                                         setViewAttachmentUrl(file.url);
                                     }}
@@ -206,7 +213,12 @@ const IdeaAttachments = ({ ideaId, authorId, currentUserId, currentUserRole }: I
                                         variant="ghost"
                                         size="icon"
                                         className="h-8 w-8 text-slate-300 hover:text-red-600 hover:bg-red-50"
-                                        onClick={() => {/* delete mutation */ }}
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            e.stopPropagation();
+                                            // delete mutation
+                                            deleteMutation.mutate(file.id);
+                                        }}
                                     >
                                         <Trash2 className="h-4 w-4" />
                                     </Button>
