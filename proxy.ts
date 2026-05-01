@@ -65,8 +65,6 @@ export async function proxy(request: NextRequest) {
             console.warn("Invalid access token in middleware:", verifyResult?.error);
         }
 
-
-
         let userRole: UserRole | null = null;
 
         if (accessToken) {
