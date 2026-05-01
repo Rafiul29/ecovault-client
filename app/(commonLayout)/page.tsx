@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import { cn } from "@/lib/utils";
 import { Hero, HeroIdeasGrid } from "@/components/landing/Hero";
 import { Stats } from "@/components/landing/Stats";
 import { Features } from "@/components/landing/Features";
@@ -23,9 +24,15 @@ export default async function LandingPage() {
       <Hero>
         <Suspense
           fallback={
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-64 bg-muted animate-pulse rounded-2xl" />
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 min-h-[300px]">
+              {[0, 1, 2].map((i) => (
+                <div 
+                  key={i} 
+                  className={cn(
+                    "h-[285px] bg-muted/20 animate-pulse rounded-2xl border",
+                    i === 1 ? "sm:-translate-y-4" : "sm:translate-y-0"
+                  )} 
+                />
               ))}
             </div>
           }
@@ -80,13 +87,15 @@ async function PricingSection({ plansPromise, userPromise }: { plansPromise: Pro
 
 function SectionSkeleton() {
   return (
-    <div className="py-20 mx-auto max-w-7xl px-4 space-y-8">
-      <div className="space-y-4">
-        <div className="h-6 w-32 bg-muted animate-pulse rounded-full" />
-        <div className="h-10 w-2/3 bg-muted animate-pulse rounded-lg" />
+    <div className="py-32 mx-auto max-w-7xl px-4 space-y-12 min-h-[700px]">
+      <div className="space-y-6">
+        <div className="h-6 w-32 bg-muted/20 animate-pulse rounded-full" />
+        <div className="h-16 w-2/3 bg-muted/20 animate-pulse rounded-lg" />
       </div>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3].map(i => <div key={i} className="h-64 bg-muted animate-pulse rounded-2xl" />)}
+      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        {[1, 2, 3].map(i => (
+          <div key={i} className="h-[520px] bg-muted/20 animate-pulse rounded-3xl border" />
+        ))}
       </div>
     </div>
   );

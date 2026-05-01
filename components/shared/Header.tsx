@@ -49,8 +49,7 @@ export function Header({ user }: HeaderProps) {
 
   const headerClasses = cn(
     "fixed top-0 z-50 left-0 right-0 transition-[background-color,border-color] duration-300",
-    !mounted &&
-    "bg-background/80 border-b border-border/50 py-3 backdrop-blur-xl", // Initial CSS state
+    !mounted && "bg-transparent py-5", // Initial SSR state matching top-of-page
     mounted &&
     isScrolled &&
     "bg-background/80 border-b border-border/50 py-3 backdrop-blur-xl",

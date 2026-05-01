@@ -60,7 +60,8 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
                       src={idea.images[0]}
                       alt={idea.title}
                       fill
-                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                      priority={ideas.indexOf(idea) < 3}
+                      sizes="(max-width: 768px) 100vw, (max-width: 1280px) 50vw, 400px"
                       className="object-cover transition-transform duration-700 group-hover:scale-110"
                     />
                   </Link>
