@@ -48,6 +48,7 @@ export function Hero({ children }: HeroProps) {
       <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
         <Link
           href="/register"
+          aria-label="Start for Free - Create an account"
           className={cn(
             buttonVariants({ size: "lg" }),
             "gap-2 px-8 shadow-md shadow-primary/10 hover:shadow-lg hover:shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0",
@@ -57,6 +58,7 @@ export function Hero({ children }: HeroProps) {
         </Link>
         <Link
           href="/ideas"
+          aria-label="Browse Ideas - Explore the marketplace"
           className={cn(
             buttonVariants({ variant: "outline", size: "lg" }),
             "gap-2 px-8 bg-background/50 backdrop-blur-sm",
@@ -76,7 +78,7 @@ export function Hero({ children }: HeroProps) {
                 key={u}
                 className="size-9 ring-2 ring-background transition-transform hover:-translate-y-1"
               >
-                <AvatarImage src={`https://i.pravatar.cc/80?u=${u}`} alt={u} />
+                <AvatarImage src={`https://i.pravatar.cc/80?u=${u}`} alt={`Avatar of ${u.replace("-", " ")}`} />
                 <AvatarFallback className="text-xs bg-secondary text-secondary-foreground">
                   {u[0].toUpperCase()}
                 </AvatarFallback>

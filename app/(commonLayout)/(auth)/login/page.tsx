@@ -8,7 +8,7 @@ interface LoginParams {
 const LoginPage = async ({ searchParams }: LoginParams) => {
   const { redirect } = await searchParams || {};
   return (
-    <div className="flex w-full flex-col lg:flex-row overflow-hidden min-h-[calc(100vh-80px)]">
+    <div className="flex w-full flex-col lg:flex-row overflow-hidden">
       {/* Left Column: Image (Desktop only) */}
       <div className="hidden lg:block lg:w-1/2 relative bg-muted overflow-hidden">
         <Image

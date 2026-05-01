@@ -89,6 +89,7 @@ export function Header({ user }: HeaderProps) {
           {/* Search Trigger */}
           <button
             onClick={() => setIsSearchOpen(true)}
+            aria-label="Open search - Press Ctrl+K to search"
             className="flex h-10 items-center gap-2 rounded-full border border-border/50 bg-background/50 hover:bg-background px-4 pr-12 text-sm text-muted-foreground transition-all hover:border-primary/30 hover:ring-4 hover:ring-primary/5 hidden lg:flex shadow-sm group"
           >
             <SearchIcon className="size-4 group-hover:text-primary transition-colors" />
@@ -100,6 +101,7 @@ export function Header({ user }: HeaderProps) {
 
           <button
             onClick={() => setIsSearchOpen(true)}
+            aria-label="Open search"
             className="flex h-10 items-center gap-2 rounded-full border border-border/50 bg-background/50 hover:bg-background px-3 pr-8 text-sm text-muted-foreground transition-all hover:border-primary/30 lg:hidden hidden md:flex shadow-sm"
           >
             <SearchIcon className="size-4" />
@@ -108,6 +110,7 @@ export function Header({ user }: HeaderProps) {
 
           <button
             onClick={() => setIsSearchOpen(true)}
+            aria-label="Open search"
             className="flex size-10 items-center justify-center rounded-full border border-border/50 bg-muted/30 text-muted-foreground transition-all hover:bg-muted/50 md:hidden"
           >
             <SearchIcon className="size-4" />

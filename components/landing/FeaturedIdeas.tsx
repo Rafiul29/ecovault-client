@@ -37,6 +37,7 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
           </div>
           <Link
             href="/ideas"
+            aria-label="Explore the full Marketplace for more ideas"
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
               "gap-2 group transition-all",

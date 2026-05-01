@@ -65,19 +65,19 @@ export function PricingCard({ plan, user, returnUrl }: PricingCardProps) {
       )}
 
       <div className="mb-8">
-        <p className="font-display text-[10px] font-black uppercase tracking-[0.2em] text-neutral-400 group-hover:text-emerald-600 transition-colors">
+        <p className="font-display text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-emerald-600 transition-colors">
           {plan.name} {plan.isActive ? "" : "(Inactive)"}
         </p>
         <div className="mt-4 flex items-baseline gap-1.5">
           <span className="font-display text-5xl font-black tracking-tighter text-neutral-900">
             ${plan.price}
           </span>
-          <span className="text-sm font-bold text-neutral-400">
+          <span className="text-sm font-bold text-muted-foreground">
             /{plan.durationDays}d
           </span>
         </div>
         {plan.description && (
-          <p className="mt-4 text-sm text-neutral-500 font-medium leading-relaxed">
+          <p className="mt-4 text-sm text-muted-foreground/90 font-medium leading-relaxed">
             {plan.description}
           </p>
         )}

@@ -24,12 +24,12 @@ export default async function LandingPage() {
       <Hero>
         <Suspense
           fallback={
-            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 min-h-[300px]">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 min-h-[340px]">
               {[0, 1, 2].map((i) => (
                 <div 
                   key={i} 
                   className={cn(
-                    "h-[285px] bg-muted/20 animate-pulse rounded-2xl border",
+                    "h-[340px] bg-muted/20 animate-pulse rounded-2xl border",
                     i === 1 ? "sm:-translate-y-4" : "sm:translate-y-0"
                   )} 
                 />
@@ -45,15 +45,15 @@ export default async function LandingPage() {
       <Features />
       <Process />
 
-      <Suspense fallback={<SectionSkeleton />}>
+      <Suspense fallback={<SectionSkeleton count={3} height={520} />}>
         <FeaturedIdeasSection ideasPromise={ideasPromise} />
       </Suspense>
 
-      <Suspense fallback={<SectionSkeleton />}>
+      <Suspense fallback={<SectionSkeleton count={3} height={400} />}>
         <TestimonialsSection commentsPromise={commentsPromise} />
       </Suspense>
 
-      <Suspense fallback={<SectionSkeleton />}>
+      <Suspense fallback={<SectionSkeleton count={3} height={600} />}>
         <PricingSection plansPromise={plansPromise} userPromise={userPromise} />
       </Suspense>
       
@@ -85,16 +85,16 @@ async function PricingSection({ plansPromise, userPromise }: { plansPromise: Pro
   return <Pricing plans={plans as any} user={user} />;
 }
 
-function SectionSkeleton() {
+function SectionSkeleton({ count = 3, height = 500 }: { count?: number; height?: number }) {
   return (
-    <div className="py-32 mx-auto max-w-7xl px-4 space-y-12 min-h-[700px]">
-      <div className="space-y-6">
-        <div className="h-6 w-32 bg-muted/20 animate-pulse rounded-full" />
-        <div className="h-16 w-2/3 bg-muted/20 animate-pulse rounded-lg" />
+    <div className="py-32 mx-auto max-w-7xl px-4 space-y-12">
+      <div className="space-y-6 text-center">
+        <div className="h-6 w-32 bg-muted/20 animate-pulse rounded-full mx-auto" />
+        <div className="h-16 w-2/3 bg-muted/20 animate-pulse rounded-lg mx-auto" />
       </div>
       <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3].map(i => (
-          <div key={i} className="h-[520px] bg-muted/20 animate-pulse rounded-3xl border" />
+        {Array.from({ length: count }).map((_, i) => (
+          <div key={i} style={{ height: `${height}px` }} className="bg-muted/20 animate-pulse rounded-3xl border" />
         ))}
       </div>
     </div>

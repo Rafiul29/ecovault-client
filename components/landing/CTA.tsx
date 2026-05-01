@@ -1,16 +1,19 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
 
 export function CTA() {
   return (
-    <section className="relative overflow-hidden px-2 py-40">
-      <img
+    <section className="group relative overflow-hidden px-2 py-40">
+      <Image
         src="https://images.pexels.com/photos/2833758/pexels-photo-2833758.jpeg"
-        alt="Aerial view of lush green forest canopy by Kelly on Pexels"
+        alt="Aerial view of lush green forest canopy"
+        fill
+        sizes="100vw"
         className="absolute inset-0 h-full w-full object-cover transition-transform duration-1000 group-hover:scale-105"
       />
 
