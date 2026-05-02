@@ -50,26 +50,26 @@ export function PricingCard({ plan, user, returnUrl }: PricingCardProps) {
   return (
     <div
       className={cn(
-        "group relative flex flex-col rounded-[2rem] border p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-emerald-500/5 hover:-translate-y-2",
+        "group relative flex flex-col rounded-2xl border p-8 transition-all duration-500 hover:shadow-2xl hover:shadow-primary/5 hover:-translate-y-2 card-hover",
         plan.isPopular
-          ? "border-emerald-500/30 bg-emerald-500/2 shadow-xl shadow-emerald-500/5 ring-1 ring-emerald-500/20"
-          : "bg-white border-neutral-100",
+          ? "border-primary/30 bg-primary/5 shadow-xl shadow-primary/5 ring-1 ring-primary/20"
+          : "bg-card border-border",
       )}
     >
       {plan.isPopular && (
         <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-          <Badge className="px-5 py-1 text-[10px] font-black uppercase tracking-widest bg-emerald-600 text-white border-none shadow-lg">
+          <Badge className="px-5 py-1 text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground border-none shadow-lg">
             Most Popular
           </Badge>
         </div>
       )}
 
       <div className="mb-8">
-        <p className="font-display text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-emerald-600 transition-colors">
+        <p className="font-display text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground group-hover:text-primary transition-colors">
           {plan.name} {plan.isActive ? "" : "(Inactive)"}
         </p>
         <div className="mt-4 flex items-baseline gap-1.5">
-          <span className="font-display text-5xl font-black tracking-tighter text-neutral-900">
+          <span className="font-display text-5xl font-black tracking-tighter text-foreground">
             ${plan.price}
           </span>
           <span className="text-sm font-bold text-muted-foreground">
@@ -83,15 +83,15 @@ export function PricingCard({ plan, user, returnUrl }: PricingCardProps) {
         )}
       </div>
 
-      <Separator className="mb-8 bg-neutral-100" />
+      <Separator className="mb-8 bg-border" />
 
       <ul className="mb-10 flex-1 space-y-4">
         {plan.features.map((feat, idx) => (
           <li key={idx} className="flex items-start gap-3.5 text-sm">
-            <div className="mt-0.5 h-5 w-5 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-              <CheckCircle className="size-3 text-emerald-600" strokeWidth={3} />
+            <div className="mt-0.5 h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+              <CheckCircle className="size-3 text-primary" strokeWidth={3} />
             </div>
-            <span className="text-neutral-600 font-medium leading-snug">
+            <span className="text-foreground font-medium leading-snug">
               {feat}
             </span>
           </li>
@@ -108,8 +108,8 @@ export function PricingCard({ plan, user, returnUrl }: PricingCardProps) {
           }),
           "w-full justify-center rounded-xl py-6 font-black shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98]",
           plan.isPopular
-            ? "bg-emerald-600 hover:bg-emerald-700 shadow-emerald-500/20"
-            : "border-neutral-200 text-neutral-900 hover:bg-neutral-50 hover:border-neutral-300"
+            ? "bg-primary text-primary-foreground hover:bg-primary/90 shadow-primary/20"
+            : "border-border text-foreground hover:bg-muted"
         )}
       >
         {subscribeMutation.isPending ? (

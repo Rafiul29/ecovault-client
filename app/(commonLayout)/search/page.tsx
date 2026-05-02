@@ -23,7 +23,9 @@ export default function SearchPage() {
     const page = Number(searchParams.get("page")) || 1;
     const limit = Number(searchParams.get("limit")) || 10;
     const searchTerm = searchParams.get("searchTerm") || "";
-    const categoryId = searchParams.get("categories.category.id") || "ALL";
+    const categoryIds = searchParams.getAll("categories.category.id");
+    const selectedCategories = categoryIds.length === 0 ? ["ALL"] : categoryIds;
+    const isPaid = searchParams.get("isPaid") || "ALL";
     const sortBy = searchParams.get("sortBy") || "trendingScore";
     const sortOrder = searchParams.get("sortOrder") || "desc";
 
@@ -36,13 +38,16 @@ export default function SearchPage() {
         if (searchTerm) {
             params.set("searchTerm", searchTerm);
         }
-        if (categoryId !== "ALL") {
-            params.set("categories.category.id", categoryId);
+        if (!selectedCategories.includes("ALL")) {
+            selectedCategories.forEach(id => params.append("categories.category.id", id));
+        }
+        if (isPaid !== "ALL") {
+            params.set("isPaid", isPaid);
         }
         params.set("sortBy", sortBy);
         params.set("sortOrder", sortOrder);
         return params.toString();
-    }, [page, limit, categoryId, sortBy, sortOrder, searchTerm]);
+    }, [page, limit, selectedCategories, isPaid, sortBy, sortOrder, searchTerm]);
 
     // Fetch data
     const { data: ideaResponse, isLoading: isLoadingIdeas, isFetching: isFetchingIdeas } = useQuery({
@@ -61,9 +66,15 @@ export default function SearchPage() {
     const categories = categoryResponse?.data || [];
 
     // URL handlers
-    const updateParams = (key: string, value: string) => {
+    const updateParams = (key: string, value: string | string[]) => {
         const params = new URLSearchParams(searchParams.toString());
-        if (value === "ALL" && (key === "categories.category.id")) {
+        
+        if (Array.isArray(value)) {
+            params.delete(key);
+            if (!value.includes("ALL")) {
+                value.forEach(v => params.append(key, v));
+            }
+        } else if (value === "ALL" && key === "categories.category.id") {
             params.delete(key);
         } else if (!value && key === "searchTerm") {
             params.delete(key);
@@ -106,8 +117,10 @@ export default function SearchPage() {
                 <div className="border-t border-border/40 pt-6 sm:pt-10">
                     <IdeaFilters
                         categories={categories}
-                        selectedCategory={categoryId}
-                        onCategoryChange={(val) => updateParams("categories.category.id", val)}
+                        selectedCategories={selectedCategories}
+                        onCategoriesChange={(val) => updateParams("categories.category.id", val)}
+                        isPaid={isPaid}
+                        onIsPaidChange={(val) => updateParams("isPaid", val)}
                         sortBy={sortBy}
                         onSortByChange={(val) => updateParams("sortBy", val)}
                         sortOrder={sortOrder}

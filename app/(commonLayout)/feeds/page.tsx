@@ -116,7 +116,7 @@ export default function FeedsPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto max-w-4xl px-2 sm:px-4 py-4 sm:py-8 w-full">
+      <main className="mx-auto max-w-7xl px-2 sm:px-4 py-4 sm:py-8 w-full">
         {/* Header */}
         <div className="mb-4 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1.5 sm:mb-2">
@@ -161,9 +161,11 @@ export default function FeedsPage() {
         <div className="flex flex-col gap-4 sm:gap-6">
           {isLoading ? (
             /* Initial loading shimmer */
-            [...Array(3)].map((_, i) => (
-              <IdeaCardSkeleton key={i} />
-            ))
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              {[...Array(8)].map((_, i) => (
+                <IdeaCardSkeleton key={i} />
+              ))}
+            </div>
           ) : ideas.length === 0 ? (
             /* Empty state */
             <div className="flex flex-col items-center justify-center p-12 text-center border rounded-2xl border-dashed bg-muted/20">
@@ -176,14 +178,9 @@ export default function FeedsPage() {
               </p>
             </div>
           ) : (
-            /* Idea List (Rendered vertically like Reddit) */
-            <div className="flex flex-col gap-4 sm:gap-6">
+            <div className="grid gap-4 sm:gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {ideas.map((idea: IIdea) => (
-                <div key={idea.id} className="w-full flex">
-                  <div className="w-full relative shadow-sm hover:shadow transition-shadow rounded-xl">
-                    <IdeaCard idea={idea as any} showStatus />
-                  </div>
-                </div>
+                <IdeaCard key={idea.id} idea={idea as any} showStatus />
               ))}
             </div>
           )}

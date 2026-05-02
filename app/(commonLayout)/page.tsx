@@ -8,6 +8,8 @@ import { FeaturedIdeas } from "@/components/landing/FeaturedIdeas";
 import { Testimonials } from "@/components/landing/Testimonials";
 import { Pricing } from "@/components/landing/Pricing";
 import { CTA } from "@/components/landing/CTA";
+import { FAQ } from "@/components/landing/FAQ";
+import { Newsletter } from "@/components/landing/Newsletter";
 import { getAllSubscriptionPlans } from "@/services/subscription.service";
 import { getIdeas } from "@/services/idea.service";
 import { getUserInfo } from "@/services/auth.service";
@@ -57,6 +59,8 @@ export default async function LandingPage() {
         <PricingSection plansPromise={plansPromise} userPromise={userPromise} />
       </Suspense>
       
+      <FAQ />
+      <Newsletter />
       <CTA />
     </>
   );

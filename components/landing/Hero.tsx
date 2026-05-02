@@ -13,7 +13,7 @@ interface HeroProps {
 
 export function Hero({ children }: HeroProps) {
   return (
-    <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center pb-16">
+    <section className="relative flex min-h-[65vh] flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center pb-16">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 left-1/4 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
         <div className="absolute -top-20 right-0 h-[500px] w-[500px] rounded-full bg-accent/10 blur-[100px]" />

@@ -98,7 +98,7 @@ const getFilterActiveCount = (
     return 0;
 };
 
-const MultiSelectFilterControl = ({
+export const MultiSelectFilterControl = ({
     filter,
     value,
     isLoading,
@@ -120,28 +120,38 @@ const MultiSelectFilterControl = ({
 
     return (
         <div className="space-y-3">
-            <div className="max-h-52 space-y-2 overflow-auto pr-1">
+            <div className="max-h-52 space-y-1 overflow-auto pr-1 scrollbar-thin scrollbar-thumb-border scrollbar-track-transparent">
                 {filter.options.map((option) => {
                     const checked = selectedValues.includes(option.value);
 
                     return (
-                        <label
+                        <div
                             key={option.value}
-                            className="flex cursor-pointer items-center gap-2 text-sm"
+                            className={cn(
+                                "flex items-center space-x-2 rounded-lg px-2 py-2 hover:bg-muted/60 transition-all cursor-pointer group",
+                                checked && "bg-primary/5"
+                            )}
+                            onClick={() => {
+                                const nextValues = !checked
+                                    ? [...selectedValues, option.value]
+                                    : selectedValues.filter((item) => item !== option.value);
+                                setSelectedValues(nextValues);
+                            }}
                         >
                             <Checkbox
+                                id={`${filter.id}-${option.value}`}
                                 checked={checked}
-                                onCheckedChange={(checkedState) => {
-                                    const nextValues = checkedState
-                                        ? [...selectedValues, option.value]
-                                        : selectedValues.filter((item) => item !== option.value);
-
-                                    setSelectedValues(nextValues);
-                                }}
+                                onCheckedChange={() => {}} // Handled by div click
                                 disabled={isLoading}
+                                className="pointer-events-none"
                             />
-                            <span>{option.label}</span>
-                        </label>
+                            <label
+                                htmlFor={`${filter.id}-${option.value}`}
+                                className="flex-1 cursor-pointer text-[12px] font-medium leading-none group-hover:text-primary transition-colors truncate"
+                            >
+                                {option.label}
+                            </label>
+                        </div>
                     );
                 })}
             </div>

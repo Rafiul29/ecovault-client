@@ -12,7 +12,6 @@ import IdeaPagination from "@/components/ideas/IdeaPagination";
 import { getIdeas } from "@/services/idea.service";
 import { getCategories } from "@/services/category.service";
 import { IIdea } from "@/types/idea.types";
-import IdeaListLoading from "./loading";
 
 export default function IdeasPage() {
     const router = useRouter();
@@ -22,9 +21,11 @@ export default function IdeasPage() {
     // Parse search params
     const page = Number(searchParams.get("page")) || 1;
     const limit = Number(searchParams.get("limit")) || 10;
-    const categoryId = searchParams.get("categories.category.id") || "ALL";
+    const categoryIds = searchParams.getAll("categories.category.id");
+    const selectedCategories = categoryIds.length === 0 ? ["ALL"] : categoryIds;
     const sortBy = searchParams.get("sortBy") || "trendingScore";
     const sortOrder = searchParams.get("sortOrder") || "desc";
+    const isPaid = searchParams.get("isPaid") || "ALL";
 
     // Build query string
     const queryString = useMemo(() => {
@@ -32,13 +33,16 @@ export default function IdeasPage() {
         params.set("page", page.toString());
         params.set("limit", limit.toString());
         params.set("status", "APPROVED"); // Added status=APPROVED
-        if (categoryId !== "ALL") {
-            params.set("categories.category.id", categoryId);
+        if (!selectedCategories.includes("ALL")) {
+            selectedCategories.forEach(id => params.append("categories.category.id", id));
+        }
+        if (isPaid !== "ALL") {
+            params.set("isPaid", isPaid);
         }
         params.set("sortBy", sortBy);
         params.set("sortOrder", sortOrder);
         return params.toString();
-    }, [page, limit, categoryId, sortBy, sortOrder]);
+    }, [page, limit, selectedCategories, isPaid, sortBy, sortOrder]);
 
     // Fetch data
     const { data: ideaResponse, isLoading: isLoadingIdeas, isFetching: isFetchingIdeas } = useQuery({
@@ -48,19 +52,27 @@ export default function IdeasPage() {
 
     const { data: categoryResponse, isLoading: isLoadingCategories } = useQuery({
         queryKey: ["categories"],
-        queryFn: () => getCategories(),
+        queryFn: () => getCategories("limit=100"),
     });
 
     const ideas = ideaResponse?.data || [];
     const meta = ideaResponse?.meta;
     const categories = categoryResponse?.data || [];
 
-    const updateParams = (key: string, value: string) => {
+    const updateParams = (key: string, value: string | string[]) => {
         const params = new URLSearchParams(searchParams.toString());
-        if (value === "ALL" && key === "categories.category.id") {
+
+        if (Array.isArray(value)) {
             params.delete(key);
+            if (!value.includes("ALL")) {
+                value.forEach(v => params.append(key, v));
+            }
         } else {
-            params.set(key, value);
+            if (value === "ALL" && (key === "categories.category.id" || key === "isPaid")) {
+                params.delete(key);
+            } else {
+                params.set(key, value);
+            }
         }
 
         // Reset page when filter/sort changes
@@ -100,8 +112,10 @@ export default function IdeasPage() {
                 {/* Filters Section (Client Component extracted) */}
                 <IdeaFilters
                     categories={categories}
-                    selectedCategory={categoryId}
-                    onCategoryChange={(val) => updateParams("categories.category.id", val)}
+                    selectedCategories={selectedCategories}
+                    onCategoriesChange={(val) => updateParams("categories.category.id", val)}
+                    isPaid={isPaid}
+                    onIsPaidChange={(val) => updateParams("isPaid", val)}
                     sortBy={sortBy}
                     onSortByChange={(val) => updateParams("sortBy", val)}
                     sortOrder={sortOrder}

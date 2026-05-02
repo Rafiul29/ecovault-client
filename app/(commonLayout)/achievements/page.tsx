@@ -35,7 +35,7 @@ export default function AchievementsPage() {
         </div>
 
         {/* Progress */}
-        <div className="mb-8 rounded-xl border bg-card p-4">
+        <div className="mb-8 rounded-2xl border bg-card p-4">
           <div className="mb-2 flex justify-between">
             <span className="text-sm font-medium">Overall Progress</span>
             <span className="text-caption">

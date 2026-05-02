@@ -1,8 +1,9 @@
 import { Inter, Outfit, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import QueryProviders from "@/providers/QueryProvider";
-import type { Metadata } from "next";
 import { Toaster } from "sonner";
+import { ThemeProvider } from "@/providers/ThemeProvider";
+import { Metadata } from "next";
 
 
 const inter = Inter({
@@ -95,7 +96,14 @@ export default function RootLayout({
         className={`${inter.variable} ${outfit.variable} ${spaceGrotesk.variable} antialiased`}
         suppressHydrationWarning
       >
-        <QueryProviders>{children}</QueryProviders>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <QueryProviders>{children}</QueryProviders>
+        </ThemeProvider>
         <Toaster richColors />
         <script
           type="application/ld+json"

@@ -16,6 +16,7 @@ import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
 import {
   Tooltip,
   TooltipContent,
@@ -96,7 +97,7 @@ export default function IdeaCard({
   };
 
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <div className="flex h-[420px] w-full flex-col overflow-hidden rounded-2xl border border-border bg-card card-hover transition-all">
       {/* Cover Image */}
       {idea?.images?.[0] && (
         <Link
@@ -265,6 +266,13 @@ export default function IdeaCard({
             </Tooltip>
           </div>
         </div>
+
+        {/* View Details Button */}
+        <div className="mt-auto pt-3 border-t border-border/50">
+          <Link href={`/ideas/${idea?.id}`} className="block w-full">
+            <Button variant="outline" className="w-full h-8 text-xs font-medium rounded-lg">View Details</Button>
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -272,7 +280,7 @@ export default function IdeaCard({
 
 export function IdeaCardSkeleton() {
   return (
-    <div className="flex h-full flex-col overflow-hidden rounded-xl border border-border bg-card">
+    <div className="flex h-[420px] w-full flex-col overflow-hidden rounded-2xl border border-border bg-card card-hover transition-all">
       <Skeleton className="h-44 w-full rounded-none" />
       <div className="p-4 space-y-4 flex-1 flex flex-col">
         <div className="flex gap-2">
@@ -297,6 +305,9 @@ export function IdeaCardSkeleton() {
             <Skeleton className="h-7 w-12 rounded-md" />
             <Skeleton className="h-7 w-12 rounded-md" />
           </div>
+        </div>
+        <div className="mt-auto pt-3 border-t border-border/50">
+          <Skeleton className="h-8 w-full rounded-lg" />
         </div>
       </div>
     </div>
