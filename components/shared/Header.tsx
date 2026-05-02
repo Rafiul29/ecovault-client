@@ -72,12 +72,12 @@ export function Header({ user }: HeaderProps) {
           </Link>
 
           {/* Desktop Nav */}
-          <nav className="hidden items-center gap-1 md:flex">
+          <nav className="hidden items-center gap-6 md:flex ml-4">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 text-sm font-medium text-muted-foreground transition-all hover:text-foreground hover:bg-muted/50 rounded-lg"
+                className="text-sm font-semibold text-muted-foreground/80 transition-colors hover:text-primary"
               >
                 {link.label}
               </Link>

@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronDown, Filter, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, Filter, SlidersHorizontal, Sparkles, X } from "lucide-react";
 import {
     Select,
     SelectContent,
@@ -57,159 +57,146 @@ export default function IdeaFilters({
     const hasActiveFilters = (!selectedCategories.includes("ALL") && selectedCategories.length > 0) || sortBy !== "trendingScore" || isPaid !== "ALL" || sortOrder !== "desc";
 
     return (
-        <div className="mb-8 rounded-2xl border border-border bg-card/50 p-3 sm:p-4 backdrop-blur-sm shadow-sm transition-all hover:bg-card">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                {/* Category Multi-Select */}
-                <div className="flex items-center gap-2">
-                    <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden md:block">
-                        Category
-                    </span>
+        <div className="mb-10 rounded-3xl border border-border/50 bg-card/40 p-2 sm:p-2 backdrop-blur-xl shadow-xl shadow-primary/5 transition-all hover:bg-card/60">
+            <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+                {/* Left Side: Categories & Reset */}
+                <div className="flex flex-1 items-center gap-2 p-1">
                     <Popover>
                         <PopoverTrigger asChild>
                             <Button
-                                variant="outline"
-                                size="sm"
+                                variant="ghost"
                                 className={cn(
-                                    "h-9 min-w-[160px] justify-between bg-muted/30 border-border/60 rounded-lg hover:border-primary/40 focus:ring-primary/20 transition-all font-normal text-xs",
-                                    !selectedCategories.includes("ALL") && "border-primary/50 bg-primary/5"
+                                    "h-10 px-4 rounded-2xl flex items-center gap-2.5 transition-all duration-300",
+                                    !selectedCategories.includes("ALL") 
+                                        ? "bg-primary text-primary-foreground shadow-lg shadow-primary/20 hover:bg-primary/90" 
+                                        : "hover:bg-primary/10 hover:text-primary"
                                 )}
                             >
-                                <div className="flex items-center gap-2 truncate">
-                                    <Filter className="size-3.5 text-primary shrink-0" />
-                                    <span className="truncate">
-                                        {selectedCategories.includes("ALL")
-                                            ? "All Categories"
-                                            : selectedCategories.length === 1
-                                                ? categories.find(c => c.id === selectedCategories[0])?.name || "1 Category"
-                                                : `${selectedCategories.length} Categories`}
-                                    </span>
-                                </div>
-                                <ChevronDown className="size-3.5 opacity-50 shrink-0 ml-2" />
+                                <Filter className={cn("size-4", !selectedCategories.includes("ALL") ? "text-primary-foreground" : "text-primary")} />
+                                <span className="text-sm font-bold tracking-tight">
+                                    {selectedCategories.includes("ALL")
+                                        ? "All Categories"
+                                        : selectedCategories.length === 1
+                                            ? categories.find(c => c.id === selectedCategories[0])?.name || "1 Category"
+                                            : `${selectedCategories.length} Categories`}
+                                </span>
+                                <ChevronDown className={cn("size-4 opacity-50", !selectedCategories.includes("ALL") ? "text-primary-foreground" : "text-primary")} />
                             </Button>
                         </PopoverTrigger>
-                        <PopoverContent className="w-64 p-3 rounded-xl border-border shadow-2xl" align="start">
-                            <div className="mb-2 pb-2 border-b border-border/50">
-                                <h4 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Select Categories</h4>
+                        <PopoverContent className="w-72 p-0 rounded-2xl border-border/50 shadow-2xl backdrop-blur-xl" align="start" sideOffset={8}>
+                            <div className="p-4 border-b border-border/50 bg-muted/20">
+                                <h4 className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground/80">Filter Categories</h4>
                             </div>
-                            <MultiSelectFilterControl
-                                filter={{
-                                    id: "category",
-                                    label: "Category",
-                                    type: "multi-select",
-                                    options: [
-                                        { label: "All Categories", value: "ALL" },
-                                        ...categories.map(c => ({ label: c.name, value: c.id }))
-                                    ]
-                                }}
-                                value={selectedCategories}
-                                onFilterChange={(_, val) => {
-                                    if (!val || (val as string[]).length === 0) {
-                                        onCategoriesChange(["ALL"]);
-                                    } else {
-                                        const newVals = val as string[];
-                                        // If "ALL" was selected alongside others, and it wasn't there before, make it just "ALL"
-                                        if (newVals.includes("ALL") && !selectedCategories.includes("ALL")) {
+                            <div className="p-2">
+                                <MultiSelectFilterControl
+                                    filter={{
+                                        id: "category",
+                                        label: "Category",
+                                        type: "multi-select",
+                                        options: [
+                                            { label: "All Categories", value: "ALL" },
+                                            ...categories.map(c => ({ label: c.name, value: c.id }))
+                                        ]
+                                    }}
+                                    value={selectedCategories}
+                                    onFilterChange={(_, val) => {
+                                        if (!val || (val as string[]).length === 0) {
                                             onCategoriesChange(["ALL"]);
+                                        } else {
+                                            const newVals = val as string[];
+                                            if (newVals.includes("ALL") && !selectedCategories.includes("ALL")) {
+                                                onCategoriesChange(["ALL"]);
+                                            }
+                                            else if (newVals.length > 1 && newVals.includes("ALL")) {
+                                                onCategoriesChange(newVals.filter(v => v !== "ALL"));
+                                            }
+                                            else {
+                                                onCategoriesChange(newVals);
+                                            }
                                         }
-                                        // If "ALL" was there and something else was added, remove "ALL"
-                                        else if (newVals.length > 1 && newVals.includes("ALL")) {
-                                            onCategoriesChange(newVals.filter(v => v !== "ALL"));
-                                        }
-                                        else {
-                                            onCategoriesChange(newVals);
-                                        }
-                                    }
-                                }}
-                            />
+                                    }}
+                                />
+                            </div>
                         </PopoverContent>
                     </Popover>
+
+                    {hasActiveFilters && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={onClearFilters}
+                            className="h-8 gap-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all group"
+                        >
+                            <X className="size-3 transition-transform group-hover:rotate-90" />
+                            Reset
+                        </Button>
+                    )}
                 </div>
 
-                <div className="flex items-center gap-3 self-end sm:self-auto sm:ml-4 pt-1 sm:pt-0 border-t sm:border-t-0 border-border/50">
-                    <div className="flex items-center gap-2">
-                        {hasActiveFilters && (
-                            <button
-                                onClick={onClearFilters}
-                                className="text-[10px] font-bold text-muted-foreground hover:text-destructive transition-all flex items-center gap-1 bg-muted/50 px-2 py-1 rounded-md border border-border/40 hover:border-destructive/40 mr-2"
-                            >
-                                Clear All
-                            </button>
-                        )}
-
-                        <div className="flex items-center gap-1">
-                            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden lg:block mr-1">
-                                Sort
-                            </span>
-                            <div className="flex items-center -space-x-px">
-                                <Select value={sortBy} onValueChange={onSortByChange}>
-                                    <SelectTrigger className={cn(
-                                        "h-9 sm:w-40 text-xs bg-muted/30 border-border/60 rounded-l-lg rounded-r-none hover:border-primary/40 focus:ring-primary/20 transition-all z-10",
-                                        sortBy !== "trendingScore" && "border-primary/50 bg-primary/5 text-primary font-medium"
-                                    )}>
-                                        <div className="flex items-center gap-2 truncate">
-                                            <SlidersHorizontal className="size-3.5 text-primary shrink-0" />
-                                            <SelectValue />
-                                        </div>
-                                    </SelectTrigger>
-                                    <SelectContent className="rounded-xl border-border shadow-2xl" position="popper" align="start" sideOffset={4}>
-                                        {SORT_OPTIONS.map((option) => (
-                                            <SelectItem
-                                                key={option.value}
-                                                value={option.value}
-                                                className="text-xs focus:bg-primary focus:text-primary-foreground rounded-lg my-0.5 mx-1"
-                                            >
-                                                {option.label}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <Select value={sortOrder} onValueChange={onSortOrderChange}>
-                                    <SelectTrigger className={cn(
-                                        "h-9 w-20 text-xs bg-muted/30 border-border/60 rounded-r-lg rounded-l-none hover:border-primary/40 focus:ring-primary/20 transition-all border-l-0",
-                                        sortOrder !== "desc" && "border-primary/50 bg-primary/5 text-primary font-medium"
-                                    )}>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent className="rounded-xl border-border shadow-2xl min-w-[100px]" position="popper" align="end" sideOffset={4}>
-                                        <SelectItem value="desc" className="text-xs focus:bg-primary focus:text-primary-foreground rounded-lg my-0.5 mx-1">DESC</SelectItem>
-                                        <SelectItem value="asc" className="text-xs focus:bg-primary focus:text-primary-foreground rounded-lg my-0.5 mx-1">ASC</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                            </div>
-                        </div>
-
-                        <div className="flex items-center gap-2 ml-2">
-                            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-wider hidden lg:block mr-1">
-                                Price
-                            </span>
-                            <Select value={isPaid || "ALL"} onValueChange={onIsPaidChange}>
-                                <SelectTrigger
-                                    className={cn(
-                                        "h-9 w-24 sm:w-32 text-xs bg-background border-border/60 rounded-lg hover:border-primary/40 focus:ring-primary/20 transition-all shadow-sm",
-                                        isPaid !== "ALL" && "border-primary/50 bg-primary/5 text-primary font-medium"
-                                    )}
-                                >
-                                    <SelectValue placeholder="All Models" />
-                                </SelectTrigger>
-                                <SelectContent
-                                    className="rounded-xl border border-border bg-popover shadow-xl z-[100]"
-                                    position="popper"
-                                    align="end"
-                                    sideOffset={4}
-                                >
-                                    <SelectItem value="ALL" className="text-xs rounded-lg my-0.5 mx-1 cursor-pointer">
-                                        All Models
+                {/* Right Side: Sorting & Price */}
+                <div className="flex flex-col sm:flex-row items-center gap-2 p-1 md:border-l md:border-border/50 md:pl-4 w-full md:w-auto">
+                    {/* Sort Select Group */}
+                    <div className="flex items-center -space-x-px w-full md:w-auto">
+                        <Select value={sortBy} onValueChange={onSortByChange}>
+                            <SelectTrigger className={cn(
+                                "h-10 flex-1 md:w-40 rounded-l-2xl rounded-r-none border-border/50 bg-background/50 backdrop-blur-sm text-sm font-bold transition-all hover:bg-background focus:ring-primary/20",
+                                sortBy !== "trendingScore" && "border-primary/30 text-primary"
+                            )}>
+                                <div className="flex items-center gap-2">
+                                    <SlidersHorizontal className="size-4 text-primary/70" />
+                                    <SelectValue />
+                                </div>
+                            </SelectTrigger>
+                            <SelectContent className="rounded-2xl border-border/50 shadow-2xl backdrop-blur-xl" position="popper" align="start" sideOffset={4}>
+                                {SORT_OPTIONS.map((option) => (
+                                    <SelectItem
+                                        key={option.value}
+                                        value={option.value}
+                                        className="text-xs font-bold focus:bg-primary focus:text-primary-foreground rounded-xl my-1 mx-1.5"
+                                    >
+                                        {option.label}
                                     </SelectItem>
-                                    <SelectItem value="false" className="text-xs rounded-lg my-0.5 mx-1 cursor-pointer">
-                                        Free Only
-                                    </SelectItem>
-                                    <SelectItem value="true" className="text-xs rounded-lg my-0.5 mx-1 cursor-pointer">
-                                        Paid Only
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
+                                ))}
+                            </SelectContent>
+                        </Select>
+                        <Select value={sortOrder} onValueChange={onSortOrderChange}>
+                            <SelectTrigger className={cn(
+                                "h-10 w-20 rounded-r-2xl rounded-l-none border-l-0 border-border/50 bg-background/50 backdrop-blur-sm text-xs font-black transition-all hover:bg-background focus:ring-primary/20 uppercase tracking-tighter",
+                                sortOrder !== "desc" && "border-primary/30 text-primary"
+                            )}>
+                                <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="rounded-2xl border-border/50 shadow-2xl min-w-[100px] backdrop-blur-xl" position="popper" align="end" sideOffset={4}>
+                                <SelectItem value="desc" className="text-xs font-black focus:bg-primary focus:text-primary-foreground rounded-xl my-1 mx-1.5">DESC</SelectItem>
+                                <SelectItem value="asc" className="text-xs font-black focus:bg-primary focus:text-primary-foreground rounded-xl my-1 mx-1.5">ASC</SelectItem>
+                            </SelectContent>
+                        </Select>
                     </div>
+
+                    {/* Price Select */}
+                    <Select value={isPaid || "ALL"} onValueChange={onIsPaidChange}>
+                        <SelectTrigger
+                            className={cn(
+                                "h-10 w-full md:w-32 rounded-2xl border-border/50 bg-background/50 backdrop-blur-sm text-sm font-bold transition-all hover:bg-background focus:ring-primary/20",
+                                isPaid !== "ALL" && "border-primary/30 text-primary"
+                            )}
+                        >
+                            <div className="flex items-center gap-2">
+                                <Sparkles className="size-4 text-primary/70" />
+                                <SelectValue placeholder="Price" />
+                            </div>
+                        </SelectTrigger>
+                        <SelectContent
+                            className="rounded-2xl border-border/50 bg-popover/90 shadow-2xl backdrop-blur-xl"
+                            position="popper"
+                            align="end"
+                            sideOffset={4}
+                        >
+                            <SelectItem value="ALL" className="text-xs font-bold rounded-xl my-1 mx-1.5">All Models</SelectItem>
+                            <SelectItem value="false" className="text-xs font-bold rounded-xl my-1 mx-1.5 text-emerald-600 dark:text-emerald-400">Free Only</SelectItem>
+                            <SelectItem value="true" className="text-xs font-bold rounded-xl my-1 mx-1.5 text-primary">Paid Only</SelectItem>
+                        </SelectContent>
+                    </Select>
                 </div>
             </div>
         </div>

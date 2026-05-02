@@ -46,80 +46,92 @@ export function MobileNav({ links, user }: MobileNavProps) {
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="flex flex-col pr-0">
-        <SheetHeader className="px-6 text-left">
+      <SheetContent side="left" className="flex flex-col p-0 border-r-0 bg-background/95 backdrop-blur-xl w-[300px] sm:w-[350px]">
+        <div className="absolute top-0 right-0 -z-10 h-64 w-64 translate-x-[30%] -translate-y-[30%] rounded-full bg-primary/5 blur-3xl" />
+        
+        <SheetHeader className="px-6 pt-8 pb-4 text-left">
           <SheetTitle>
             <Link
               href="/"
-              className="flex items-center gap-2"
+              className="flex items-center gap-3"
               onClick={() => setOpen(false)}
             >
-              <div className="flex size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-                <Leaf className="size-4" />
+              <div className="flex size-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-lg shadow-primary/20 transition-transform active:scale-95">
+                <Leaf className="size-5" />
               </div>
-              <span className="font-display text-lg font-bold tracking-tight">
+              <span className="font-display text-2xl font-black tracking-tighter text-foreground">
                 EcoVault
               </span>
             </Link>
           </SheetTitle>
         </SheetHeader>
-        <div className="flex flex-1 flex-col py-6 px-6">
-          <nav className="flex flex-col gap-4">
+        <div className="flex flex-1 flex-col overflow-y-auto px-6 py-6 scrollbar-hidden">
+          <div className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+            Navigation
+          </div>
+          <nav className="flex flex-col gap-2">
             {links.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-lg font-semibold transition-colors hover:text-primary"
+                className="flex items-center rounded-xl px-3 py-2 text-base font-bold text-foreground/80 transition-all hover:text-primary active:scale-[0.98]"
                 onClick={() => setOpen(false)}
               >
                 {link.label}
               </Link>
             ))}
           </nav>
-          <Separator className="my-6" />
-          <div className="flex flex-col gap-4">
+
+          <Separator className="my-8 bg-border/50" />
+
+          <div className="mb-4 text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground/60">
+            Account
+          </div>
+          <div className="flex flex-col gap-2">
             {user ? (
               <>
                 <Link
                   href="/dashboard"
-                  className="text-lg font-semibold transition-colors hover:text-primary"
+                  className="flex items-center rounded-xl px-3 py-2 text-base font-bold text-foreground/80 transition-all hover:text-primary active:scale-[0.98]"
                   onClick={() => setOpen(false)}
                 >
                   Dashboard
                 </Link>
                 <Link
                   href="/my-profile"
-                  className="text-lg font-semibold transition-colors hover:text-primary"
+                  className="flex items-center rounded-xl px-3 py-2 text-base font-bold text-foreground/80 transition-all hover:text-primary active:scale-[0.98]"
                   onClick={() => setOpen(false)}
                 >
                   Profile
                 </Link>
                 <Button
-                  variant="destructive"
-                  className="mt-2 flex items-center justify-center gap-2 rounded-lg py-6 text-lg font-bold"
+                  variant="ghost"
+                  className="mt-4 flex w-full items-center justify-start gap-3 rounded-xl px-3 py-6 text-base font-bold text-destructive hover:bg-destructive/10 hover:text-destructive"
                   onClick={handleLogout}
                 >
-                  <LogOut className="h-5 w-5" />
+                  <div className="flex size-8 items-center justify-center rounded-lg bg-destructive/10">
+                    <LogOut className="h-4 w-4" />
+                  </div>
                   Log out
                 </Button>
               </>
             ) : (
-              <>
+              <div className="flex flex-col gap-3 pt-2">
                 <Link
                   href="/login"
-                  className="text-lg font-semibold transition-colors hover:text-primary"
+                  className="flex h-12 items-center justify-center rounded-xl border border-border bg-background text-sm font-bold text-foreground transition-all hover:bg-muted active:scale-[0.98]"
                   onClick={() => setOpen(false)}
                 >
                   Sign In
                 </Link>
                 <Link
                   href="/register"
-                  className="flex items-center justify-center rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground shadow-sm transition-all hover:bg-primary/90 active:scale-[0.98]"
+                  className="flex h-12 items-center justify-center rounded-xl bg-primary text-sm font-bold text-primary-foreground shadow-lg shadow-primary/20 transition-all hover:bg-primary/90 active:scale-[0.98]"
                   onClick={() => setOpen(false)}
                 >
                   Get Started
                 </Link>
-              </>
+              </div>
             )}
           </div>
         </div>
