@@ -20,7 +20,7 @@ const companyLinks = [
 export function Footer() {
   return (
     <footer className="border-t border-border/50 bg-muted/40">
-      <div className="mx-auto max-w-7xl py-16 px-2 ">
+      <div className=" wrapper py-12">
         <div className="grid gap-12 sm:grid-cols-2 md:grid-cols-4 lg:gap-16">
           <div className="md:col-span-2 space-y-6">
             <Link href="/" className="flex items-center gap-3 group">
@@ -60,7 +60,6 @@ export function Footer() {
               </p>
             </div>
           </div>
-
           {/* Platform links */}
           <div className="space-y-6 text-sm">
             <h4 className="font-display text-xs font-bold uppercase tracking-[0.2em] text-foreground/80">
@@ -98,6 +97,7 @@ export function Footer() {
               ))}
             </ul>
           </div>
+
         </div>
 
         <Separator className="my-12 border-border/40" />

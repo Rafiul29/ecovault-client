@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import type { Idea } from "@/types/types";
+import { LandingSlider } from "./LandingSlider";
 
 interface FeaturedIdeasProps {
   ideas: Idea[];
@@ -16,9 +17,9 @@ interface FeaturedIdeasProps {
 
 export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
   return (
-    <section className="py-32">
-      <div className="mx-auto max-w-7xl px-2">
-        <div className="mb-16 flex flex-wrap items-end justify-between gap-8 md:gap-12">
+    <section className="section-padding">
+      <div className="wrapper">
+        <div className="mb-16 flex flex-wrap items-end justify-between gap-8">
           <div className="max-w-2xl">
             <Badge
               variant="outline"
@@ -48,11 +49,11 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
           </Link>
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <LandingSlider autoPlay={true} autoPlayInterval={3000} showArrows={false}>
           {ideas.map((idea) => (
             <Card
               key={idea.id}
-              className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/30"
+              className="group flex flex-col overflow-hidden rounded-3xl border border-border/60 bg-card transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/30 h-full"
             >
               {idea.images[0] && (
                 <div className="relative h-56 overflow-hidden">
@@ -131,7 +132,7 @@ export function FeaturedIdeas({ ideas }: FeaturedIdeasProps) {
               </CardContent>
             </Card>
           ))}
-        </div>
+        </LandingSlider>
       </div>
     </section>
   );

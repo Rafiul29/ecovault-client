@@ -121,14 +121,14 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                     </form.Subscribe>
                 </form>
 
-                <div className="relative">
+                {/* <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t border-muted-foreground/10"></span>
                     </div>
                     <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold">
                         <span className="bg-background px-3 text-muted-foreground/60">Or continue with</span>
                     </div>
-                </div>
+                </div> */}
                 {/* 
                 <Button variant="outline" className="w-full h-10 border-muted-foreground/20 hover:bg-emerald-50/50 hover:border-emerald-600/30 transition-all duration-200 flex items-center justify-center gap-3" onClick={() => {
                     window.location.href = `${API_BASE_URL}/auth/login/google`;
@@ -153,6 +153,55 @@ const LoginForm = ({ redirectPath }: LoginFormProps) => {
                     </svg>
                     Google Account
                 </Button> */}
+            </div>
+
+            <div className="space-y-4">
+                <div className="relative">
+                    <div className="absolute inset-0 flex items-center">
+                        <span className="w-full border-t border-muted-foreground/10"></span>
+                    </div>
+                    <div className="relative flex justify-center text-[10px] uppercase tracking-widest font-bold">
+                        <span className="bg-background px-3 text-muted-foreground/60">Demo Accounts</span>
+                    </div>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] font-bold h-9 border-muted-foreground/20 hover:border-emerald-600/30 hover:bg-emerald-50/50 transition-all uppercase tracking-wider"
+                        onClick={() => {
+                            form.setFieldValue("email", "raficse00@gmail.com");
+                            form.setFieldValue("password", "Password123!");
+                            setTimeout(() => form.handleSubmit(), 100);
+                        }}
+                    >
+                        Admin
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] font-bold h-9 border-muted-foreground/20 hover:border-emerald-600/30 hover:bg-emerald-50/50 transition-all uppercase tracking-wider"
+                        onClick={() => {
+                            form.setFieldValue("email", "moderator1@gmail.com");
+                            form.setFieldValue("password", "Password123!");
+                            setTimeout(() => form.handleSubmit(), 100);
+                        }}
+                    >
+                        Moderator
+                    </Button>
+                    <Button
+                        variant="outline"
+                        size="sm"
+                        className="text-[10px] font-bold h-9 border-muted-foreground/20 hover:border-emerald-600/30 hover:bg-emerald-50/50 transition-all uppercase tracking-wider"
+                        onClick={() => {
+                            form.setFieldValue("email", "member@gmail.com");
+                            form.setFieldValue("password", "Password123!");
+                            setTimeout(() => form.handleSubmit(), 100);
+                        }}
+                    >
+                        Member
+                    </Button>
+                </div>
             </div>
 
             <p className="text-center text-sm text-muted-foreground font-medium">

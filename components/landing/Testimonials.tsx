@@ -1,6 +1,7 @@
 import { Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { LandingSlider } from "./LandingSlider";
 
 interface Comment {
   id: string;
@@ -26,8 +27,8 @@ export function Testimonials({ comments = [] }: TestimonialsProps) {
   }
 
   return (
-    <section className="bg-muted/30 py-32">
-      <div className="mx-auto max-w-7xl px-2">
+    <section className="bg-muted/30 section-padding">
+      <div className="wrapper">
         <div className="mb-20 text-center">
           <Badge
             variant="outline"
@@ -45,11 +46,11 @@ export function Testimonials({ comments = [] }: TestimonialsProps) {
           </p>
         </div>
 
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+        <LandingSlider autoPlay={true} autoPlayInterval={3000} showArrows={false}>
           {comments.map((t) => (
             <div
               key={t.id}
-              className="group flex flex-col rounded-3xl border border-border/60 bg-card p-8 shadow-sm transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1.5"
+              className="group flex flex-col rounded-3xl border border-border/60 bg-card p-8 shadow-sm transition-all duration-300 hover:shadow-2xl hover:shadow-primary/5 hover:border-primary/20 hover:-translate-y-1.5 h-full"
             >
               {/* Stars */}
               <div className="mb-6 flex gap-1.5">
@@ -76,14 +77,14 @@ export function Testimonials({ comments = [] }: TestimonialsProps) {
                   <p className="text-sm font-bold tracking-tight text-foreground line-clamp-1">
                     {t.author.name}
                   </p>
-                  <p className="text-[11px] font-medium text-muted-foreground tracking-widest line-clamp-1 mt-0.5">
+                  <p className="text-[11px] font-medium text-muted-foreground tracking-widest line-clamp-1 mt-0.5 uppercase">
                     {t.idea.title}
                   </p>
                 </div>
               </div>
             </div>
           ))}
-        </div>
+        </LandingSlider>
       </div>
     </section>
   );

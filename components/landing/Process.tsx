@@ -3,8 +3,8 @@ import { steps } from "@/lib/mock-data";
 
 export function Process() {
   return (
-    <section className="bg-muted/30 py-32 px-6">
-      <div className="mx-auto max-w-7xl">
+    <section className="section-padding bg-muted/30">
+      <div className="wrapper">
         <div className="mb-20 text-center">
           <Badge
             variant="outline"

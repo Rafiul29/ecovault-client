@@ -130,6 +130,15 @@
     font-family: "Geist", "Inter", sans-serif;
     -webkit-font-smoothing: antialiased;
   }
+
+  .wrapper {
+    @apply mx-auto max-w-7xl px-2 sm:px-4;
+  }
+
+  .section-padding {
+    @apply py-12 sm:py-16 lg:py-20;
+  }
+
 }
 
 /* ── Typography utilities ── */

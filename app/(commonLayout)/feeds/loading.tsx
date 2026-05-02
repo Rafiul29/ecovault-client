@@ -4,7 +4,7 @@ import { IdeaCardSkeleton } from "@/components/ideas/IdeaCard";
 export default function FeedLoading() {
     return (
         <div className="flex flex-1 flex-col">
-            <main className="mx-auto max-w-4xl px-2 sm:px-4 py-4 sm:py-8 w-full">
+            <main className="wrapper section-padding w-full">
                 {/* Header Skeleton */}
                 <div className="mb-4 sm:mb-8 space-y-3">
                     <Skeleton className="h-8 w-48 sm:h-10 sm:w-64 rounded-lg" />

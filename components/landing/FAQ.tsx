@@ -25,6 +25,18 @@ const faqs = [
   {
     question: "How are ideas protected?",
     answer: "We take intellectual property seriously. While sharing ideas publicly always carries some risk, our platform allows you to choose what details to reveal. We encourage sharing the 'what' and 'why' while keeping the core proprietary 'how' confidential until you secure proper protections or partnerships."
+  },
+  {
+    question: "How does the funding or support process work?",
+    answer: "Innovators can apply for funding or support directly through the platform. Once an idea gains traction and meets certain criteria, it becomes eligible for review by our panel of investors and expert mentors. Successful projects receive funding, mentorship, and resources to help bring their ideas to life."
+  },
+  {
+    question: "What happens to my idea after submission?",
+    answer: "Once submitted, your idea is reviewed by our community and experts. It goes through stages of evaluation, feedback, and potential improvement. Ideas that gain significant support and validation may be featured, funded, or developed into real-world projects with the help of our resources."
+  },
+  {
+    question: "Can I edit or update my idea after publishing?",
+    answer: "Yes, you can edit and update your idea as needed. We encourage innovators to refine their concepts based on community feedback and new insights. You can make changes to your description, images, or other details at any time."
   }
 ];
 
@@ -35,8 +47,8 @@ export function FAQ() {
     <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
       {/* Decorative background elements */}
       <div className="absolute left-1/2 top-0 -z-10 h-[600px] w-[800px] -translate-x-1/2 bg-primary/5 blur-[120px] rounded-full" />
-      
-      <div className="mx-auto max-w-4xl px-6 lg:px-8">
+
+      <div className="mx-auto max-w-4xl px-2 md:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-primary font-semibold tracking-wide text-sm uppercase mb-3">Questions & Answers</h2>
           <p className="text-3xl font-bold tracking-tight text-foreground sm:text-4xl">
@@ -49,7 +61,7 @@ export function FAQ() {
 
         <div className="space-y-4">
           {faqs.map((faq, index) => (
-            <div 
+            <div
               key={index}
               className={cn(
                 "border border-border rounded-2xl overflow-hidden transition-all duration-200 bg-card",
@@ -61,14 +73,14 @@ export function FAQ() {
                 className="flex w-full items-center justify-between px-6 py-5 text-left focus:outline-none"
               >
                 <span className="font-semibold text-foreground pr-8">{faq.question}</span>
-                <ChevronDown 
+                <ChevronDown
                   className={cn(
                     "size-5 text-muted-foreground transition-transform duration-300 shrink-0",
                     openIndex === index ? "rotate-180 text-primary" : ""
-                  )} 
+                  )}
                 />
               </button>
-              
+
               <AnimatePresence>
                 {openIndex === index && (
                   <motion.div

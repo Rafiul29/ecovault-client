@@ -4,7 +4,7 @@ export default function IdeaDetailLoading() {
   return (
     <div className="flex flex-1 flex-col py-5">
       <main className="flex-1">
-        <div className="mx-auto max-w-7xl px-2">
+        <div className="wrapper">
           {/* Back Button Skeleton */}
           <Skeleton className="h-8 w-32 mb-5 rounded-lg" />
 

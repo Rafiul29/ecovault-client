@@ -12,7 +12,7 @@ export function Newsletter() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!email) return;
-    
+
     setIsLoading(true);
     // Simulate API call
     setTimeout(() => {
@@ -23,13 +23,13 @@ export function Newsletter() {
   };
 
   return (
-    <section className="py-24 bg-primary text-primary-foreground relative overflow-hidden">
+    <section className="section-padding bg-primary text-primary-foreground relative overflow-hidden">
       {/* Decorative patterns */}
       <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '40px 40px' }} />
       <div className="absolute -top-24 -right-24 size-96 rounded-full bg-white/10 blur-3xl" />
       <div className="absolute -bottom-24 -left-24 size-96 rounded-full bg-black/10 blur-3xl" />
-      
-      <div className="mx-auto max-w-4xl px-6 lg:px-8 relative z-10">
+
+      <div className="mx-auto max-w-4xl px-2 sm:px-4 relative z-10">
         <div className="flex flex-col md:flex-row items-center gap-12 text-center md:text-left">
           <div className="flex-1 space-y-4">
             <h2 className="text-3xl font-bold tracking-tight sm:text-4xl">
@@ -39,7 +39,7 @@ export function Newsletter() {
               Join our newsletter to receive the latest sustainability ideas, funding opportunities, and community highlights delivered straight to your inbox.
             </p>
           </div>
-          
+
           <div className="w-full max-w-md shrink-0">
             <form onSubmit={handleSubmit} className="flex flex-col gap-3 p-6 bg-card/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl">
               <div>
@@ -58,10 +58,10 @@ export function Newsletter() {
                   placeholder="Enter your email"
                 />
               </div>
-              <Button 
-                type="submit" 
-                variant="secondary" 
-                size="lg" 
+              <Button
+                type="submit"
+                variant="secondary"
+                size="lg"
                 className="w-full font-semibold h-12"
                 disabled={isLoading}
               >

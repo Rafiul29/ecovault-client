@@ -116,7 +116,7 @@ export default function FeedsPage() {
 
   return (
     <div className="flex flex-1 flex-col">
-      <main className="mx-auto max-w-7xl px-2 sm:px-4 py-4 sm:py-8 w-full">
+      <main className="wrapper py-10 w-full">
         {/* Header */}
         <div className="mb-4 sm:mb-8">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight mb-1.5 sm:mb-2">

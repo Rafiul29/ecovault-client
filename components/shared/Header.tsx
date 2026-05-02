@@ -59,7 +59,7 @@ export function Header({ user }: HeaderProps) {
 
   return (
     <header className={headerClasses}>
-      <div className="mx-auto flex max-w-7xl  px-2 items-center justify-between">
+      <div className="wrapper  flex items-center justify-between">
         {/* Brand */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2.5 group">

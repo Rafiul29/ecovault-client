@@ -28,12 +28,12 @@ export default async function LandingPage() {
           fallback={
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 min-h-[340px]">
               {[0, 1, 2].map((i) => (
-                <div 
-                  key={i} 
+                <div
+                  key={i}
                   className={cn(
                     "h-[340px] bg-muted/20 animate-pulse rounded-2xl border",
                     i === 1 ? "sm:-translate-y-4" : "sm:translate-y-0"
-                  )} 
+                  )}
                 />
               ))}
             </div>
@@ -42,7 +42,7 @@ export default async function LandingPage() {
           <HeroSection ideasPromise={ideasPromise} />
         </Suspense>
       </Hero>
-      
+
       <Stats />
       <Features />
       <Process />
@@ -58,7 +58,7 @@ export default async function LandingPage() {
       <Suspense fallback={<SectionSkeleton count={3} height={600} />}>
         <PricingSection plansPromise={plansPromise} userPromise={userPromise} />
       </Suspense>
-      
+
       <FAQ />
       <Newsletter />
       <CTA />
@@ -91,7 +91,7 @@ async function PricingSection({ plansPromise, userPromise }: { plansPromise: Pro
 
 function SectionSkeleton({ count = 3, height = 500 }: { count?: number; height?: number }) {
   return (
-    <div className="py-32 mx-auto max-w-7xl px-4 space-y-12">
+    <div className="section-padding wrapper space-y-12">
       <div className="space-y-6 text-center">
         <div className="h-6 w-32 bg-muted/20 animate-pulse rounded-full mx-auto" />
         <div className="h-16 w-2/3 bg-muted/20 animate-pulse rounded-lg mx-auto" />

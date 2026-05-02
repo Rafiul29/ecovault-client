@@ -4,7 +4,7 @@ import { statsData } from "@/lib/mock-data";
 export function Stats() {
   return (
     <section className="border-y border-border bg-muted/40 py-10 transition-colors hover:bg-muted/50">
-      <div className="mx-auto max-w-7xl px-2">
+      <div className="wrapper">
         <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
           {statsData.map((s, i) => (
             <div

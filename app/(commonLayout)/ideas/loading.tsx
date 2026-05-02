@@ -2,7 +2,7 @@ import { IdeaCardSkeleton } from "@/components/ideas/IdeaCard";
 
 export default function IdeaListLoading() {
     return (
-        <div className="mx-auto max-w-7xl px-2 py-12 w-full">
+        <div className="wrapper section-padding py-12 w-full">
             <div className="text-center mb-10 max-w-2xl mx-auto space-y-3">
                 <div className="h-10 w-64 bg-muted animate-pulse mx-auto rounded-lg" />
                 <div className="h-4 w-96 bg-muted animate-pulse mx-auto rounded-lg" />
@@ -15,7 +15,7 @@ export default function IdeaListLoading() {
             </div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                {[...Array(8)].map((_, i) => (
+                {[...Array(8)].map((_, i) => (  
                     <IdeaCardSkeleton key={i} />
                 ))}
             </div>

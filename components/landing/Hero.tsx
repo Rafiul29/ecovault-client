@@ -6,6 +6,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Idea } from "@/types/types";
+import { LandingSlider } from "./LandingSlider";
 
 interface HeroProps {
   children?: React.ReactNode;
@@ -13,7 +14,7 @@ interface HeroProps {
 
 export function Hero({ children }: HeroProps) {
   return (
-    <section className="relative flex min-h-[65vh] flex-col items-center justify-center overflow-hidden px-6 pt-16 text-center pb-16">
+    <section className="relative flex min-h-[65vh] flex-col items-center justify-center overflow-hidden px-2 md:px-6 pt-16 text-center pb-16">
       <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div className="absolute -top-40 left-1/4 h-[700px] w-[700px] -translate-x-1/2 rounded-full bg-primary/10 blur-[120px]" />
         <div className="absolute -top-20 right-0 h-[500px] w-[500px] rounded-full bg-accent/10 blur-[100px]" />
@@ -102,12 +103,12 @@ export function Hero({ children }: HeroProps) {
 
 export function HeroIdeasGrid({ featuredIdeas }: { featuredIdeas: Idea[] }) {
   return (
-    <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+    <LandingSlider showArrows={false} autoPlay={true} autoPlayInterval={3000}>
       {featuredIdeas.map((idea, i) => (
         <div
           key={idea.id}
           className={cn(
-            "glass group rounded-2xl border p-4 text-left shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:border-primary/30",
+            "glass group rounded-2xl border p-4 text-left shadow-sm transition-all duration-500 hover:-translate-y-2 hover:shadow-xl hover:border-primary/30 h-full",
             i === 1 ? "sm:-translate-y-4" : "sm:translate-y-0",
           )}
         >
@@ -120,7 +121,7 @@ export function HeroIdeasGrid({ featuredIdeas }: { featuredIdeas: Idea[] }) {
                   fill
                   priority
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-500"
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
                 />
               </div>
             </Link>
@@ -130,24 +131,28 @@ export function HeroIdeasGrid({ featuredIdeas }: { featuredIdeas: Idea[] }) {
               <Badge
                 key={cat?.category?.id}
                 variant="secondary"
-                className="text-[10px] px-1.5 py-0 bg-primary/5 text-primary"
+                className="text-[10px] px-1.5 py-0 bg-primary/5 text-primary border-primary/10"
               >
                 {cat?.category?.name}
               </Badge>
             ))}
           </div>
           <Link href={`/ideas/${idea.id}`}>
-            <p className="text-sm font-semibold line-clamp-2 text-foreground group-hover:text-primary transition-colors">
+            <p className="text-sm font-semibold line-clamp-2 text-foreground group-hover:text-primary transition-colors leading-snug">
               {idea.title}
             </p>
           </Link>
           <div className="mt-3 flex items-center gap-4 text-[11px] text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="text-primary opacity-80"><ThumbsUp className="size-3.5" /></span>{" "}
+              <span className="text-primary opacity-80">
+                <ThumbsUp className="size-3.5" />
+              </span>{" "}
               {formatNumber(idea.upvoteCount)}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="text-primary opacity-80"><Eye className="size-3.5" /></span>{" "}
+              <span className="text-primary opacity-80">
+                <Eye className="size-3.5" />
+              </span>{" "}
               {formatNumber(idea.viewCount)}
             </span>
             {idea.isPaid && (
@@ -158,7 +163,7 @@ export function HeroIdeasGrid({ featuredIdeas }: { featuredIdeas: Idea[] }) {
           </div>
         </div>
       ))}
-    </div>
+    </LandingSlider>
   );
 }
 

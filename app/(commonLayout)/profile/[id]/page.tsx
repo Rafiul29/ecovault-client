@@ -111,7 +111,7 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
 
   return (
     <div className="flex flex-1 flex-col py-6 px-2">
-      <div className="mx-auto w-full max-w-6xl space-y-6">
+      <div className="mx-auto w-full max-w-7xl space-y-6">
         {/* Hero / Header Card */}
         <Card className="overflow-hidden border-0 shadow-md">
           <div className="h-28 bg-gradient-to-r from-primary/20 via-primary/10 to-muted" />
@@ -272,19 +272,19 @@ export default async function ProfilePage({ params }: ProfilePageProps) {
                 </div>
                 {(activeProfile?.phoneNumber ||
                   activeProfile?.contactNumber) && (
-                  <div className="flex items-center gap-3">
-                    <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                      <Phone className="h-3.5 w-3.5 text-primary" />
+                    <div className="flex items-center gap-3">
+                      <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <Phone className="h-3.5 w-3.5 text-primary" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="text-xs text-muted-foreground">Phone</p>
+                        <p className="text-sm font-medium truncate">
+                          {activeProfile.phoneNumber ||
+                            activeProfile.contactNumber}
+                        </p>
+                      </div>
                     </div>
-                    <div className="min-w-0">
-                      <p className="text-xs text-muted-foreground">Phone</p>
-                      <p className="text-sm font-medium truncate">
-                        {activeProfile.phoneNumber ||
-                          activeProfile.contactNumber}
-                      </p>
-                    </div>
-                  </div>
-                )}
+                  )}
               </CardContent>
             </Card>
 

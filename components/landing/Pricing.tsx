@@ -12,8 +12,8 @@ interface PricingProps {
 
 export function Pricing({ plans, user, returnUrl }: PricingProps) {
   return (
-    <section id="pricing" className="py-16">
-      <div className="mx-auto max-w-7xl px-2">
+    <section id="pricing" className="section-padding">
+      <div className="wrapper">
         {/* Show a contextual banner when coming from a subscription-expired redirect */}
         {returnUrl && (
           <div className="mb-10 flex items-start gap-4 rounded-2xl border border-amber-200 bg-amber-50 dark:bg-amber-950/20 dark:border-amber-900/30 p-5 backdrop-blur-sm">
