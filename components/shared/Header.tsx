@@ -8,6 +8,7 @@ import { MobileNav } from "./MobileNav";
 import type { UserInfo } from "@/types/user.types";
 import { useState, useEffect } from "react";
 import { GlobalSearch } from "../search/GlobalSearch";
+import { ThemeToggle } from './ThemeToggle'
 
 interface HeaderProps {
   user?: UserInfo;
@@ -115,6 +116,8 @@ export function Header({ user }: HeaderProps) {
           >
             <SearchIcon className="size-4" />
           </button>
+
+          <ThemeToggle />
 
           <div className="hidden items-center gap-3 sm:flex">
             {user ? (

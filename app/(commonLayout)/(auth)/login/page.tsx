@@ -27,10 +27,11 @@ const LoginPage = async ({ searchParams }: LoginParams) => {
       </div>
 
       {/* Right Column: Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16 bg-background relative lg:shadow-[-20px_0_50px_rgba(0,0,0,0.05)] z-10 w-full">
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 lg:p-16 bg-background relative overflow-y-auto overflow-x-hidden lg:shadow-[-20px_0_50px_rgba(0,0,0,0.05)] z-10">
         {/* Subtle decorative background element */}
         <div className="absolute top-0 right-0 -z-10 h-[600px] w-[600px] translate-x-[20%] -translate-y-[20%] rounded-full bg-emerald-500/5 blur-[120px]" />
         <div className="absolute bottom-0 left-0 -z-10 h-[600px] w-[600px] -translate-x-[20%] translate-y-[20%] rounded-full bg-blue-500/5 blur-[120px]" />
+
 
         <LoginForm redirectPath={redirect} />
       </div>
