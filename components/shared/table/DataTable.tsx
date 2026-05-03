@@ -203,7 +203,7 @@ const DataTable = <TData,>({ data = [] as TData[], columns, actions, toolbarActi
             )}
 
             {/* // Table */}
-            <div className="rounded-lg border bg-white shadow-sm overflow-hidden font-sans">
+            <div className="rounded-lg border bg-background shadow-sm overflow-hidden font-sans">
                 <Table>
                     <TableHeader>
                         {table.getHeaderGroups().map((hg) => (

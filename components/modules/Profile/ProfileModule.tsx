@@ -214,7 +214,7 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                                 key={imagePreview}
                             />
                         ) : (
-                            <AvatarFallback className="bg-emerald-100 text-3xl font-black text-emerald-700">
+                            <AvatarFallback className="bg-emerald-100 dark:bg-emerald-950 text-3xl font-black text-emerald-700 dark:text-emerald-400">
                                 {userInfo.name?.charAt(0).toUpperCase()}
                             </AvatarFallback>
                         )}
@@ -250,23 +250,23 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
 
             {/* Vertical Tabs Sections */}
             <Tabs orientation="vertical" defaultValue="overview" className="flex flex-col md:flex-row gap-6">
-                <TabsList className="flex md:flex-col h-fit p-1.5 bg-white/80 backdrop-blur-md shadow-xl shadow-gray-200/40 rounded-xl border border-gray-100 min-w-[240px]">
+                <TabsList className="flex md:flex-col h-fit p-1.5 bg-card backdrop-blur-md shadow-lg rounded-xl border border-border min-w-[240px]">
                     <TabsTrigger value="overview" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-600 data-[state=active]:text-white data-[state=active]:shadow-lg data-[state=active]:shadow-emerald-600/20 group">
                         <Info className="size-5 group-data-[state=active]:text-white" />
                         <span className="font-bold tracking-tight">Overview</span>
                     </TabsTrigger>
-                    <TabsTrigger value="edit" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
-                        <Edit2 className="size-5 group-data-[state=active]:text-emerald-600" />
+                    <TabsTrigger value="edit" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 data-[state=active]:shadow-none group">
+                        <Edit2 className="size-5 group-data-[state=active]:text-emerald-600 dark:group-data-[state=active]:text-emerald-400" />
                         <span className="font-bold tracking-tight">Personal Info</span>
                     </TabsTrigger>
                     {isModerator && (
-                        <TabsTrigger value="social" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
-                            <Globe className="size-5 group-data-[state=active]:text-emerald-600" />
-                            <span className="font-bold tracking-tight">Social Connect</span>``
+                        <TabsTrigger value="social" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 data-[state=active]:shadow-none group">
+                            <Globe className="size-5 group-data-[state=active]:text-emerald-600 dark:group-data-[state=active]:text-emerald-400" />
+                            <span className="font-bold tracking-tight">Social Connect</span>
                         </TabsTrigger>
                     )}
-                    <TabsTrigger value="security" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-50 data-[state=active]:text-emerald-700 data-[state=active]:shadow-none group">
-                        <Shield className="size-5 group-data-[state=active]:text-emerald-600" />
+                    <TabsTrigger value="security" className="flex-1 md:flex-none justify-start gap-3 py-2 px-6 rounded-xl transition-all data-[state=active]:bg-emerald-500/10 data-[state=active]:text-emerald-600 dark:data-[state=active]:text-emerald-400 data-[state=active]:shadow-none group">
+                        <Shield className="size-5 group-data-[state=active]:text-emerald-600 dark:group-data-[state=active]:text-emerald-400" />
                         <span className="font-bold tracking-tight">Change Password</span>
                     </TabsTrigger>
                 </TabsList>
@@ -275,8 +275,8 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                     <TabsContent value="overview">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
                             <div className="lg:col-span-2 space-y-8">
-                                <Card className="border-none shadow-xl shadow-gray-200/50 rounded-4xl overflow-hidden">
-                                    <CardHeader className="bg-gray-50/50 border-b border-gray-100 p-8">
+                                <Card className="border-border bg-card shadow-lg rounded-4xl overflow-hidden">
+                                    <CardHeader className="bg-muted/50 border-b border-border p-8">
                                         <CardTitle className="text-2xl font-black flex items-center gap-3">
                                             <div className="p-2 bg-emerald-500 rounded-xl text-white shadow-lg">
                                                 <User className="size-5" />
@@ -285,48 +285,48 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                                         </CardTitle>
                                     </CardHeader>
                                     <CardContent className="p-8">
-                                        <p className="text-slate-600 leading-relaxed text-lg font-medium italic">
+                                        <p className="text-muted-foreground leading-relaxed text-lg font-medium italic">
                                             "{profileData?.bio || userInfo.bio || "No biography shared yet. Every change maker starts somewhere."}"
                                         </p>
                                     </CardContent>
                                 </Card>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                    <Card className="border-none shadow-xl shadow-gray-200/50 rounded-3xl p-8 hover:bg-emerald-50/30 transition-colors duration-500">
-                                        <LayoutDashboard className="size-8 text-emerald-600 mb-4" />
-                                        <h3 className="text-3xl font-black text-slate-800 mb-1">{userInfo.ideasCount || 0}</h3>
-                                        <p className="font-bold text-slate-500 text-sm uppercase tracking-widest">Ideas Shared</p>
+                                    <Card className="border-border bg-card shadow-lg rounded-3xl p-8 hover:bg-emerald-500/5 transition-colors duration-500">
+                                        <LayoutDashboard className="size-8 text-emerald-600 dark:text-emerald-400 mb-4" />
+                                        <h3 className="text-3xl font-black text-foreground mb-1">{userInfo.ideasCount || 0}</h3>
+                                        <p className="font-bold text-muted-foreground text-sm uppercase tracking-widest">Ideas Shared</p>
                                     </Card>
-                                    <Card className="border-none shadow-xl shadow-gray-200/50 rounded-3xl p-8 hover:bg-emerald-50/30 transition-colors duration-500">
-                                        <User className="size-8 text-blue-600 mb-4" />
-                                        <h3 className="text-3xl font-black text-slate-800 mb-1">{userInfo.followersCount || 0}</h3>
-                                        <p className="font-bold text-slate-500 text-sm uppercase tracking-widest">Followers</p>
+                                    <Card className="border-border bg-card shadow-lg rounded-3xl p-8 hover:bg-blue-500/5 transition-colors duration-500">
+                                        <User className="size-8 text-blue-600 dark:text-blue-400 mb-4" />
+                                        <h3 className="text-3xl font-black text-foreground mb-1">{userInfo.followersCount || 0}</h3>
+                                        <p className="font-bold text-muted-foreground text-sm uppercase tracking-widest">Followers</p>
                                     </Card>
                                 </div>
                             </div>
 
-                            <Card className="border-none shadow-xl shadow-gray-200/50 rounded-4xl h-fit">
-                                <CardHeader className="bg-gray-50/50 border-b border-gray-100 p-8">
-                                    <CardTitle className="text-xl font-black">Account Details</CardTitle>
+                            <Card className="border-border bg-card shadow-lg rounded-4xl h-fit">
+                                <CardHeader className="bg-muted/50 border-b border-border p-8">
+                                    <CardTitle className="text-xl font-black text-foreground">Account Details</CardTitle>
                                 </CardHeader>
                                 <CardContent className="p-8 space-y-6">
                                     <div className="space-y-4">
-                                        <div className="flex justify-between items-center bg-gray-50 p-4 rounded-2xl">
-                                            <span className="text-slate-500 font-bold text-xs uppercase tracking-wider">Status</span>
-                                            <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-200 border-none px-3 py-1 font-bold">{userInfo.status}</Badge>
+                                        <div className="flex justify-between items-center bg-muted/50 p-4 rounded-2xl">
+                                            <span className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Status</span>
+                                            <Badge className="bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-200 dark:hover:bg-emerald-900 border-none px-3 py-1 font-bold">{userInfo.status}</Badge>
                                         </div>
-                                        <div className="flex justify-between items-center bg-gray-50 p-4 rounded-2xl">
-                                            <span className="text-slate-500 font-bold text-xs uppercase tracking-wider">Subscription</span>
-                                            <Badge className="bg-blue-100 text-blue-700 hover:bg-blue-200 border-none px-3 py-1 font-bold">{userInfo.subscription?.tier || "FREE"}</Badge>
+                                        <div className="flex justify-between items-center bg-muted/50 p-4 rounded-2xl">
+                                            <span className="text-muted-foreground font-bold text-xs uppercase tracking-wider">Subscription</span>
+                                            <Badge className="bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 hover:bg-blue-200 dark:hover:bg-blue-900 border-none px-3 py-1 font-bold">{userInfo.subscription?.tier || "FREE"}</Badge>
                                         </div>
                                     </div>
                                     <Separator className="my-6 opacity-50" />
                                     <div className="space-y-4 text-sm font-medium">
-                                        <div className="flex items-center gap-3 text-slate-600">
+                                        <div className="flex items-center gap-3 text-muted-foreground">
                                             <Phone className="size-4 text-emerald-500" />
                                             <span>{profileData?.phoneNumber || "No phone added"}</span>
                                         </div>
-                                        <div className="flex items-center gap-3 text-slate-600">
+                                        <div className="flex items-center gap-3 text-muted-foreground">
                                             <MapPin className="size-4 text-emerald-500" />
                                             <span>{profileData?.address || "Location not set"}</span>
                                         </div>
@@ -337,10 +337,10 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                     </TabsContent>
 
                     <TabsContent value="edit">
-                        <Card className="border-none shadow-xl shadow-gray-200/40 rounded-4xl overflow-hidden">
-                            <CardHeader className="p-8 border-b border-gray-100 bg-linear-to-r from-gray-50 to-transparent">
-                                <CardTitle className="text-2xl font-black text-slate-900">Update Profile</CardTitle>
-                                <CardDescription className="text-base font-medium text-slate-500">Refine your public identity and storyteller persona.</CardDescription>
+                        <Card className="border-border bg-card shadow-lg rounded-4xl overflow-hidden">
+                            <CardHeader className="p-8 border-b border-border bg-muted/30">
+                                <CardTitle className="text-2xl font-black text-foreground">Update Profile</CardTitle>
+                                <CardDescription className="text-base font-medium text-muted-foreground">Refine your public identity and storyteller persona.</CardDescription>
                             </CardHeader>
                             <CardContent className="p-8">
                                 <form
@@ -371,9 +371,9 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                                                         name="bio"
                                                         children={(field) => (
                                                             <div className="flex flex-col gap-2">
-                                                                <label className="text-sm font-bold text-slate-700 tracking-tight">Biography</label>
+                                                                <label className="text-sm font-bold text-foreground tracking-tight">Biography</label>
                                                                 <textarea
-                                                                    className="min-h-[160px] flex w-full rounded-2xl border-2 border-gray-100 bg-white px-5 py-4 text-sm font-medium transition-all focus-visible:ring-4 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-500 outline-none resize-none placeholder:text-gray-300"
+                                                                    className="min-h-[160px] flex w-full rounded-2xl border-2 border-border bg-background px-5 py-4 text-sm font-medium transition-all focus-visible:ring-4 focus-visible:ring-emerald-500/10 focus-visible:border-emerald-500 outline-none resize-none placeholder:text-muted-foreground/50"
                                                                     value={field.state.value}
                                                                     onChange={(e) => field.handleChange(e.target.value)}
                                                                     placeholder="Tell your story. What drives you?"
@@ -426,10 +426,10 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                     </TabsContent>
 
                     <TabsContent value="social">
-                        <Card className="border-none shadow-xl shadow-gray-200/40 rounded-4xl overflow-hidden">
-                            <CardHeader className="p-8 border-b border-gray-100 bg-linear-to-r from-gray-50 to-transparent text-center">
-                                <CardTitle className="text-2xl font-black text-slate-900">Social Connections</CardTitle>
-                                <CardDescription className="text-base font-medium text-slate-500">Amplify your reach and engage with the community.</CardDescription>
+                        <Card className="border-border bg-card shadow-lg rounded-4xl overflow-hidden">
+                            <CardHeader className="p-8 border-b border-border bg-muted/30 text-center">
+                                <CardTitle className="text-2xl font-black text-foreground">Social Connections</CardTitle>
+                                <CardDescription className="text-base font-medium text-muted-foreground">Amplify your reach and engage with the community.</CardDescription>
                             </CardHeader>
                             <CardContent className="p-8">
                                 <form
@@ -489,13 +489,13 @@ const ProfileModule = ({ userInfo, profileData }: ProfileModuleProps) => {
                     </TabsContent>
 
                     <TabsContent value="security">
-                        <Card className="border-none shadow-xl shadow-gray-200/40 rounded-4xl max-w-2xl mx-auto overflow-hidden">
-                            <CardHeader className="p-8 border-b border-gray-100 bg-slate-50/50 text-center">
-                                <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-emerald-500/5">
+                        <Card className="border-border bg-card shadow-lg rounded-4xl max-w-2xl mx-auto overflow-hidden">
+                            <CardHeader className="p-8 border-b border-border bg-muted/30 text-center">
+                                <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
                                     <Shield className="size-8" />
                                 </div>
-                                <CardTitle className="text-2xl font-black text-slate-900">Security Vault</CardTitle>
-                                <CardDescription className="text-base font-medium text-slate-500">Protect your assets and change your access credentials.</CardDescription>
+                                <CardTitle className="text-2xl font-black text-foreground">Security Vault</CardTitle>
+                                <CardDescription className="text-base font-medium text-muted-foreground">Protect your assets and change your access credentials.</CardDescription>
                             </CardHeader>
                             <CardContent className="p-8">
                                 <ChangePasswordForm />

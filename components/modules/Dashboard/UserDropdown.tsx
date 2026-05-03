@@ -78,7 +78,7 @@ export function UserDropdown({ user }: UserNavProps) {
                             <span>Watchlist</span>
                         </Link>
                     </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
+                    {/* <DropdownMenuItem asChild>
                         <Link href="/notifications" className="cursor-pointer w-full flex items-center">
                             <Bell className="mr-2 h-4 w-4" />
                             <span>Notifications</span>
@@ -95,15 +95,16 @@ export function UserDropdown({ user }: UserNavProps) {
                             <Settings className="mr-2 h-4 w-4" />
                             <span>Settings</span>
                         </Link>
-                    </DropdownMenuItem>
+                    </DropdownMenuItem> */}
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                    className="text-destructive focus:bg-destructive/10 focus:text-destructive cursor-pointer"
+                    className="text-destructive bg-accent/10 focus:bg-destructive/10 focus:text-destructive cursor-pointer"
                     onClick={handleLogout}
                 >
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span className="text-black">Log out</span>
+                    <LogOut className="mr-2 h-4 w-4 text-destructive" />
+                    {/* Option A: Uses the theme's default text color */}
+                    <span className="text-foreground">Log out</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

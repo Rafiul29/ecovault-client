@@ -19,15 +19,15 @@ interface DashboardSidebarContentProps {
 const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: DashboardSidebarContentProps) => {
     const pathname = usePathname()
     return (
-        <aside className="hidden md:flex h-full w-72 flex-col border-r border-gray-200 bg-white shadow-[1px_0_0_0_rgba(0,0,0,0.02)] transition-all duration-300">
+        <aside className="hidden md:flex h-full w-72 flex-col border-r border-border bg-background shadow-[1px_0_0_0_rgba(0,0,0,0.02)] transition-all duration-300">
             {/* Logo Area */}
-            <div className="flex h-16 shrink-0 items-center border-b border-gray-200 px-2">
+            <div className="flex h-16 shrink-0 items-center border-b border-border px-2">
                 <Link href={dashboardHome} className="flex items-center gap-4 group transition-all duration-500 hover:scale-[1.02]">
                     <div className="flex size-10 items-center justify-center rounded-[1.25rem] bg-emerald-600 text-white shadow-xl shadow-emerald-600/20 transition-all duration-700 group-hover:rotate-[15deg] group-hover:bg-emerald-500 group-hover:shadow-emerald-500/40">
                         <Leaf className="size-5 transition-transform group-hover:scale-110" />
                     </div>
                     <div className="flex flex-col">
-                        <span className="font-display text-2xl font-black tracking-tight text-neutral-900 leading-none">
+                        <span className="font-display text-2xl font-black tracking-tight text-foreground leading-none">
                             EcoVault
                         </span>
                     </div>
@@ -80,7 +80,7 @@ const DashboardSidebarContent = ({ dashboardHome, navItems, userInfo }: Dashboar
             </ScrollArea>
 
             {/* User Info At Bottom */}
-            <div className="border-t px-3 py-4">
+            <div className="border-t border-border px-3 py-4">
                 <div className="flex items-center gap-3">
                     <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                         <span className="text-sm font-semibold text-primary">

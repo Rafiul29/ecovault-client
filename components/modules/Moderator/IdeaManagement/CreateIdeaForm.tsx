@@ -180,7 +180,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories, user }: CreateIdeaFor
                                 {(field) => (
                                     <AppField
                                         field={field}
-                                        label={<span>Title <span className="text-rose-500">*</span></span> as any}
+                                        label={<span>Title <span className="text-rose-500">*</span></span>}
                                         placeholder="e.g., Solar-Powered Water Purification System"
                                     />
                                 )}

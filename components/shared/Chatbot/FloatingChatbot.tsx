@@ -275,15 +275,15 @@ export default function FloatingChatbot() {
         <>
             {/* ── Chat Window ────────────────────────────────────────────────── */}
             <div
-                className={`fixed bottom-24 right-6 z-50 w-88 sm:w-104 flex flex-col rounded-2xl shadow-2xl border border-border overflow-hidden bg-card transition-all duration-300 ease-in-out ${isOpen
+                className={`fixed bottom-20 inset-x-4 sm:left-auto sm:right-6 sm:w-96 lg:w-[420px] z-50 flex flex-col rounded-2xl shadow-2xl border border-border overflow-hidden bg-card transition-all duration-300 ease-in-out ${isOpen
                     ? "opacity-100 translate-y-0 pointer-events-auto"
                     : "opacity-0 translate-y-6 pointer-events-none"
                     }`}
-                style={{ maxHeight: "78vh" }}
+                style={{ maxHeight: "calc(100dvh - 7rem)" }}
                 aria-hidden={!isOpen}
             >
                 {/* Header */}
-                <div className="bg-linear-to-br from-primary to-accent px-4 py-3 flex items-center justify-between shrink-0">
+                <div className="bg-linear-to-br from-primary to-accent px-4 py-3 flex flex-row items-center justify-between shrink-0">
                     <div className="flex items-center gap-2.5">
                         <div className="w-9 h-9 rounded-full bg-white/20 dark:bg-black/20 flex items-center justify-center backdrop-blur-sm">
                             <Bot size={20} className="text-primary-foreground" />
@@ -326,7 +326,7 @@ export default function FloatingChatbot() {
                 <div
                     ref={scrollRef}
                     className="flex-1 overflow-y-auto p-4 space-y-4 bg-muted/30 min-h-0"
-                    style={{ minHeight: "200px", maxHeight: "55vh" }}
+                    style={{ minHeight: "180px" }}
                 >
                     {messages.map((msg) => (
                         <MessageBubble key={msg.id} message={msg} onRetry={handleSend} />

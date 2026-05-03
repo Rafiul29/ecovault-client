@@ -8,13 +8,16 @@ import { Separator } from "@/components/ui/separator";
 const platformLinks = [
   { label: "Browse Ideas", href: "/ideas" },
   { label: "Explore", href: "/feeds" },
-  // { label: "Watchlist", href: "/watchlist" },
+  { label: "Watchlist", href: "/watchlist" },
+  { label: "Privacy Policy", href: "/privacy" },
 ];
 
 const companyLinks = [
   { label: "Pricing", href: "/pricing" },
   { label: "Sign In", href: "/login" },
   { label: "Register", href: "/register" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 export function Footer() {

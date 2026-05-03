@@ -8,7 +8,7 @@ export default function ModeratorDashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex flex-col min-h-full">
+    <div className="flex flex-col min-h-full bg-background text-foreground">
       {/* Subscription expiry warning — only visible ≤10 days before expiry */}
       <SubscriptionExpiryBanner />
       {children}

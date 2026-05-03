@@ -58,10 +58,10 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
     // Helper functions for status styling
     const getStatusConfig = (status: string) => {
         switch (status) {
-            case "APPROVED": return { color: "bg-emerald-50 text-emerald-700 border-emerald-100", icon: <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> }
-            case "UNDER_REVIEW": return { color: "bg-amber-50 text-amber-700 border-amber-100", icon: <Clock className="h-3.5 w-3.5 mr-1.5" /> }
-            case "REJECTED": return { color: "bg-rose-50 text-rose-700 border-rose-100", icon: <Trash2 className="h-3.5 w-3.5 mr-1.5" /> }
-            default: return { color: "bg-neutral-100 text-neutral-700 border-neutral-200", icon: null }
+            case "APPROVED": return { color: "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20", icon: <ShieldCheck className="h-3.5 w-3.5 mr-1.5" /> }
+            case "UNDER_REVIEW": return { color: "bg-amber-500/10 text-amber-700 dark:text-amber-400 border-amber-500/20", icon: <Clock className="h-3.5 w-3.5 mr-1.5" /> }
+            case "REJECTED": return { color: "bg-rose-500/10 text-rose-700 dark:text-rose-400 border-rose-500/20", icon: <Trash2 className="h-3.5 w-3.5 mr-1.5" /> }
+            default: return { color: "bg-muted text-muted-foreground border-border", icon: null }
         }
     }
 
@@ -69,31 +69,31 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
 
     return (
 
-        <div className="py-8 px-4 sm:px-6 space-y-5 bg-slate-50/30 min-h-screen">
+        <div className="py-8 px-4 sm:px-6 space-y-5 bg-background min-h-screen">
 
             {/* Top Navigation & Interaction Bar (Matches Image Design) */}
             {/* SECTION: ADMIN FEEDBACK (READ-ONLY FOR MODERATOR) */}
             {idea?.adminFeedback && (
-                <div className="bg-amber-50/50 rounded-2xl shadow-sm border border-amber-200 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
-                    <div className="px-6 md:px-8 py-4 border-b border-amber-100 bg-amber-50/80 flex items-center gap-3">
-                        <div className="h-8 w-8 rounded-lg bg-amber-100 flex items-center justify-center border border-amber-200">
-                            <Save className="h-4 w-4 text-amber-600" />
+                <div className="bg-amber-500/5 rounded-2xl shadow-sm border border-amber-500/20 overflow-hidden animate-in fade-in slide-in-from-top-4 duration-500">
+                    <div className="px-6 md:px-8 py-4 border-b border-amber-500/10 bg-amber-500/10 flex items-center gap-3">
+                        <div className="h-8 w-8 rounded-lg bg-amber-500/20 flex items-center justify-center border border-amber-500/30">
+                            <Save className="h-4 w-4 text-amber-600 dark:text-amber-400" />
                         </div>
                         <div>
-                            <h2 className="text-base font-bold text-amber-900">Feedback from Admin</h2>
-                            <p className="text-[11px] text-amber-700/70 font-bold uppercase tracking-wider">Reviewer Comments</p>
+                            <h2 className="text-base font-bold text-amber-900 dark:text-amber-100">Feedback from Admin</h2>
+                            <p className="text-[11px] text-amber-700/70 dark:text-amber-400/70 font-bold uppercase tracking-wider">Reviewer Comments</p>
                         </div>
                     </div>
 
                     <div className="p-6 md:p-8">
-                        <div className="bg-white/60 rounded-xl p-5 border border-amber-100/50 shadow-inner">
-                            <p className="text-neutral-800 text-[15px] leading-relaxed font-medium">
+                        <div className="bg-card/60 rounded-xl p-5 border border-amber-500/10 shadow-inner">
+                            <p className="text-foreground text-[15px] leading-relaxed font-medium">
                                 {idea.adminFeedback}
                             </p>
                         </div>
                         <div className="mt-4 flex items-center gap-2">
                             <div className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-                            <p className="text-[11px] text-amber-600 font-bold uppercase tracking-widest">Constructive feedback</p>
+                            <p className="text-[11px] text-amber-600 dark:text-amber-400 font-bold uppercase tracking-widest">Constructive feedback</p>
                         </div>
                     </div>
                 </div>
@@ -146,50 +146,50 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                 <div className="lg:col-span-8 space-y-5">
 
                     {/* Idea Header Section */}
-                    <div className="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm">
-                        <div className="p-5 border-b border-slate-50 bg-slate-50/30">
+                    <div className="bg-card rounded-2xl border border-border overflow-hidden shadow-sm">
+                        <div className="p-5 border-b border-border bg-muted/30">
                             <div className="flex items-center gap-2 mb-2">
                                 <Badge variant="outline" className={`text-[10px] uppercase font-bold py-0 ${statusConfig.color}`}>
                                     {statusConfig.icon} {idea.status}
                                 </Badge>
-                                <span className="text-[10px] font-bold text-slate-400">ID: #{idea.id.slice(-6)}</span>
+                                <span className="text-[10px] font-bold text-muted-foreground">ID: #{idea.id.slice(-6)}</span>
                             </div>
-                            <h1 className="text-2xl font-bold text-slate-900 leading-tight">{idea.title}</h1>
+                            <h1 className="text-2xl font-bold text-foreground leading-tight">{idea.title}</h1>
                         </div>
                     </div>
 
                     {/* Overview Card (Clean Image-like Style) */}
-                    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all hover:border-emerald-100">
-                        <div className="px-5 py-3 border-b border-slate-50 bg-slate-50/20">
-                            <h3 className="text-sm font-bold text-slate-800">Overview</h3>
+                    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden transition-all hover:border-emerald-500/20">
+                        <div className="px-5 py-3 border-b border-border bg-muted/20">
+                            <h3 className="text-sm font-bold text-foreground">Overview</h3>
                         </div>
-                        <div className="p-5 text-sm text-slate-600 leading-relaxed font-medium">
+                        <div className="p-5 text-sm text-muted-foreground leading-relaxed font-medium">
                             {idea.description || "Project details summary goes here..."}
                         </div>
                     </div>
 
                     {/* Problem Statement Card */}
-                    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all hover:border-rose-100">
-                        <div className="px-5 py-3 border-b border-slate-50 bg-slate-50/20">
-                            <h3 className="text-sm font-bold text-slate-800">Problem Statement</h3>
+                    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden transition-all hover:border-rose-500/20">
+                        <div className="px-5 py-3 border-b border-border bg-muted/20">
+                            <h3 className="text-sm font-bold text-foreground">Problem Statement</h3>
                         </div>
-                        <div className="p-5 text-sm text-slate-600 leading-relaxed">
+                        <div className="p-5 text-sm text-muted-foreground leading-relaxed">
                             {idea.problemStatement}
                         </div>
                     </div>
 
                     {/* Proposed Solution Card */}
-                    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden transition-all hover:border-emerald-100">
-                        <div className="px-5 py-3 border-b border-slate-50 bg-slate-50/20">
-                            <h3 className="text-sm font-bold text-slate-800">Proposed Solution</h3>
+                    <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden transition-all hover:border-emerald-500/20">
+                        <div className="px-5 py-3 border-b border-border bg-muted/20">
+                            <h3 className="text-sm font-bold text-foreground">Proposed Solution</h3>
                         </div>
-                        <div className="p-5 text-sm text-slate-600 leading-relaxed italic">
+                        <div className="p-5 text-sm text-muted-foreground leading-relaxed italic">
                             {idea.proposedSolution}
                         </div>
                     </div>
 
                     {/* Attachments (Integrated within the same style) */}
-                    <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-2">
+                    <div className="bg-card rounded-2xl border border-border shadow-sm p-2">
                         <IdeaAttachments
                             ideaId={idea.id}
                             authorId={idea.authorId}
@@ -265,41 +265,41 @@ const ViewIdeaPage = async ({ params }: { params: Promise<{ id: string }> }) => 
                         </div>
 
                         {/* Metrics Card */}
-                        <div className="bg-slate-900 rounded-2xl p-5 shadow-lg text-white">
+                        <div className="bg-foreground rounded-2xl p-5 shadow-lg text-background">
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase">Views</p>
+                                    <p className="text-[10px] text-muted-foreground font-bold uppercase">Views</p>
                                     <p className="text-xl font-bold">{idea.viewCount.toLocaleString()}</p>
                                 </div>
                                 <div>
-                                    <p className="text-[10px] text-slate-400 font-bold uppercase">Comments</p>
+                                    <p className="text-[10px] text-muted-foreground font-bold uppercase">Comments</p>
                                     <p className="text-xl font-bold">{idea._count?.comments || 0}</p>
                                 </div>
                             </div>
                         </div>
 
                         {/* Taxonomy Card */}
-                        <div className="bg-white rounded-2xl border border-slate-100 shadow-sm p-5 space-y-4">
+                        <div className="bg-card rounded-2xl border border-border shadow-sm p-5 space-y-4">
                             <div>
-                                <h4 className="text-[10px] font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
+                                <h4 className="text-[10px] font-bold text-muted-foreground uppercase mb-3 flex items-center gap-2">
                                     <Folder className="h-3 w-3" /> Categories
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
                                     {idea.categories?.map((c) => (
-                                        <Badge key={c.category.id} className="bg-slate-50 text-slate-600 border-slate-100 hover:bg-slate-100 px-2.5 py-1 rounded-lg">
+                                        <Badge key={c.category.id} className="bg-muted text-foreground border-border hover:bg-muted/80 px-2.5 py-1 rounded-lg">
                                             {c.category.name}
                                         </Badge>
                                     ))}
                                 </div>
                             </div>
-                            <Separator className="bg-slate-50" />
+                            <Separator className="bg-border" />
                             <div>
-                                <h4 className="text-[10px] font-bold text-slate-400 uppercase mb-3 flex items-center gap-2">
+                                <h4 className="text-[10px] font-bold text-muted-foreground uppercase mb-3 flex items-center gap-2">
                                     <TagIcon className="h-3 w-3" /> Tags
                                 </h4>
                                 <div className="flex flex-wrap gap-1.5">
                                     {idea.tags?.map((t) => (
-                                        <span key={t.tag.id} className="text-[11px] font-medium text-slate-500 bg-slate-50 px-2 py-0.5 rounded-md">
+                                        <span key={t.tag.id} className="text-[11px] font-medium text-muted-foreground bg-muted px-2 py-0.5 rounded-md">
                                             #{t.tag.name}
                                         </span>
                                     ))}

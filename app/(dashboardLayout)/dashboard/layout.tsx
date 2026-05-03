@@ -8,9 +8,9 @@ export default function MemberDashboardLayout({
 
 
   return (
-    <>
+    <div className="bg-background text-foreground min-h-full">
       {children}
-    </>
+    </div>
   );
 
 }

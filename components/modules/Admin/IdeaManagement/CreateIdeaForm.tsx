@@ -141,8 +141,8 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                     </Button>
                 </Link>
                 <div>
-                    <h1 className="text-3xl font-black text-neutral-900 tracking-tight">Create New Idea</h1>
-                    <p className="text-neutral-500 font-medium">Share your innovative solution with the ecosystem.</p>
+                    <h1 className="text-3xl font-black text-foreground tracking-tight">Create New Idea</h1>
+                    <p className="text-muted-foreground font-medium">Share your innovative solution with the ecosystem.</p>
                 </div>
             </div>
 
@@ -155,13 +155,13 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                 className="space-y-8"
             >
                 {/* SECTION: GENERAL INFORMATION */}
-                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
-                        <h2 className="text-lg font-bold text-neutral-900">Basic Information</h2>
-                        <p className="text-sm text-neutral-500 font-medium mt-1">Title, description, and overview of your idea</p>
+                <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-border bg-card">
+                        <h2 className="text-lg font-bold text-foreground">Basic Information</h2>
+                        <p className="text-sm text-muted-foreground font-medium mt-1">Title, description, and overview of your idea</p>
                     </div>
 
-                    <div className="p-6 md:p-8 space-y-8 bg-white">
+                    <div className="p-6 md:p-8 space-y-8 bg-card">
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
                             <form.Field
                                 name="title"
@@ -175,7 +175,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                 {(field) => (
                                     <AppField
                                         field={field}
-                                        label={<span>Title <span className="text-rose-500">*</span></span> as any}
+                                        label={<span>Title <span className="text-rose-500">*</span></span>}
                                         placeholder="e.g., Solar-Powered Water Purification System"
                                     />
                                 )}
@@ -184,12 +184,12 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                             <form.Field name="status">
                                 {(field) => (
                                     <div className="space-y-2">
-                                        <Label className="text-sm font-medium text-neutral-800">Initial Status</Label>
+                                        <Label className="text-sm font-medium text-foreground">Initial Status</Label>
                                         <Select value={field.state.value} onValueChange={(val) => field.handleChange(val as any)}>
-                                            <SelectTrigger className="h-12 rounded-xl transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200">
+                                            <SelectTrigger className="h-12 rounded-xl transition-all focus:ring-2 focus:ring-emerald-500/20 border-border bg-background">
                                                 <SelectValue placeholder="Select status" />
                                             </SelectTrigger>
-                                            <SelectContent className="rounded-xl border-neutral-100 shadow-xl">
+                                            <SelectContent className="rounded-xl border-border shadow-xl">
                                                 <SelectItem value="DRAFT">Draft</SelectItem>
                                                 <SelectItem value="UNDER_REVIEW">Under Review</SelectItem>
                                                 <SelectItem value="APPROVED">Approved</SelectItem>
@@ -214,10 +214,10 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                         >
                             {(field) => (
                                 <div className="space-y-2">
-                                    <Label className="text-sm font-medium text-neutral-800">Short Description <span className="text-rose-500">*</span></Label>
+                                    <Label className="text-sm font-medium text-foreground">Short Description <span className="text-rose-500">*</span></Label>
                                     <Textarea
                                         placeholder="A concise overview of your idea (2–3 sentences)"
-                                        className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
+                                        className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-border bg-background font-sans"
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
                                     />
@@ -231,13 +231,13 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                 </div>
 
                 {/* SECTION: PROBLEM & SOLUTION */}
-                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
-                        <h2 className="text-lg font-bold text-neutral-900">Problem & Solution</h2>
-                        <p className="text-sm text-neutral-500 font-medium mt-1">Clearly define the problem you're solving</p>
+                <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-border bg-card">
+                        <h2 className="text-lg font-bold text-foreground">Problem & Solution</h2>
+                        <p className="text-sm text-muted-foreground font-medium mt-1">Clearly define the problem you're solving</p>
                     </div>
 
-                    <div className="p-6 md:p-8 flex flex-col gap-6 sm:gap-8 bg-white">
+                    <div className="p-6 md:p-8 flex flex-col gap-6 sm:gap-8 bg-card">
                         <form.Field
                             name="problemStatement"
                             validators={{
@@ -249,10 +249,10 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                         >
                             {(field) => (
                                 <div className="space-y-2">
-                                    <Label className="text-sm font-medium text-neutral-800">Problem Statement <span className="text-rose-500">*</span></Label>
+                                    <Label className="text-sm font-medium text-foreground">Problem Statement <span className="text-rose-500">*</span></Label>
                                     <Textarea
                                         placeholder="What specific problem does your idea address? Include data or evidence if possible."
-                                        className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
+                                        className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-border bg-background font-sans"
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
                                     />
@@ -274,10 +274,10 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                         >
                             {(field) => (
                                 <div className="space-y-2">
-                                    <Label className="text-sm font-medium text-neutral-800">Proposed Solution <span className="text-rose-500">*</span></Label>
+                                    <Label className="text-sm font-medium text-foreground">Proposed Solution <span className="text-rose-500">*</span></Label>
                                     <Textarea
                                         placeholder="How does your idea solve the problem? Be specific about the approach, technology, or method."
-                                        className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-neutral-200 font-sans"
+                                        className="h-32 rounded-2xl p-4 transition-all focus:ring-2 focus:ring-emerald-500/20 border-border bg-background font-sans"
                                         value={field.state.value}
                                         onChange={(e) => field.handleChange(e.target.value)}
                                     />
@@ -291,13 +291,13 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                 </div>
 
                 {/* SECTION: CATEGORIZATION */}
-                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
-                        <h2 className="text-lg font-bold text-neutral-900">Categorization</h2>
-                        <p className="text-sm text-neutral-500 font-medium mt-1">Help users discover your idea</p>
+                <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-border bg-card">
+                        <h2 className="text-lg font-bold text-foreground">Categorization</h2>
+                        <p className="text-sm text-muted-foreground font-medium mt-1">Help users discover your idea</p>
                     </div>
 
-                    <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 bg-white">
+                    <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 bg-card">
                         <form.Field name="categories">
                             {(field) => (
                                 <CategoryMultiSelect
@@ -329,19 +329,19 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                 </div>
 
                 {/* SECTION: PRICING & VISIBILITY */}
-                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
-                        <h2 className="text-lg font-bold text-neutral-900">Pricing & Visibility</h2>
-                        <p className="text-sm text-neutral-500 font-medium mt-1">Configure monetization and promotion settings.</p>
+                <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-border bg-card">
+                        <h2 className="text-lg font-bold text-foreground">Pricing & Visibility</h2>
+                        <p className="text-sm text-muted-foreground font-medium mt-1">Configure monetization and promotion settings.</p>
                     </div>
 
-                    <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-6 items-start bg-white">
+                    <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-6 items-start bg-card">
                         <div className="flex flex-col gap-4">
                             <form.Field name="isPaid">
                                 {(field) => (
                                     <div className="space-y-1">
                                         <div
-                                            className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-3 ${field.state.value ? 'bg-emerald-50/50 border-emerald-500' : 'bg-white border-neutral-200 hover:border-emerald-300'}`}
+                                            className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-3 ${field.state.value ? 'bg-emerald-500/10 border-emerald-500' : 'bg-background border-border hover:border-emerald-500/50'}`}
                                             onClick={() => {
                                                 field.handleChange(!field.state.value);
                                                 if (field.state.value) form.setFieldValue("price", 0);
@@ -352,11 +352,11 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                                 id="isPaid"
                                                 checked={field.state.value}
                                                 onChange={() => { }}
-                                                className={`h-5 w-5 rounded-md border-2 transition-colors focus:ring-emerald-500 cursor-pointer pointer-events-none ${field.state.value ? 'text-emerald-500 border-emerald-500' : 'text-transparent border-neutral-300'}`}
+                                                className={`h-5 w-5 rounded-md border-2 transition-colors focus:ring-emerald-500 cursor-pointer pointer-events-none ${field.state.value ? 'text-emerald-500 border-emerald-500 bg-emerald-500' : 'text-transparent border-border bg-transparent'}`}
                                             />
                                             <div className="flex flex-col select-none">
-                                                <Label htmlFor="isPaid" className="font-bold text-neutral-900 pointer-events-none text-[15px]">Make it a Paid Idea</Label>
-                                                <span className="text-xs text-neutral-500 pointer-events-none mt-0.5">Users must purchase to gain access</span>
+                                                <Label htmlFor="isPaid" className="font-bold text-foreground pointer-events-none text-[15px]">Make it a Paid Idea</Label>
+                                                <span className="text-xs text-muted-foreground pointer-events-none mt-0.5">Users must purchase to gain access</span>
                                             </div>
                                         </div>
                                         {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
@@ -370,7 +370,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                 {(field) => (
                                     <div className="space-y-1">
                                         <div
-                                            className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-3 ${field.state.value ? 'bg-amber-50/50 border-amber-500' : 'bg-white border-neutral-200 hover:border-amber-300'}`}
+                                            className={`p-4 rounded-2xl border-2 transition-all cursor-pointer flex items-center gap-3 ${field.state.value ? 'bg-amber-500/10 border-amber-500' : 'bg-background border-border hover:border-amber-500/50'}`}
                                             onClick={() => field.handleChange(!field.state.value)}
                                         >
                                             <input
@@ -378,11 +378,11 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                                 id="isFeatured"
                                                 checked={field.state.value}
                                                 onChange={() => { }}
-                                                className={`h-5 w-5 rounded-md border-2 transition-colors focus:ring-amber-500 cursor-pointer pointer-events-none ${field.state.value ? 'text-amber-500 border-amber-500' : 'text-transparent border-neutral-300'}`}
+                                                className={`h-5 w-5 rounded-md border-2 transition-colors focus:ring-amber-500 cursor-pointer pointer-events-none ${field.state.value ? 'text-amber-500 border-amber-500 bg-amber-500' : 'text-transparent border-border bg-transparent'}`}
                                             />
                                             <div className="flex flex-col select-none">
-                                                <Label htmlFor="isFeatured" className="font-bold text-neutral-900 pointer-events-none text-[15px]">Feature this Idea</Label>
-                                                <span className="text-xs text-neutral-500 pointer-events-none mt-0.5">Promote for higher visibility</span>
+                                                <Label htmlFor="isFeatured" className="font-bold text-foreground pointer-events-none text-[15px]">Feature this Idea</Label>
+                                                <span className="text-xs text-muted-foreground pointer-events-none mt-0.5">Promote for higher visibility</span>
                                             </div>
                                         </div>
                                         {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
@@ -408,18 +408,18 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                         }}
                                     >
                                         {(field) => (
-                                            <div className="space-y-2 p-4 bg-white rounded-2xl border border-neutral-200 shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
+                                            <div className="space-y-2 p-4 bg-background rounded-2xl border border-border shadow-sm animate-in fade-in slide-in-from-left-4 duration-300">
                                                 <div className="flex flex-col">
-                                                    <Label className="font-bold text-neutral-800 text-sm">Set Price amount <span className="text-rose-500">*</span></Label>
-                                                    <span className="text-[11px] text-neutral-500 mt-0.5">Determine the cost for users to access this idea.</span>
+                                                    <Label className="font-bold text-foreground text-sm">Set Price amount <span className="text-rose-500">*</span></Label>
+                                                    <span className="text-[11px] text-muted-foreground mt-0.5">Determine the cost for users to access this idea.</span>
                                                 </div>
                                                 <div className="relative mt-1 flex items-center">
-                                                    <span className="absolute left-4 font-bold text-neutral-500 select-none">$</span>
+                                                    <span className="absolute left-4 font-bold text-muted-foreground select-none">$</span>
                                                     <Input
                                                         type="number"
                                                         value={field.state.value || ""}
                                                         onChange={(e) => field.handleChange(Number(e.target.value))}
-                                                        className="h-11 pl-8 pr-10 rounded-xl bg-white border-neutral-200 focus:border-emerald-500 focus:ring-emerald-500/20 font-bold text-[15px] font-sans text-neutral-900 transition-all shadow-sm"
+                                                        className="h-11 pl-8 pr-10 rounded-xl bg-background border-border focus:border-emerald-500 focus:ring-emerald-500/20 font-bold text-[15px] font-sans text-foreground transition-all shadow-sm"
                                                         placeholder="0.00"
                                                         min="1"
                                                     />
@@ -438,19 +438,19 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                 </div>
 
                 {/* SECTION: MEDIA SHOWCASE */}
-                <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
-                    <div className="px-6 md:px-8 py-5 border-b border-neutral-200 bg-white">
-                        <h2 className="text-lg font-bold text-neutral-900">Media Showcase</h2>
-                        <p className="text-sm text-neutral-500 font-medium mt-1">Upload high-quality images to represent your idea visually.</p>
+                <div className="bg-card rounded-2xl shadow-sm border border-border overflow-hidden">
+                    <div className="px-6 md:px-8 py-5 border-b border-border bg-card">
+                        <h2 className="text-lg font-bold text-foreground">Media Showcase</h2>
+                        <p className="text-sm text-muted-foreground font-medium mt-1">Upload high-quality images to represent your idea visually.</p>
                     </div>
 
-                    <div className="p-6 md:p-8 bg-white">
+                    <div className="p-6 md:p-8 bg-card">
                         <form.Field name="images">
                         {(field) => (
                             <div className="space-y-4">
                                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-4 sm:gap-6">
                                     {imagePreviews.map((preview, idx) => (
-                                        <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-neutral-100 group shadow-sm transition-transform hover:scale-95">
+                                        <div key={idx} className="relative aspect-square rounded-[1.5rem] overflow-hidden border-2 border-border group shadow-sm transition-transform hover:scale-95">
                                             <Image src={preview} alt="Preview" fill className="object-cover" />
                                             <button
                                                 type="button"
@@ -461,7 +461,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                             </button>
                                         </div>
                                     ))}
-                                    <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-neutral-50 border-neutral-200 hover:bg-emerald-50 hover:border-emerald-200 transition-all cursor-pointer group shadow-inner">
+                                    <div className="relative aspect-square flex flex-col items-center justify-center border-3 border-dashed rounded-[1.5rem] bg-muted/50 border-border hover:bg-emerald-500/10 hover:border-emerald-500/50 transition-all cursor-pointer group shadow-inner">
                                         <Input
                                             type="file"
                                             multiple
@@ -469,8 +469,8 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
                                             className="absolute inset-0 opacity-0 cursor-pointer z-20"
                                             onChange={handleImageChange}
                                         />
-                                        <Upload className="h-8 w-8 text-neutral-400 mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
-                                        <span className="text-[10px] font-black text-neutral-400 uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
+                                        <Upload className="h-8 w-8 text-muted-foreground mb-3 group-hover:text-emerald-500 group-hover:scale-110 transition-all" />
+                                        <span className="text-[10px] font-black text-muted-foreground uppercase tracking-widest group-hover:text-emerald-600 px-2 text-center">Add Images</span>
                                     </div>
                                 </div>
                                 {field.state.meta.isTouched && field.state.meta.errors.length > 0 && (
@@ -484,7 +484,7 @@ const CreateIdeaForm = ({ categories, isLoadingCategories }: CreateIdeaFormProps
 
                 <div className="flex flex-col-reverse sm:flex-row justify-end gap-4 pt-4">
                     <Link href="/admin/dashboard/idea-management" className="w-full sm:w-auto">
-                        <Button type="button" variant="outline" className="h-14 w-full sm:px-10 rounded-2xl font-bold text-neutral-500 hover:text-neutral-900 transition-all border-neutral-200" disabled={isPending}>
+                        <Button type="button" variant="outline" className="h-14 w-full sm:px-10 rounded-2xl font-bold text-muted-foreground hover:text-foreground transition-all border-border" disabled={isPending}>
                             Discard
                         </Button>
                     </Link>

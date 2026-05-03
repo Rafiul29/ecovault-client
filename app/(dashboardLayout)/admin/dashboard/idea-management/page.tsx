@@ -39,8 +39,12 @@ const IdeaManagementPage = async ({ searchParams }: { searchParams: { [key: stri
             <div className="space-y-12">
                 <div className="flex flex-col justify-between gap-6 border-b pb-8 md:flex-row md:items-center">
                     <div>
-                        <h1 className="text-4xl font-extrabold tracking-tight text-neutral-900 font-sans">Idea Management</h1>
-                        <p className="mt-2 text-lg text-neutral-500 font-medium tracking-tight">
+                        {/* Changed text-neutral-900 to text-foreground or added dark: variant */}
+                        <h1 className="text-4xl font-extrabold tracking-tight font-sans text-foreground">
+                            Idea Management
+                        </h1>
+                        {/* Changed text-neutral-500 to text-muted-foreground */}
+                        <p className="mt-2 text-lg text-muted-foreground font-medium tracking-tight">
                             Manage your ecosystem's ideas, review submissions, and feature innovative solutions.
                         </p>
                     </div>

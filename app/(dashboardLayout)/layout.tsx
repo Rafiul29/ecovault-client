@@ -5,7 +5,7 @@ import React from "react"
 
 const RootDashboardLayout = async ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className="flex h-screen overflow-hidden">
+        <div className="flex h-screen overflow-hidden bg-background text-foreground">
             {/* Dashboard Sidebar */}
             <DashboardSidebar />
 
