@@ -4,6 +4,7 @@ import QueryProviders from "@/providers/QueryProvider";
 import { Toaster } from "sonner";
 import { ThemeProvider } from "@/providers/ThemeProvider";
 import { Metadata } from "next";
+import FloatingChatbot from "@/components/shared/Chatbot/FloatingChatbot";
 
 
 const inter = Inter({
@@ -102,7 +103,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <QueryProviders>{children}</QueryProviders>
+          <QueryProviders>{children}
+
+            <FloatingChatbot />
+
+          </QueryProviders>
         </ThemeProvider>
         <Toaster richColors />
         <script

@@ -34,13 +34,20 @@ const API_BASE = (
 export default async function IdeaDetailPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const ideaResponse = await getIdeaById(id);
+
+  let ideaResponse;
+  try {
+    ideaResponse = await getIdeaById(id);
+  } catch (error) {
+    return notFound();
+  }
+
   const currentUser = await getUserInfo();
 
-  if (!ideaResponse.success || !ideaResponse.data) {
+  if (!ideaResponse?.success || !ideaResponse?.data) {
     return notFound();
   }
 
@@ -48,10 +55,15 @@ export default async function IdeaDetailPage({
   const isOwner = currentUser?.id === idea.authorId;
 
   // Fetch related ideas
-  const relatedIdeasResponse = await getIdeas(
-    `limit=3&exclude=${idea.id}&status=APPROVED`,
-  );
-  const relatedIdeas = relatedIdeasResponse.data || [];
+  let relatedIdeas: any[] = [];
+  try {
+    const relatedIdeasResponse = await getIdeas(
+      `limit=3&exclude=${idea.id}&status=APPROVED`,
+    );
+    relatedIdeas = relatedIdeasResponse.data || [];
+  } catch (error) {
+    console.error("Failed to fetch related ideas:", error);
+  }
 
   // Determine current user's vote
   const userVoteObj = idea.votes?.find((v) => v.userId === currentUser?.id);
