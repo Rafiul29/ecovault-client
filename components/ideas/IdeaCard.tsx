@@ -154,7 +154,7 @@ export default function IdeaCard({
         </Link>
 
         {/* Description */}
-        <div className="relative line-clamp-2 flex-1 mb-4">
+        <div className="relative line-clamp-2 flex-1 mb-1">
           <p className={cn(
             "text-[13px] leading-relaxed",
             idea?.isPaid ? "text-muted-foreground/50 blur-[3px] select-none" : "text-muted-foreground"
@@ -268,11 +268,11 @@ export default function IdeaCard({
         </div>
 
         {/* View Details Button */}
-        <div className="mt-auto pt-3 border-t border-border/50">
+        {/* <div className="mt-auto pt-3 border-t border-border/50">
           <Link href={`/ideas/${idea?.id}`} className="block w-full">
             <Button variant="outline" className="w-full h-8 text-xs font-medium rounded-lg">View Details</Button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </div>
   );
